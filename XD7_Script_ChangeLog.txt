@@ -1,0 +1,159 @@
+#webster@carlwebster.com
+#@carlwebster on Twitter
+#http://www.CarlWebster.com
+# Created on October 20, 2013
+
+#Version 1.31 13-Feb-2017
+#	Fixed French wording for Table of Contents 2 (Thanks to David Rouquier)
+
+#Version 1.30 7-Feb-2017
+#	Fix numerous typos
+#	Removed snapin citrix.common.commands as it is no longer used and no cmdlets are used from that snapin
+
+#Version 1.29 2-Jan-2017
+#	Added Description to Machine Catalog details
+#	Added RemotePC OU and Subfolder properties to RemotePC Machine Catalog details
+
+#Version 1.28 21-Dec-2016
+#	Added Summary report page
+#	Updated version checking
+#	Updated version checking registry access to allow 32-bit PowerShell access to 64-bit registry
+
+#Version 1.27 6-Dec-2016
+#	For Machine Catalog details, for PVS provisioned catalogs, add the PVS Server address
+
+#Version 1.26 29-Nov-2016
+#	Fix bug when Delivery Type for a delivery group could not be determined
+#	Fix bug in HTML output for delivery group details
+
+#Version 1.25 7-Nov-2016
+#	Added Chinese language support
+
+#Version 1.24 22-Oct-2016
+#	More refinement of HTML output
+
+#Version 1.23 19-Oct-2016
+#	Fixed formatting issues with HTML headings output
+
+#Version 1.22 26-Sep-2016
+#	Add Configuration Logging Preferences
+#	Add to machine catalog information for RemotePC, "No. of Machines" and "Allocated Machines"
+#	Fix calculation for "No. of Machines" in Machine Catalogs summary and details
+
+#Version 1.21 17-Aug-2016
+#	Added policy setting ICA\Launching of non-published programs during client connection 
+#	Renamed Virtual Desktop Agent Settings to Virtual Delivery Agent Settings
+#	Fixed a few issues with Text and HTML output in the Hardware region
+
+#Version 1.20 4-May-2016
+#	Added -Dev parameter to create a text file of script errors
+#	Added -ScriptInfo (SI) parameter to create a text file of script information
+#	Added more script information to the console output when script starts
+#	Changed from using arrays to populating data in tables to strings
+#	Cleaned up some issues in the help text
+#	Color variables needed to be [long] and not [int] except for $wdColorBlack which is 0
+#	Fixed numerous issues discovered with the latest update to PowerShell V5
+#	Fixed saving the HTML file when using AddDateTime, now only one file is created not two
+#	Fixed several incorrect variable names that kept PDFs from saving in Windows 10 and Office 2013
+#	Removed the 10 second pauses waiting for Word to save and close
+
+#Version 1.17 19-Apr-2016
+#	Add check to make sure script is not run on Version 7.8 or later
+#	Add server machine details
+#	Fixed, for desktop machine details text and HTML output, Session User Name was incorrect.
+
+#Version 1.16 17-Mar-2016
+#	Fixed Zone information showing in the Hosting section for all XA/XD versions
+#	For the Monitoring Database, show details and Grooming Retention Settings (for Jeremy Saunders)
+
+#Version 1.15 29-Feb-2016
+#	Fixed the remaining $Null comparison issues
+#	Fixed a typo keeping the AlwaysCache policy setting from working
+#	Fixed an issue where Manual Provisioning and Not RemotePC Machine Catalogs were missing from Word and Text output (thanks to Michael Foster)
+
+#Version 1.14 9-Feb-2016
+#	Added specifying an optional output folder
+#	Added the option to email the output file
+#	Fixed several spacing and typo errors
+#	Fixed output to HTML with -AddDateTime parameter
+#	Add Section parameter
+#		Valid Section options are:
+#			Admins (Administrators)
+#			Apps (Applications)
+#			AppV
+#			Catalogs (Machine Catalogs)
+#			Config (Configuration)
+#			Controllers
+#			Groups (Delivery Groups)
+#			Hosting
+#			Licensing
+#			Logging
+#			Policies
+#			StoreFront
+#			Zones
+#			All
+
+#Version 1.13 released 28-Dec-2015
+#	Tested with version 7.7 and 7.6 FP3
+#	Fixed several typos
+#	Added "Hosting Server Name" to machine/desktop details
+#	Added support for VDA version 7.7
+#	Added policy setting ICA\Desktop launches [overlooked from initial script creation]
+#	Added policy setting ICA\Adobe Flash Delivery\Flash Redirection\Flash video fallback prevention [new with 7.6 FP3]
+#	Added policy setting ICA\Adobe Flash Delivery\Flash Redirection\Flash video fallback prevention error *.swf [new with 7.6 FP3]
+#	Added policy setting ICA\File Redirection\Allow file transfer between desktop and client [new with 7.6 FP3]
+#	Added policy setting ICA\File Redirection\Download file from desktop [new with 7.6 FP3]
+#	Added policy setting ICA\File Redirection\Upload file to desktop [new with 7.6 FP3]
+#	Added policy setting ICA\Graphics\Use video codec for compression [new with 7.6 FP3]
+#	Added policy setting ICA\Graphics\Framehawk\Framehawk display channel [new with 7.6 FP3]
+#	Added policy setting ICA\Graphics\Framehawk\Framehawk display channel port range [new with 7.6 FP3]
+#	Added policy setting ICA\Multimedia\Windows media fallback prevention [new with 7.6 FP3] 
+#	Added policy setting ICA\USB devices\Client USB device optimization rules [new with 7.6 FP3]
+#	Added policy setting ICA\Visual Display\Preferred color depth for simple graphics [new with 7.6 FP3]
+#	Renamed policy setting ICA\Multimedia\Optimization for Windows Media multimedia redirection to ICA\Multimedia\Optimization for Windows Media multimedia redirection over WAN
+#	Renamed policy setting ICA\Multimedia\Use GPU for optimizing Windows Media multimedia redirection to ICA\Multimedia\Use GPU for optimizing Windows Media multimedia redirection over WAN
+#	Added Zone section
+#	Added Zones to Machine Catalog details
+#	Added Zones to Hosting Connection details
+#	Fixed the way Scopes are reported for Machine Catalogs
+# Version 1.12 released 5-Oct-2015
+#	Add support for Word 2016
+# Version 1.11 released 8-Jul-2015
+#	Add in updated hardware inventory code
+#	Updated help text
+# Version 1.1 released June 29, 2015
+#	For Policies, change Filter(s) to "Assigned to" to match what is shown in Studio.
+#	For Policies, change the text "HDX Policy" to Policies to match what is shown in Studio,
+#	In Machine Catalog HTML output, removed two unneeded lines
+#	Add Machine Catalog summary table to beginning of section
+#	Add Delivery Group summary table to beginning of section
+#	In Delivery Group Word/PDF output, add in missing Machine type
+#	Begin Delivery Group data on new page for Word/PDF output
+#	In Delivery Group details, add:
+#		AutomaticPowerOnForAssigned
+#		AutomaticPowerOnForAssingedDuringPeak
+#		Extended Power Management Settings:
+#			During peak extended hours, when disconnected
+#			During off-peak extended hours, when disconnected
+#	Note: The previous four settings can only be set via PowerShell and are not shown in Studio
+#	In Delivery Group, add Desktops:
+#		Available
+#		In Use
+#		Never Registered
+#		Preparing
+#	In Delivery Group Details:
+#		Fix display of State (Enabled, Disabled or Maintenance mode)
+#		Add Description
+#		Add Display Name
+#		Add Color Depth
+#		Add Shutdown Desktops After Use
+#		Add Turn On Added Machine
+#	For Hosting details, add Sessions
+#	For Hosting details, begin Desktop OS, Server OS and Sessions data on new pages for Word/PDF output
+#	Added new parameter, Administrators (Admins), to get full administrator details.
+#	Added for Administrator Scopes, Objects and Administrators
+#	Added for Administrator Roles, Role definition and Administrators.
+#	Fix numerous typos
+#	Removed all 449 references to the unused variable $CurrentServiceIndex
+
+# Version 1.0 released to the community on June 12, 2015
