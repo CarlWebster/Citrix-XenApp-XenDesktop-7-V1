@@ -4,6 +4,7 @@
 #		Company Email
 #		Company Fax
 #		Company Phone
+#	Fix Summary Page not checking for Zone support
 #	Remove code (140 lines) that made sure all Parameters were set to default values if for some reason they did exist or values were $Null
 #	Replace _SetDocumentProperty function with Jim Moyle's Set-DocumentProperty function
 #	Update Function ProcessScriptEnd for the new Cover Page properties
