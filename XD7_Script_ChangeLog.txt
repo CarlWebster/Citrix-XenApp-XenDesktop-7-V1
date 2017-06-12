@@ -3,6 +3,20 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.32 11-Jun-2017
+#	Add four new Cover Page properties
+#		Company Address
+#		Company Email
+#		Company Fax
+#		Company Phone
+#	Fix Function Check-LoadedModule
+#	Fix Summary Page not checking for Zone support
+#	Remove code (140 lines) that made sure all Parameters were set to default values if for some reason they did exist or values were $Null
+#	Replace _SetDocumentProperty function with Jim Moyle's Set-DocumentProperty function
+#	Update Function ProcessScriptEnd for the new Cover Page properties
+#	Update Function ShowScriptOptions for the new Cover Page properties
+#	Update Function UpdateDocumentProperties for the new Cover Page properties
+
 #Version 1.31 13-Feb-2017
 #	Fixed French wording for Table of Contents 2 (Thanks to David Rouquier)
 
