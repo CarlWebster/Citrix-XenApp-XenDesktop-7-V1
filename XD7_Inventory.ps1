@@ -77,35 +77,35 @@
 .PARAMETER CompanyAddress
 	Company Address to use for the Cover Page, if the Cover Page has the Address field.  
 		The following Cover Pages have an Address field:
-			Banded
-			Contrast
-			Exposure
-			Filigree
-			Ion (Dark)
-			Retrospect
-			Semaphore
-			Tiles
-			ViewMaster
+			Banded (Word 2013/2016)
+			Contrast (Word 2010)
+			Exposure (Word 2010)
+			Filigree (Word 2013/2016)
+			Ion (Dark) (Word 2013/2016)
+			Retrospect (Word 2013/2016)
+			Semaphore (Word 2013/2016)
+			Tiles (Word 2010)
+			ViewMaster (Word 2013/2016)
 	This parameter is only valid with the MSWORD and PDF output parameters.
 	This parameter has an alias of CA.
 .PARAMETER CompanyEmail
 	Company Email to use for the Cover Page, if the Cover Page has the Email field.  
 		The following Cover Pages have an Email field:
-			Facet
+			Facet (Word 2013/2016)
 	This parameter is only valid with the MSWORD and PDF output parameters.
 	This parameter has an alias of CE.
 .PARAMETER CompanyFax
 	Company Fax to use for the Cover Page, if the Cover Page has the Fax field.  
 		The following Cover Pages have a Fax field:
-			Contrast
-			Exposure
+			Contrast (Word 2010)
+			Exposure (Word 2010)
 	This parameter is only valid with the MSWORD and PDF output parameters.
 	This parameter has an alias of CF.
 .PARAMETER CompanyPhone
 	Company Phone to use for the Cover Page, if the Cover Page has the Phone field.  
 		The following Cover Pages have a Phone field:
-			Contrast
-			Exposure
+			Contrast (Word 2010)
+			Exposure (Word 2010)
 	This parameter is only valid with the MSWORD and PDF output parameters.
 	This parameter has an alias of CPh.
 .PARAMETER CoverPage
@@ -1140,11 +1140,14 @@ Param(
 #		Company Email
 #		Company Fax
 #		Company Phone
+#	Fix Function Check-LoadedModule
+#	Fix Summary Page not checking for Zone support
 #	Remove code (140 lines) that made sure all Parameters were set to default values if for some reason they did exist or values were $Null
 #	Replace _SetDocumentProperty function with Jim Moyle's Set-DocumentProperty function
 #	Update Function ProcessScriptEnd for the new Cover Page properties
 #	Update Function ShowScriptOptions for the new Cover Page properties
 #	Update Function UpdateDocumentProperties for the new Cover Page properties
+#	Update help text
 #
 #endregion
 
@@ -4707,8 +4710,9 @@ Function Check-LoadedModule
 	#was manually loaded from a non Default folder
 	#$ModuleFound = (!$LoadedModules -like "*$ModuleName*")
 	
-	[bool]$ModuleFound = ($LoadedModules -like "*$ModuleName*")
-	If(!$ModuleFound) 
+	#11-Jun-2017 change from [bool] to ][string]
+	[string]$ModuleFound = ($LoadedModules -like "*$ModuleName*")
+	If($ModuleFound -ne $ModuleName) 
 	{
 		$module = Import-Module -Name $ModuleName -PassThru -EA 0 4>$Null
 		If($module -and $?)
@@ -4838,11 +4842,11 @@ Function SaveandCloseDocumentandShutdownWord
 			}
 		}
 		Write-Verbose "$(Get-Date): Running $($Script:WordProduct) and detected operating system $($Script:RunningOS)"
-		$Script:Doc.SaveAs2([REF]$Script:FileName1, [ref]$wdFormatDocumentDefault)
+		$Script:Doc.SaveAs2([ref]$Script:FileName1, [ref]$wdFormatDocumentDefault)
 		If($PDF)
 		{
 			Write-Verbose "$(Get-Date): Now saving as PDF"
-			$Script:Doc.SaveAs([REF]$Script:FileName2, [ref]$wdFormatPDF)
+			$Script:Doc.SaveAs([ref]$Script:FileName2, [ref]$wdFormatPDF)
 		}
 	}
 
@@ -26098,9 +26102,12 @@ Function ProcessSummaryPage
 		WriteWordLine 0 0 "StoreFront"
 		WriteWordLine 0 1 "Total StoreFront Servers`t: " $Global:TotalStoreFrontServers
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Zone summary info"
-		WriteWordLine 0 0 "Zones"
-		WriteWordLine 0 1 "Total Zones`t`t`t: " $Global:TotalZones
+		If((Get-ConfigServiceAddedCapability @XDParams1) -contains "ZonesSupport")
+		{
+			Write-Verbose "$(Get-Date): `tAdd Zone summary info"
+			WriteWordLine 0 0 "Zones"
+			WriteWordLine 0 1 "Total Zones`t`t`t: " $Global:TotalZones
+		}
 	}
 	ElseIf($Text)
 	{
@@ -26175,9 +26182,12 @@ Function ProcessSummaryPage
 		Line 0 "StoreFront"
 		Line 1 "Total StoreFront Servers`t: " $Global:TotalStoreFrontServers
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Zone summary info"
-		Line 0 "Zones"
-		Line 1 "Total Zones`t`t`t: " $Global:TotalZones
+		If((Get-ConfigServiceAddedCapability @XDParams1) -contains "ZonesSupport")
+		{
+			Write-Verbose "$(Get-Date): `tAdd Zone summary info"
+			Line 0 "Zones"
+			Line 1 "Total Zones`t`t`t: " $Global:TotalZones
+		}
 	}
 	ElseIf($HTML)
 	{
@@ -26252,9 +26262,12 @@ Function ProcessSummaryPage
 		WriteHTMLLine 0 0 "StoreFront"
 		WriteHTMLLine 0 1 "Total StoreFront Servers: " $Global:TotalStoreFrontServers
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add Zone summary info"
-		WriteHTMLLine 0 0 "Zones"
-		WriteHTMLLine 0 1 "Total Zones: " $Global:TotalZones
+		If((Get-ConfigServiceAddedCapability @XDParams1) -contains "ZonesSupport")
+		{
+			Write-Verbose "$(Get-Date): Add Zone summary info"
+			WriteHTMLLine 0 0 "Zones"
+			WriteHTMLLine 0 1 "Total Zones: " $Global:TotalZones
+		}
 	}
 
 	Write-Verbose "$(Get-Date): Finished Create Summary Page"
