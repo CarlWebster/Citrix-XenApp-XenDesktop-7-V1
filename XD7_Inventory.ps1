@@ -1149,6 +1149,14 @@ Param(
 #	Update Function UpdateDocumentProperties for the new Cover Page properties
 #	Update help text
 #
+#Version 1.33 15-Jun-2017
+#	Added back the WorkerGroup policy filter for XenApp 6.x
+#	Added folder name to Function OutputApplication (Thanks to Brandon Mitchell)
+#	Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
+#	Fix bug when retrieving Filters for a Policy that "applies to all objects in the Site"
+#	Fix functions ProcessAppV and OutputAppv to handle multiple AppV servers (Thanks to Brandon Mitchell)
+#	Fix two calls to Get-BrokerApplication that were retrieving the default of 250 records (Thanks to Brandon Mitchell)
+#
 #endregion
 
 #region initial variable testing and setup
@@ -10206,7 +10214,7 @@ Function ProcessApplications
 	$Global:TotalPublishedApplications = 0
 	$Global:TotalAppvApplications = 0
 	
-	$AllApplications = Get-BrokerApplication @XDParams1 -SortBy Name
+	$AllApplications = Get-BrokerApplication @XDParams2 -SortBy "AdminFolderName,ApplicationName"
 	If($? -and $Null -ne $AllApplications)
 	{
 		OutputApplications $AllApplications
@@ -10283,6 +10291,7 @@ Function OutputApplications
 		If($MSWord -or $PDF)
 		{
 			$WordTableRowHash = @{
+			FolderName = $Application.AdminFolderName;
 			ApplicationName = $Application.ApplicationName; 
 			Description = $Application.Description; 
 			Location = $xLocation;
@@ -10292,6 +10301,7 @@ Function OutputApplications
 		}
 		ElseIf($Text)
 		{
+			Line 1 "Folder`t`t: " $Application.AdminFolderName
 			Line 1 "Name`t`t: " $Application.ApplicationName
 			Line 1 "Description`t: " $Application.Description
 			Line 1 "Location`t: " $xLocation
@@ -10301,6 +10311,7 @@ Function OutputApplications
 		ElseIf($HTML)
 		{
 			$rowdata += @(,(
+			$Application.AdminFolderName,$htmlwhite,
 			$Application.ApplicationName,$htmlwhite,
 			$Application.Description,$htmlwhite,
 			$xLocation,$htmlwhite,
@@ -10311,17 +10322,18 @@ Function OutputApplications
 	If($MSWord -or $PDF)
 	{
 		$Table = AddWordTable -Hashtable $AllApplicationsWordTable `
-		-Columns  ApplicationName,Description,Location,Enabled `
-		-Headers  "Name","Description","Location","State" `
+		-Columns  FolderName,ApplicationName,Description,Location,Enabled `
+		-Headers  "Folder","Name","Description","Location","State" `
 		-Format $wdTableGrid `
 		-AutoFit $wdAutoFitFixed;
 
 		SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
 
-		$Table.Columns.Item(1).Width = 175;
-		$Table.Columns.Item(2).Width = 170;
-		$Table.Columns.Item(3).Width = 100;
-		$Table.Columns.Item(4).Width = 55;
+		$Table.Columns.Item(1).Width = 100;
+		$Table.Columns.Item(2).Width = 145;
+		$Table.Columns.Item(3).Width = 125;
+		$Table.Columns.Item(4).Width = 80;
+		$Table.Columns.Item(5).Width = 50;
 
 		$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
 
@@ -10332,13 +10344,14 @@ Function OutputApplications
 	ElseIf($HTML)
 	{
 		$columnHeaders = @(
+		'Folder',($htmlsilver -bor $htmlbold),
 		'Name',($htmlsilver -bor $htmlbold),
 		'Description',($htmlsilver -bor $htmlbold),
 		'Location',($htmlsilver -bor $htmlbold),
 		'State',($htmlsilver -bor $htmlbold))
 
 		$msg = ""
-		$columnWidths = @("175","170","100","55")
+		$columnWidths = @("100","145","125","80","50")
 		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "500"
 		WriteHTMLLine 0 0 " "
 	}
@@ -11519,18 +11532,20 @@ Function ProcessCitrixPolicies
 					ForEach($Filter in $Filters)
 					{
 						$tmp = ""
+						#14-Jun-2017 add back the WorkerGroup filter for xenapp 6.x
 						Switch($filter.FilterType)
 						{
-							"AccessControl"  {$tmp = "Access Control"}
-							"BranchRepeater" {$tmp = "Citrix CloudBridge"}
-							"ClientIP"       {$tmp = "Client IP Address"}
-							"ClientName"     {$tmp = "Client Name"}
-							"DesktopGroup"   {$tmp = "Delivery Group"}
-							"DesktopKind"    {$tmp = "Delivery GroupType"}
-							"DesktopTag"     {$tmp = "Tag"}
-							"OU"             {$tmp = "Organizational Unit (OU)"}
-							"User"           {$tmp = "User or group"}
-							Default {$tmp = "Policy Filter Type could not be determined: $($filter.FilterType)"}
+							"AccessControl"  {$tmp = "Access Control"; Break}
+							"BranchRepeater" {$tmp = "Citrix CloudBridge"; Break}
+							"ClientIP"       {$tmp = "Client IP Address"; Break}
+							"ClientName"     {$tmp = "Client Name"; Break}
+							"DesktopGroup"   {$tmp = "Delivery Group"; Break}
+							"DesktopKind"    {$tmp = "Delivery GroupType"; Break}
+							"DesktopTag"     {$tmp = "Tag"; Break}
+							"OU"             {$tmp = "Organizational Unit (OU)"; Break}
+							"User"           {$tmp = "User or group"; Break}
+							"WorkerGroup"    {$tmp = "Worker Group"; Break}
+							Default {$tmp = "Policy Filter Type could not be determined: $($filter.FilterType)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -11616,42 +11631,58 @@ Function ProcessCitrixPolicies
 					}
 				}
 			}
+			ElseIf($? -and $Null -eq $Filters)
+			{
+				$txt = "$($Policy.PolicyName) policy applies to all objects in the Site"
+				If($MSWord -or $PDF)
+				{
+					WriteWordLine 3 0 "Assigned to"
+					WriteWordLine 0 1 $txt
+				}
+				ElseIf($Text)
+				{
+					Line 0 "Assigned to"
+					Line 1 $txt
+				}
+				ElseIf($HTML)
+				{
+					WriteHTMLLine 3 0 "Assigned to"
+					WriteHTMLLine 0 1 $txt
+				}
+			}
+			ElseIf($? -and $Policy.PolicyName -eq "Unfiltered")
+			{
+				$txt = "Unfiltered policy applies to all objects in the Site"
+				If($MSWord -or $PDF)
+				{
+					WriteWordLine 3 0 "Assigned to"
+					WriteWordLine 0 1 $txt
+				}
+				ElseIf($Text)
+				{
+					Line 0 "Assigned to"
+					Line 1 $txt
+				}
+				ElseIf($HTML)
+				{
+					WriteHTMLLine 3 0 "Assigned to"
+					WriteHTMLLine 0 1 $txt
+				}
+			}
 			Else
 			{
-				If($Policy.PolicyName -eq "Unfiltered")
+				$txt = "Unable to retrieve Filter settings"
+				If($MSWord -or $PDF)
 				{
-					$txt = "Unfiltered policy has no filter settings"
-					If($MSWord -or $PDF)
-					{
-						WriteWordLine 3 0 "Assigned to"
-						WriteWordLine 0 1 $txt
-					}
-					ElseIf($Text)
-					{
-						Line 0 "Assigned to"
-						Line 1 $txt
-					}
-					ElseIf($HTML)
-					{
-						WriteHTMLLine 3 0 "Assigned to"
-						WriteHTMLLine 0 1 $txt
-					}
+					WriteWordLine 0 1 $txt
 				}
-				Else
+				ElseIf($Text)
 				{
-					$txt = "Unable to retrieve Filter settings"
-					If($MSWord -or $PDF)
-					{
-						WriteWordLine 0 1 $txt
-					}
-					ElseIf($Text)
-					{
-						Line 1 $txt
-					}
-					ElseIf($HTML)
-					{
-						WriteHTMLLine 0 1 $txt
-					}
+					Line 1 $txt
+				}
+				ElseIf($HTML)
+				{
+					WriteHTMLLine 0 1 $txt
 				}
 			}
 			
@@ -25675,31 +25706,40 @@ Function ProcessAppV
 	}
 	
 	Write-Verbose "$(Get-Date): `tRetrieving App-V configuration"
-	$AppvConfig = Get-BrokerMachineConfiguration @XDParams1 -Name appv*
+	$AppVConfigs = Get-BrokerMachineConfiguration @XDParams1 -Name appv* 4>$Null
 	
-	If($? -and $Null -ne $AppVConfig)
+	If($? -and $Null -ne $AppVConfigs)
 	{
 		Write-Verbose "$(Get-Date): `t`tRetrieving App-V server information"
-		$AppVs = Get-CtxAppVServer -ByteArray $Appvconfig[0].Policy -EA 0
-		If($? -and ($Null -ne $AppVs))
+		
+		$AppVs = @()
+		ForEach($AppVConfig in $AppVConfigs)
 		{
-			ForEach($AppV in $AppVs)
+			$AppV = Get-CtxAppVServer -ByteArray $AppVConfig.Policy -EA 0 4>$Null
+			If($? -and ($Null -ne $AppV))
 			{
-				OutputAppV $AppV
+				$obj = New-Object -TypeName PSObject
+				$obj | Add-Member -MemberType NoteProperty -Name MgmtServer	-Value $AppV.ManagementServer
+				$obj | Add-Member -MemberType NoteProperty -Name PubServer	-Value $AppV.PublishingServer
+				$AppVs += $obj
+			}
+			ElseIf($? -and ($Null -eq $AppV))
+			{
+				$txt = "There was no App-V server information found for $($AppVConfig.Policy)"
+				OutputWarning $txt
+			}
+			Else
+			{
+				$txt = "Unable to retrieve App-V information for $($AppVConfig.Policy)"
+				OutputWarning $txt
 			}
 		}
-		ElseIf($? -and ($Null -eq $AppVs))
-		{
-			$txt = "There was no App-V server information found"
-			OutputWarning $txt
-		}
-		Else
-		{
-			$txt = "Unable to retrieve App-V information"
-			OutputWarning $txt
-		}
+		
+		$AppVs = $AppVs | Sort MgmtServer
+		
+		OutputAppV $AppVs
 	}
-	ElseIf($? -and $Null -eq $AppVConfig)
+	ElseIf($? -and $Null -eq $AppVConfigs)
 	{
 		$txt = "App-V is not configured for this Site"
 		OutputWarning $txt
@@ -25714,21 +25754,53 @@ Function ProcessAppV
 
 Function OutputAppV
 {
-	Param([object]$AppV)
+	Param([object]$AppVs)
 	
 	Write-Verbose "$(Get-Date): `t`t`tOutput App-V server information"
 	If($MSWord -or $PDF)
 	{
-		[System.Collections.Hashtable[]] $ScriptInformation = @()
-		$ScriptInformation += @{ Data = "App-V management server"; Value = $AppV.ManagementServer; }
-		$ScriptInformation += @{ Data = "App-V publishing server"; Value = $AppV.PublishingServer; }
-		$Table = AddWordTable -Hashtable $ScriptInformation `
-		-Columns Data,Value `
-		-List `
+		[System.Collections.Hashtable[]] $AppVWordTable = @();
+	}
+	ElseIf($HTML)
+	{
+		$rowdata = @()
+	}
+	
+	ForEach($AppV in $AppVs)
+	{
+		Write-Verbose "$(Get-Date): `t`t`tAdding AppV Server $($AppV.MgmtServer)"
+
+		If($MSWord -or $PDF)
+		{
+			$WordTableRowHash = @{
+			MgmtServer = $AppV.MgmtServer; 
+			PubServer = $AppV.PubServer; 
+			}
+			$AppVWordTable += $WordTableRowHash;
+		}
+		ElseIf($Text)
+		{
+			Line 1 "App-V management server`t: " $AppV.MgmtServer
+			Line 1 "App-V publishing server`t: " $AppV.PubServer
+			Line 0 ""
+		}
+		ElseIf($HTML)
+		{
+			$rowdata += @(,(
+			$AppV.MgmtServer,$htmlwhite,
+			$AppV.PubServer,$htmlwhite))
+		}
+	}
+
+	If($MSWord -or $PDF)
+	{
+		$Table = AddWordTable -Hashtable $AppVWordTable `
+		-Columns  MgmtServer,PubServer `
+		-Headers  "App-V management server","App-V publishing server" `
 		-Format $wdTableGrid `
 		-AutoFit $wdAutoFitFixed;
 
-		SetWordCellFormat -Collection $Table.Columns.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+		SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
 
 		$Table.Columns.Item(1).Width = 250;
 		$Table.Columns.Item(2).Width = 250;
@@ -25739,21 +25811,15 @@ Function OutputAppV
 		$Table = $Null
 		WriteWordLine 0 0 ""
 	}
-	ElseIf($Text)
-	{
-		Line 0 "App-V management server: " $Appv.ManagementServer
-		Line 0 "App-V publishing server: " $AppV.PublishingServer
-		Line 0 ""
-	}
 	ElseIf($HTML)
 	{
-		$rowdata = @()
-		$columnHeaders = @("App-V management server",($htmlsilver -bor $htmlbold),$Appv.ManagementServer,$htmlwhite)
-		$rowdata += @(,('App-V publishing server',($htmlsilver -bor $htmlbold),$AppV.PublishingServer,$htmlwhite))
+		$columnHeaders = @(
+		'App-V management server',($htmlsilver -bor $htmlbold),
+		'App-V publishing server',($htmlsilver -bor $htmlbold))
 
 		$msg = ""
 		$columnWidths = @("250","250")
-		FormatHTMLTable $msg "auto" -rowArray $rowdata -columnArray $columnHeaders
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "500"
 		WriteHTMLLine 0 0 " "
 	}
 }
