@@ -1,0 +1,7 @@
+#Version 1.33 15-Jun-2017
+#	Added back the WorkerGroup policy filter for XenApp 6.x
+#	Added folder name to Function OutputApplication (Thanks to Brandon Mitchell)
+#	Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
+#	Fix bug when retrieving Filters for a Policy that "applies to all objects in the Site"
+#	Fix functions ProcessAppV and OutputAppv to handle multiple AppV servers (Thanks to Brandon Mitchell)
+#	Fix two calls to Get-BrokerApplication that were retrieving the default of 250 records (Thanks to Brandon Mitchell)
