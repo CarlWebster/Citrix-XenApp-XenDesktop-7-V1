@@ -1,6 +1,0 @@
-#Version 1.34 17-Jun-2017
-#	Fixed function OutputPolicySetting
-#	Fixed numerous issues in the Policies section
-#	Removed the Summary parameter as it was not used
-#	Reordered the parameters in the help text and parameter list so they match and are grouped better
-#	Updated help text

@@ -262,6 +262,26 @@
 	
 	This parameter is disabled by default.
 	This parameter has an alias of MC.
+.PARAMETER MaxDetails
+	Adds maximum detail to the report.
+	
+	This is the same as using the following parameters:
+		Administrators
+		Applications
+		DeliveryGroups
+		HardWare
+		Hosting
+		Logging
+		MachineCatalogs
+		Policies
+		StoreFront
+
+	Does not change the value of NoADPolicies.
+	
+	WARNING: Using this parameter can create an extremely large report and 
+	can take a very long time to run.
+
+	This parameter has an alias of MAX.
 .PARAMETER Policies
 	Give detailed information for both Site and Citrix AD based Policies.
 	
@@ -779,6 +799,32 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 	Processes only the Policies section of the report.
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 -MaxDetails
+	
+	Will use all Default values.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or 
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+	
+	Set the following parameter values:
+		Administrators      = True
+		Applications        = True
+		DeliveryGroups      = True
+		HardWare            = True
+		Hosting             = True
+		Logging             = True
+		MachineCatalogs     = True
+		Policies            = True
+		StoreFront          = True
+		
+		NoPolicies          = False
+		Section             = "All"
 .INPUTS
 	None.  You cannot pipe objects to this script.
 .OUTPUTS
@@ -786,9 +832,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.34
+	VERSION: 1.35
 	AUTHOR: Carl Webster
-	LASTEDIT: June 17, 2017
+	LASTEDIT: June 21, 2017
 #>
 
 #endregion
@@ -904,6 +950,10 @@ Param(
 	[Alias("MC")]
 	[Switch]$MachineCatalogs=$False,	
 	
+	[parameter(Mandatory=$False)] 
+	[Alias("MAX")]
+	[Switch]$MaxDetails=$False,
+
 	[parameter(Mandatory=$False)] 
 	[Alias("Pol")]
 	[Switch]$Policies=$False,	
@@ -1153,6 +1203,20 @@ Param(
 #	Removed the Summary parameter as it was not used
 #	Reordered the parameters in the help text and parameter list so they match and are grouped better
 #	Updated help text
+#
+#Version 1.35 21-Jun-2017
+#	Added new parameter MaxDetails:
+#		This is the same as using the following parameters:
+#			Administrators
+#			Applications
+#			DeliveryGroups
+#			HardWare
+#			Hosting
+#			Logging
+#			MachineCatalogs
+#			Policies
+#			StoreFront
+#	Updated help text
 #endregion
 
 #region initial variable testing and setup
@@ -1233,6 +1297,23 @@ Else
 	}
 	Write-Error "Unable to determine output parameter.  Script cannot continue"
 	Exit
+}
+
+#If the MaxDetails parameter is used, set a bunch of stuff true and some stuff false
+If($MaxDetails)
+{
+	$Administrators		= $True
+	$Applications		= $True
+	$DeliveryGroups		= $True
+	$HardWare			= $True
+	$Hosting			= $True
+	$Logging			= $True
+	$MachineCatalogs	= $True
+	$Policies			= $True
+	$StoreFront			= $True
+	
+	$NoPolicies			= $False
+	$Section			= "All"
 }
 
 If($NoPolicies)
@@ -5091,6 +5172,7 @@ Function ShowScriptOptions
 		Write-Verbose "$(Get-Date):    End Date     : $($EndDate)"
 	}
 	Write-Verbose "$(Get-Date): MachineCatalogs : $($MachineCatalogs)"
+	Write-Verbose "$(Get-Date): MaxDetails      : $($MaxDetails)"
 	Write-Verbose "$(Get-Date): NoADPolicies    : $($NoADPolicies)"
 	Write-Verbose "$(Get-Date): NoPolicies      : $($NoPolicies)"
 	Write-Verbose "$(Get-Date): Policies        : $($Policies)"
@@ -26716,6 +26798,7 @@ Function ProcessScriptEnd
 			Out-File -FilePath $SIFile -Append -InputObject "   End Date     : $($EndDate)" 4>$Null
 		}
 		Out-File -FilePath $SIFile -Append -InputObject "MachineCatalogs : $($MachineCatalogs)" 4>$Null
+		Out-File -FilePath $SIFile -Append -InputObject "MaxDetails      : $($MaxDetails)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "NoADPolicies    : $($NoADPolicies)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "NoPolicies      : $($NoPolicies)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "Policies        : $($Policies)" 4>$Null
