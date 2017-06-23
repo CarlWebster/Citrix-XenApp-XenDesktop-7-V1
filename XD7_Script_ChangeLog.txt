@@ -3,6 +3,15 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.36
+#	Added additional error checking for Site version information
+#		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
+#		is not found on the computer running the script, then look on the computer specified for -AdminAddress
+#		If still not found on that computer, abort the script
+#	Cleaned up many Switch () Statements
+#	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
+#	Working on why Mirrored database information is not shown properly
+
 #Version 1.35 21-Jun-2017
 #	Added new parameter MaxDetails:
 #		This is the same as using the following parameters:

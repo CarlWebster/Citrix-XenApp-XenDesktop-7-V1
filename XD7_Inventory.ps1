@@ -832,9 +832,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.35
+	VERSION: 1.36
 	AUTHOR: Carl Webster
-	LASTEDIT: June 21, 2017
+	LASTEDIT: June 23, 2017
 #>
 
 #endregion
@@ -1217,6 +1217,16 @@ Param(
 #			Policies
 #			StoreFront
 #	Updated help text
+#
+#Version 1.36
+#	Added additional error checking for Site version information
+#		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
+#		is not found on the computer running the script, then look on the computer specified for -AdminAddress
+#		If still not found on that computer, abort the script
+#	Cleaned up many Switch () Statements
+#	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
+#	Working on why Mirroed database information is not shown properly
+#	
 #endregion
 
 #region initial variable testing and setup
@@ -26588,7 +26598,12 @@ Function ProcessScriptSetup
 	}
 
 	$Global:DoPolicies = $True
-	If(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $False)
+	If($NoPolicies)
+	{
+		Write-Verbose "$(Get-Date): NoPolicies was specified so do not search for Citrix.GroupPolicy.Commands.psm1"
+		$Global:DoPolicies = $False
+	}
+	ElseIf(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $False)
 	{
 		Write-Warning "The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded `n
 		Please see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf). 
@@ -26668,6 +26683,33 @@ Function ProcessScriptSetup
 	#initial idea from WC at Citrix and also from http://stackoverflow.com/questions/630382/how-to-access-the-64-bit-registry-from-a-32-bit-powershell-instance reply from SergVro
 	$key = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry64)
 	$subKey =  $key.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller")
+
+	#new test added 23-Jun-2017
+	#if subkey is Null, then check the -AdminAddress computer for the key
+	If($Null -eq $subkey)
+	{
+		Write-Verbose "$(Get-Date): Could not find the version information on $($env:ComputerName), testing $($AdminAddress) now"
+		$key = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $AdminAddress)
+		$subKey =  $key.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller")
+		
+		If($Null -eq $subkey)
+		{
+			#something is really wrong
+			Write-Verbose "$(Get-Date): Could not find the version information on $($AdminAddress),`n`nScript cannot continue`n "
+			AbortScript
+		}
+		
+		$value = $subKey.GetValue("DisplayVersion")
+		$Script:XDSiteVersion = $value.Substring(0,4)
+		$tmp = $Script:XDSiteVersion.Split(".")
+		[int]$MajorVersion = $tmp[0]
+		[int]$MinorVersion = $tmp[1]
+	}
+	Else
+	{
+		Write-Verbose "$(Get-Date): Found the version information on $($env:ComputerName)"
+	}
+
 	$value = $subKey.GetValue("DisplayVersion")
 	$Script:XDSiteVersion = $value.Substring(0,3)
 	$tmp = $Script:XDSiteVersion.Split(".")
