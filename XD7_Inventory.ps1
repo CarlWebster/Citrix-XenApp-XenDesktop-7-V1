@@ -1333,20 +1333,20 @@ If($NoPolicies -and $Section -eq "Policies")
 $ValidSection = $False
 Switch ($Section)
 {
-	"Admins" {$ValidSection = $True}
-	"Apps" {$ValidSection = $True}
-	"AppV" {$ValidSection = $True}
-	"Catalogs" {$ValidSection = $True}
-	"Config" {$ValidSection = $True}
-	"Controllers" {$ValidSection = $True}
-	"Groups" {$ValidSection = $True}
-	"Hosting" {$ValidSection = $True}
-	"Licensing" {$ValidSection = $True}
-	"Logging" {$ValidSection = $True; $Logging = $True}	#force $logging true if the config logging section is specified
-	"Policies" {$ValidSection = $True; $Policies = $True} #force $policies true if the policies section is specified
-	"StoreFront" {$ValidSection = $True}
-	"Zones" {$ValidSection = $True}
-	"All" {$ValidSection = $True}
+	"Admins"		{$ValidSection = $True; Break}
+	"Apps"			{$ValidSection = $True; Break}
+	"AppV" 			{$ValidSection = $True; Break}
+	"Catalogs"		{$ValidSection = $True; Break}
+	"Config"		{$ValidSection = $True; Break}
+	"Controllers"	{$ValidSection = $True; Break}
+	"Groups"		{$ValidSection = $True; Break}
+	"Hosting"		{$ValidSection = $True; Break}
+	"Licensing"		{$ValidSection = $True; Break}
+	"Logging"		{$ValidSection = $True; $Logging = $True; Break}	#force $logging true if the config logging section is specified
+	"Policies"		{$ValidSection = $True; $Policies = $True; Break} #force $policies true if the policies section is specified
+	"StoreFront"	{$ValidSection = $True; Break}
+	"Zones"			{$ValidSection = $True; Break}
+	"All"			{$ValidSection = $True; Break}
 }
 
 If($ValidSection -eq $False)
@@ -2020,13 +2020,13 @@ Function OutputDriveItem
 	$xDriveType = ""
 	Switch ($drive.drivetype)
 	{
-		0	{$xDriveType = "Unknown"; Break}
-		1	{$xDriveType = "No Root Directory"; Break}
-		2	{$xDriveType = "Removable Disk"; Break}
-		3	{$xDriveType = "Local Disk"; Break}
-		4	{$xDriveType = "Network Drive"; Break}
-		5	{$xDriveType = "Compact Disc"; Break}
-		6	{$xDriveType = "RAM Disk"; Break}
+		0		{$xDriveType = "Unknown"; Break}
+		1		{$xDriveType = "No Root Directory"; Break}
+		2		{$xDriveType = "Removable Disk"; Break}
+		3		{$xDriveType = "Local Disk"; Break}
+		4		{$xDriveType = "Network Drive"; Break}
+		5		{$xDriveType = "Compact Disc"; Break}
+		6		{$xDriveType = "RAM Disk"; Break}
 		Default {$xDriveType = "Unknown"; Break}
 	}
 	
@@ -2149,23 +2149,23 @@ Function OutputProcessorItem
 	$xAvailability = ""
 	Switch ($processor.availability)
 	{
-		1	{$xAvailability = "Other"; Break}
-		2	{$xAvailability = "Unknown"; Break}
-		3	{$xAvailability = "Running or Full Power"; Break}
-		4	{$xAvailability = "Warning"; Break}
-		5	{$xAvailability = "In Test"; Break}
-		6	{$xAvailability = "Not Applicable"; Break}
-		7	{$xAvailability = "Power Off"; Break}
-		8	{$xAvailability = "Off Line"; Break}
-		9	{$xAvailability = "Off Duty"; Break}
-		10	{$xAvailability = "Degraded"; Break}
-		11	{$xAvailability = "Not Installed"; Break}
-		12	{$xAvailability = "Install Error"; Break}
-		13	{$xAvailability = "Power Save - Unknown"; Break}
-		14	{$xAvailability = "Power Save - Low Power Mode"; Break}
-		15	{$xAvailability = "Power Save - Standby"; Break}
-		16	{$xAvailability = "Power Cycle"; Break}
-		17	{$xAvailability = "Power Save - Warning"; Break}
+		1		{$xAvailability = "Other"; Break}
+		2		{$xAvailability = "Unknown"; Break}
+		3		{$xAvailability = "Running or Full Power"; Break}
+		4		{$xAvailability = "Warning"; Break}
+		5		{$xAvailability = "In Test"; Break}
+		6		{$xAvailability = "Not Applicable"; Break}
+		7		{$xAvailability = "Power Off"; Break}
+		8		{$xAvailability = "Off Line"; Break}
+		9		{$xAvailability = "Off Duty"; Break}
+		10		{$xAvailability = "Degraded"; Break}
+		11		{$xAvailability = "Not Installed"; Break}
+		12		{$xAvailability = "Install Error"; Break}
+		13		{$xAvailability = "Power Save - Unknown"; Break}
+		14		{$xAvailability = "Power Save - Low Power Mode"; Break}
+		15		{$xAvailability = "Power Save - Standby"; Break}
+		16		{$xAvailability = "Power Cycle"; Break}
+		17		{$xAvailability = "Power Save - Warning"; Break}
 		Default	{$xAvailability = "Unknown"; Break}
 	}
 
@@ -2291,23 +2291,23 @@ Function OutputNicItem
 	$xAvailability = ""
 	Switch ($processor.availability)
 	{
-		1	{$xAvailability = "Other"; Break}
-		2	{$xAvailability = "Unknown"; Break}
-		3	{$xAvailability = "Running or Full Power"; Break}
-		4	{$xAvailability = "Warning"; Break}
-		5	{$xAvailability = "In Test"; Break}
-		6	{$xAvailability = "Not Applicable"; Break}
-		7	{$xAvailability = "Power Off"; Break}
-		8	{$xAvailability = "Off Line"; Break}
-		9	{$xAvailability = "Off Duty"; Break}
-		10	{$xAvailability = "Degraded"; Break}
-		11	{$xAvailability = "Not Installed"; Break}
-		12	{$xAvailability = "Install Error"; Break}
-		13	{$xAvailability = "Power Save - Unknown"; Break}
-		14	{$xAvailability = "Power Save - Low Power Mode"; Break}
-		15	{$xAvailability = "Power Save - Standby"; Break}
-		16	{$xAvailability = "Power Cycle"; Break}
-		17	{$xAvailability = "Power Save - Warning"; Break}
+		1		{$xAvailability = "Other"; Break}
+		2		{$xAvailability = "Unknown"; Break}
+		3		{$xAvailability = "Running or Full Power"; Break}
+		4		{$xAvailability = "Warning"; Break}
+		5		{$xAvailability = "In Test"; Break}
+		6		{$xAvailability = "Not Applicable"; Break}
+		7		{$xAvailability = "Power Off"; Break}
+		8		{$xAvailability = "Off Line"; Break}
+		9		{$xAvailability = "Off Duty"; Break}
+		10		{$xAvailability = "Degraded"; Break}
+		11		{$xAvailability = "Not Installed"; Break}
+		12		{$xAvailability = "Install Error"; Break}
+		13		{$xAvailability = "Power Save - Unknown"; Break}
+		14		{$xAvailability = "Power Save - Low Power Mode"; Break}
+		15		{$xAvailability = "Power Save - Standby"; Break}
+		16		{$xAvailability = "Power Cycle"; Break}
+		17		{$xAvailability = "Power Save - Warning"; Break}
 		Default	{$xAvailability = "Unknown"; Break}
 	}
 
@@ -2356,9 +2356,9 @@ Function OutputNicItem
 	$xTcpipNetbiosOptions = ""
 	Switch ($nic.TcpipNetbiosOptions)
 	{
-		0	{$xTcpipNetbiosOptions = "Use NetBIOS setting from DHCP Server"; Break}
-		1	{$xTcpipNetbiosOptions = "Enable NetBIOS"; Break}
-		2	{$xTcpipNetbiosOptions = "Disable NetBIOS"; Break}
+		0		{$xTcpipNetbiosOptions = "Use NetBIOS setting from DHCP Server"; Break}
+		1		{$xTcpipNetbiosOptions = "Enable NetBIOS"; Break}
+		2		{$xTcpipNetbiosOptions = "Disable NetBIOS"; Break}
 		Default	{$xTcpipNetbiosOptions = "Unknown"; Break}
 	}
 	
@@ -5607,24 +5607,24 @@ Function OutputMachines
 
 		Switch ($Catalog.AllocationType)
 		{
-			"Static"	{$xAllocationType = "Permanent"}
-			"Permanent"	{$xAllocationType = "Permanent"}
-			"Random"	{$xAllocationType = "Random"}
-			Default	{$xAllocationType = "Allocation type could not be determined: $($Catalog.AllocationType)"}
+			"Static"	{$xAllocationType = "Permanent"; Break}
+			"Permanent"	{$xAllocationType = "Permanent"; Break}
+			"Random"	{$xAllocationType = "Random"; Break}
+			Default	{$xAllocationType = "Allocation type could not be determined: $($Catalog.AllocationType)"; Break}
 		}
 		Switch ($Catalog.PersistUserChanges)
 		{
-			"OnLocal" {$xPersistType = "On local disk"}
-			"Discard" {$xPersistType = "Discard"}
-			"OnPvd"   {$xPersistType = "On Personal vDisk"}
-			Default   {$xPersistType = "User data could not be determined: $($Catalog.PersistUserChanges)"}
+			"OnLocal" {$xPersistType = "On local disk"; Break}
+			"Discard" {$xPersistType = "Discard"; Break}
+			"OnPvd"   {$xPersistType = "On Personal vDisk"; Break}
+			Default   {$xPersistType = "User data could not be determined: $($Catalog.PersistUserChanges)"; Break}
 		}
 		Switch ($Catalog.ProvisioningType)
 		{
-			"Manual" {$xProvisioningType = "No provisioning"}
-			"PVS"    {$xProvisioningType = "Provisioning Services"}
-			"MCS"    {$xProvisioningType = "Machine creation services"}
-			Default  {$xProvisioningType = "Provisioning method could not be determined: $($Catalog.ProvisioningType)"}
+			"Manual" {$xProvisioningType = "No provisioning"; Break}
+			"PVS"    {$xProvisioningType = "Provisioning Services"; Break}
+			"MCS"    {$xProvisioningType = "Machine creation services"; Break}
+			Default  {$xProvisioningType = "Provisioning method could not be determined: $($Catalog.ProvisioningType)"; Break}
 		}
 
 		$Machines = Get-BrokerMachine @XDParams2 -CatalogName $Catalog.Name -SortBy DNSName 
@@ -5754,32 +5754,32 @@ Function OutputMachines
 
 		Switch ($Catalog.AllocationType)
 		{
-			"Static"	{$xAllocationType = "Permanent"}
-			"Permanent"	{$xAllocationType = "Permanent"}
-			"Random"	{$xAllocationType = "Random"}
-			Default	{$xAllocationType = "Allocation type could not be determined: $($Catalog.AllocationType)"}
+			"Static"	{$xAllocationType = "Permanent"; Break}
+			"Permanent"	{$xAllocationType = "Permanent"; Break}
+			"Random"	{$xAllocationType = "Random"; Break}
+			Default	{$xAllocationType = "Allocation type could not be determined: $($Catalog.AllocationType)"; Break}
 		}
 		Switch ($Catalog.PersistUserChanges)
 		{
-			"OnLocal" {$xPersistType = "On local disk"}
-			"Discard" {$xPersistType = "Discard"}
-			"OnPvd"   {$xPersistType = "On Personal vDisk"}
-			Default   {$xPersistType = "User data could not be determined: $($Catalog.PersistUserChanges)"}
+			"OnLocal" {$xPersistType = "On local disk"; Break}
+			"Discard" {$xPersistType = "Discard"; Break}
+			"OnPvd"   {$xPersistType = "On Personal vDisk"; Break}
+			Default   {$xPersistType = "User data could not be determined: $($Catalog.PersistUserChanges)"; Break}
 		}
 		Switch ($Catalog.ProvisioningType)
 		{
-			"Manual" {$xProvisioningType = "No provisioning"}
-			"PVS"    {$xProvisioningType = "Provisioning Services"}
-			"MCS"    {$xProvisioningType = "Machine creation services"}
-			Default  {$xProvisioningType = "Provisioning method could not be determined: $($Catalog.ProvisioningType)"}
+			"Manual" {$xProvisioningType = "No provisioning"; Break}
+			"PVS"    {$xProvisioningType = "Provisioning Services"; Break}
+			"MCS"    {$xProvisioningType = "Machine creation services"; Break}
+			Default  {$xProvisioningType = "Provisioning method could not be determined: $($Catalog.ProvisioningType)"; Break}
 		}
 		Switch ($Catalog.MinimumFunctionalLevel)
 		{
-			"L5" 	{$xVDAVersion = "5.6 FP1 (Windows XP and Windows Vista)"}
-			"L7"	{$xVDAVersion = "7.0 (or newer)"}
-			"L7_6"	{$xVDAVersion = "7.6 (or newer)"}
-			"L7_7"	{$xVDAVersion = "7.7 (recommended, to access the latest features)"}
-			Default {"Unable to determine VDA version: $($Catalog.MinimumFunctionalLevel)"}
+			"L5" 	{$xVDAVersion = "5.6 FP1 (Windows XP and Windows Vista)"; Break}
+			"L7"	{$xVDAVersion = "7.0 (or newer)"; Break}
+			"L7_6"	{$xVDAVersion = "7.6 (or newer)"; Break}
+			"L7_7"	{$xVDAVersion = "7.7 (recommended, to access the latest features)"; Break}
+			Default {"Unable to determine VDA version: $($Catalog.MinimumFunctionalLevel)"; Break}
 		}
 
 		If($Catalog.ProvisioningType -eq "Manual" -and $Catalog.IsRemotePC -eq $True)
@@ -6619,45 +6619,45 @@ Function OutputMachineDetails
 	$xLastDeregistrationReason = ""
 	Switch ($Machine.LastDeregistrationReason)
 	{
-		$Null							{$xLastDeregistrationReason = ""}
-		"AgentAddressResolutionFailed"		{$xLastDeregistrationReason = "Agent Address Resolution Failed"}
-		"AgentNotContactable"				{$xLastDeregistrationReason = "Agent Not Contactable"}
-		"AgentRejectedSettingsUpdate"			{$xLastDeregistrationReason = "Agent Rejected Settings Update"}
-		"AgentRequested"					{$xLastDeregistrationReason = "Agent Requested"}
-		"AgentShutdown"					{$xLastDeregistrationReason = "Agent Shutdown"}
-		"AgentSuspended"					{$xLastDeregistrationReason = "Agent Suspended"}
-		"AgentWrongActiveDirectoryOU"			{$xLastDeregistrationReason = "Agent Wrong Active Directory OU"}
-		"BrokerRegistrationLimitReached"		{$xLastDeregistrationReason = "Broker Registration Limit Reached"}
-		"ContactLost"					{$xLastDeregistrationReason = "Contact Lost"}
-		"DesktopRemoved"					{$xLastDeregistrationReason = "Desktop Removed"}
-		"DesktopRestart"					{$xLastDeregistrationReason = "Desktop Restart"}
-		"EmptyRegistrationRequest"			{$xLastDeregistrationReason = "Empty Registration Request"}
-		"FunctionalLevelTooLowForCatalog"		{$xLastDeregistrationReason = "Functional Level Too Low For Catalog"}
-		"FunctionalLevelTooLowForDesktopGroup"	{$xLastDeregistrationReason = "Functional Level Too Low For Desktop Group"}
-		"IncompatibleVersion"				{$xLastDeregistrationReason = "Incompatible Version"}
-		"InconsistentRegistrationCapabilities"	{$xLastDeregistrationReason = "Inconsistent Registration Capabilities"}
-		"InvalidRegistrationRequest"			{$xLastDeregistrationReason = "Invalid Registration Request"}
-		"MissingAgentVersion"				{$xLastDeregistrationReason = "Missing Agent Version"}
-		"MissingRegistrationCapabilities"		{$xLastDeregistrationReason = "Missing Registration Capabilities"}
-		"NotLicensedForFeature"				{$xLastDeregistrationReason = "Not Licensed For Feature"}
-		"PowerOff"						{$xLastDeregistrationReason = "Power Off"}
-		"SendSettingsFailure"				{$xLastDeregistrationReason = "Send Settings Failure"}
-		"SessionAuditFailure"				{$xLastDeregistrationReason = "Session Audit Failure"}
-		"SessionPrepareFailure"				{$xLastDeregistrationReason = "Session Prepare Failure"}
-		"SettingsCreationFailure"			{$xLastDeregistrationReason = "Settings Creation Failure"}
-		"SingleMultiSessionMismatch"			{$xLastDeregistrationReason = "Single Multi Session Mismatch"}
-		"UnknownError"					{$xLastDeregistrationReason = "Unknown Error"}
-		"UnsupportedCredentialSecurityVersion"	{$xLastDeregistrationReason = "Unsupported Credential Security Version"} 
-		Default {$xLastDeregistrationReason = "Unable to determine LastDeregistrationReason: $($Machine.LastDeregistrationReason)"}
+		$Null									{$xLastDeregistrationReason = ""; Break}
+		"AgentAddressResolutionFailed"			{$xLastDeregistrationReason = "Agent Address Resolution Failed"; Break}
+		"AgentNotContactable"					{$xLastDeregistrationReason = "Agent Not Contactable"; Break}
+		"AgentRejectedSettingsUpdate"			{$xLastDeregistrationReason = "Agent Rejected Settings Update"; Break}
+		"AgentRequested"						{$xLastDeregistrationReason = "Agent Requested"; Break}
+		"AgentShutdown"							{$xLastDeregistrationReason = "Agent Shutdown"; Break}
+		"AgentSuspended"						{$xLastDeregistrationReason = "Agent Suspended"; Break}
+		"AgentWrongActiveDirectoryOU"			{$xLastDeregistrationReason = "Agent Wrong Active Directory OU"; Break}
+		"BrokerRegistrationLimitReached"		{$xLastDeregistrationReason = "Broker Registration Limit Reached"; Break}
+		"ContactLost"							{$xLastDeregistrationReason = "Contact Lost"; Break}
+		"DesktopRemoved"						{$xLastDeregistrationReason = "Desktop Removed"; Break}
+		"DesktopRestart"						{$xLastDeregistrationReason = "Desktop Restart"; Break}
+		"EmptyRegistrationRequest"				{$xLastDeregistrationReason = "Empty Registration Request"; Break}
+		"FunctionalLevelTooLowForCatalog"		{$xLastDeregistrationReason = "Functional Level Too Low For Catalog"; Break}
+		"FunctionalLevelTooLowForDesktopGroup"	{$xLastDeregistrationReason = "Functional Level Too Low For Desktop Group"; Break}
+		"IncompatibleVersion"					{$xLastDeregistrationReason = "Incompatible Version"; Break}
+		"InconsistentRegistrationCapabilities"	{$xLastDeregistrationReason = "Inconsistent Registration Capabilities"; Break}
+		"InvalidRegistrationRequest"			{$xLastDeregistrationReason = "Invalid Registration Request"; Break}
+		"MissingAgentVersion"					{$xLastDeregistrationReason = "Missing Agent Version"; Break}
+		"MissingRegistrationCapabilities"		{$xLastDeregistrationReason = "Missing Registration Capabilities"; Break}
+		"NotLicensedForFeature"					{$xLastDeregistrationReason = "Not Licensed For Feature"; Break}
+		"PowerOff"								{$xLastDeregistrationReason = "Power Off"; Break}
+		"SendSettingsFailure"					{$xLastDeregistrationReason = "Send Settings Failure"; Break}
+		"SessionAuditFailure"					{$xLastDeregistrationReason = "Session Audit Failure"; Break}
+		"SessionPrepareFailure"					{$xLastDeregistrationReason = "Session Prepare Failure"; Break}
+		"SettingsCreationFailure"				{$xLastDeregistrationReason = "Settings Creation Failure"; Break}
+		"SingleMultiSessionMismatch"			{$xLastDeregistrationReason = "Single Multi Session Mismatch"; Break}
+		"UnknownError"							{$xLastDeregistrationReason = "Unknown Error"; Break}
+		"UnsupportedCredentialSecurityVersion"	{$xLastDeregistrationReason = "Unsupported Credential Security Version"; Break} 
+		Default {$xLastDeregistrationReason = "Unable to determine LastDeregistrationReason: $($Machine.LastDeregistrationReason)"; Break}
 	}
 
 	$xPersistUserChanges = ""
 	Switch ($Machine.PersistUserChanges)
 	{
-		"OnLocal" {$xPersistUserChanges = "On Local"}
-		"Discard" {$xPersistUserChanges = "Discard"}
-		"OnPvD"   {$xPersistUserChanges = "On Personal vDisk"}
-		Default {$xPersistUserChanges = "Unable to determine the value of PersistUserChanges: $($Machine.PersistUserChanges)"}
+		"OnLocal" {$xPersistUserChanges = "On Local"; Break}
+		"Discard" {$xPersistUserChanges = "Discard"; Break}
+		"OnPvD"   {$xPersistUserChanges = "On Personal vDisk"; Break}
+		Default {$xPersistUserChanges = "Unable to determine the value of PersistUserChanges: $($Machine.PersistUserChanges)"; Break}
 	}
 
 	$xWillShutdownAfterUse = ""
@@ -7352,11 +7352,11 @@ Function OutputServerMachineDetails
 	$xWindowsConnectionSetting = ""
 	Switch ($Machine.WindowsConnectionSetting)
 	{
-		"LogonEnabled"			{$xWindowsConnectionSetting = "Logon enabled"}
-		"Draining"				{$xWindowsConnectionSetting = "Draining"}
-		"DrainingUntilRestart"	{$xWindowsConnectionSetting = "Draining until restart"}
-		"LogonDisabled"			{$xWindowsConnectionSetting = "Logon disabled"}
-		Default	{$xWindowsConnectionSetting = "Unable to determine WindowsConnectionString: $($Machine.WindowsConnectionSetting)"}
+		"LogonEnabled"			{$xWindowsConnectionSetting = "Logon enabled"; Break}
+		"Draining"				{$xWindowsConnectionSetting = "Draining"; Break}
+		"DrainingUntilRestart"	{$xWindowsConnectionSetting = "Draining until restart"; Break}
+		"LogonDisabled"			{$xWindowsConnectionSetting = "Logon disabled"; Break}
+		Default	{$xWindowsConnectionSetting = "Unable to determine WindowsConnectionString: $($Machine.WindowsConnectionSetting)"; Break}
 	}
 
 	$xIsPhysical = ""
@@ -7420,45 +7420,45 @@ Function OutputServerMachineDetails
 	$xLastDeregistrationReason = ""
 	Switch ($Machine.LastDeregistrationReason)
 	{
-		$Null									{$xLastDeregistrationReason = ""}
-		"AgentAddressResolutionFailed"			{$xLastDeregistrationReason = "Agent Address Resolution Failed"}
-		"AgentNotContactable"					{$xLastDeregistrationReason = "Agent Not Contactable"}
-		"AgentRejectedSettingsUpdate"			{$xLastDeregistrationReason = "Agent Rejected Settings Update"}
-		"AgentRequested"						{$xLastDeregistrationReason = "Agent Requested"}
-		"AgentShutdown"							{$xLastDeregistrationReason = "Agent Shutdown"}
-		"AgentSuspended"						{$xLastDeregistrationReason = "Agent Suspended"}
-		"AgentWrongActiveDirectoryOU"			{$xLastDeregistrationReason = "Agent Wrong Active Directory OU"}
-		"BrokerRegistrationLimitReached"		{$xLastDeregistrationReason = "Broker Registration Limit Reached"}
-		"ContactLost"							{$xLastDeregistrationReason = "Contact Lost"}
-		"DesktopRemoved"						{$xLastDeregistrationReason = "Desktop Removed"}
-		"DesktopRestart"						{$xLastDeregistrationReason = "Desktop Restart"}
-		"EmptyRegistrationRequest"				{$xLastDeregistrationReason = "Empty Registration Request"}
-		"FunctionalLevelTooLowForCatalog"		{$xLastDeregistrationReason = "Functional Level Too Low For Catalog"}
-		"FunctionalLevelTooLowForDesktopGroup"	{$xLastDeregistrationReason = "Functional Level Too Low For Desktop Group"}
-		"IncompatibleVersion"					{$xLastDeregistrationReason = "Incompatible Version"}
-		"InconsistentRegistrationCapabilities"	{$xLastDeregistrationReason = "Inconsistent Registration Capabilities"}
-		"InvalidRegistrationRequest"			{$xLastDeregistrationReason = "Invalid Registration Request"}
-		"MissingAgentVersion"					{$xLastDeregistrationReason = "Missing Agent Version"}
-		"MissingRegistrationCapabilities"		{$xLastDeregistrationReason = "Missing Registration Capabilities"}
-		"NotLicensedForFeature"					{$xLastDeregistrationReason = "Not Licensed For Feature"}
-		"PowerOff"								{$xLastDeregistrationReason = "Power Off"}
-		"SendSettingsFailure"					{$xLastDeregistrationReason = "Send Settings Failure"}
-		"SessionAuditFailure"					{$xLastDeregistrationReason = "Session Audit Failure"}
-		"SessionPrepareFailure"					{$xLastDeregistrationReason = "Session Prepare Failure"}
-		"SettingsCreationFailure"				{$xLastDeregistrationReason = "Settings Creation Failure"}
-		"SingleMultiSessionMismatch"			{$xLastDeregistrationReason = "Single Multi Session Mismatch"}
-		"UnknownError"							{$xLastDeregistrationReason = "Unknown Error"}
-		"UnsupportedCredentialSecurityVersion"	{$xLastDeregistrationReason = "Unsupported Credential Security Version"} 
-		Default {$xLastDeregistrationReason = "Unable to determine LastDeregistrationReason: $($Machine.LastDeregistrationReason)"}
+		$Null									{$xLastDeregistrationReason = ""; Break}
+		"AgentAddressResolutionFailed"			{$xLastDeregistrationReason = "Agent Address Resolution Failed"; Break}
+		"AgentNotContactable"					{$xLastDeregistrationReason = "Agent Not Contactable"; Break}
+		"AgentRejectedSettingsUpdate"			{$xLastDeregistrationReason = "Agent Rejected Settings Update"; Break}
+		"AgentRequested"						{$xLastDeregistrationReason = "Agent Requested"; Break}
+		"AgentShutdown"							{$xLastDeregistrationReason = "Agent Shutdown"; Break}
+		"AgentSuspended"						{$xLastDeregistrationReason = "Agent Suspended"; Break}
+		"AgentWrongActiveDirectoryOU"			{$xLastDeregistrationReason = "Agent Wrong Active Directory OU"; Break}
+		"BrokerRegistrationLimitReached"		{$xLastDeregistrationReason = "Broker Registration Limit Reached"; Break}
+		"ContactLost"							{$xLastDeregistrationReason = "Contact Lost"; Break}
+		"DesktopRemoved"						{$xLastDeregistrationReason = "Desktop Removed"; Break}
+		"DesktopRestart"						{$xLastDeregistrationReason = "Desktop Restart"; Break}
+		"EmptyRegistrationRequest"				{$xLastDeregistrationReason = "Empty Registration Request"; Break}
+		"FunctionalLevelTooLowForCatalog"		{$xLastDeregistrationReason = "Functional Level Too Low For Catalog"; Break}
+		"FunctionalLevelTooLowForDesktopGroup"	{$xLastDeregistrationReason = "Functional Level Too Low For Desktop Group"; Break}
+		"IncompatibleVersion"					{$xLastDeregistrationReason = "Incompatible Version"; Break}
+		"InconsistentRegistrationCapabilities"	{$xLastDeregistrationReason = "Inconsistent Registration Capabilities"; Break}
+		"InvalidRegistrationRequest"			{$xLastDeregistrationReason = "Invalid Registration Request"; Break}
+		"MissingAgentVersion"					{$xLastDeregistrationReason = "Missing Agent Version"; Break}
+		"MissingRegistrationCapabilities"		{$xLastDeregistrationReason = "Missing Registration Capabilities"; Break}
+		"NotLicensedForFeature"					{$xLastDeregistrationReason = "Not Licensed For Feature"; Break}
+		"PowerOff"								{$xLastDeregistrationReason = "Power Off"; Break}
+		"SendSettingsFailure"					{$xLastDeregistrationReason = "Send Settings Failure"; Break}
+		"SessionAuditFailure"					{$xLastDeregistrationReason = "Session Audit Failure"; Break}
+		"SessionPrepareFailure"					{$xLastDeregistrationReason = "Session Prepare Failure"; Break}
+		"SettingsCreationFailure"				{$xLastDeregistrationReason = "Settings Creation Failure"; Break}
+		"SingleMultiSessionMismatch"			{$xLastDeregistrationReason = "Single Multi Session Mismatch"; Break}
+		"UnknownError"							{$xLastDeregistrationReason = "Unknown Error"; Break}
+		"UnsupportedCredentialSecurityVersion"	{$xLastDeregistrationReason = "Unsupported Credential Security Version"; Break} 
+		Default {$xLastDeregistrationReason = "Unable to determine LastDeregistrationReason: $($Machine.LastDeregistrationReason)"; Break}
 	}
 
 	$xPersistUserChanges = ""
 	Switch ($Machine.PersistUserChanges)
 	{
-		"OnLocal" {$xPersistUserChanges = "On Local"}
-		"Discard" {$xPersistUserChanges = "Discard"}
-		"OnPvD"   {$xPersistUserChanges = "On Personal vDisk"}
-		Default {$xPersistUserChanges = "Unable to determine the value of PersistUserChanges: $($Machine.PersistUserChanges)"}
+		"OnLocal" {$xPersistUserChanges = "On Local"; Break}
+		"Discard" {$xPersistUserChanges = "Discard"; Break}
+		"OnPvD"   {$xPersistUserChanges = "On Personal vDisk"; Break}
+		Default {$xPersistUserChanges = "Unable to determine the value of PersistUserChanges: $($Machine.PersistUserChanges)"; Break}
 	}
 
 	$xWillShutdownAfterUse = ""
@@ -8662,20 +8662,20 @@ Function OutputDeliveryGroupDetails
 	$xDeliveryType = ""
 	Switch ($Group.DeliveryType)
 	{
-		"DesktopsOnly"	{$xDeliveryType = "Desktops"}
-		"AppsOnly"		{$xDeliveryType = "Applications"}
-		"DesktopsAndApps"	{$xDeliveryType = "Desktops and applications"}
-		Default	{"Delivery Type could not be determined: $($Group.DeliveryType)"}
+		"DesktopsOnly"	{$xDeliveryType = "Desktops"; Break}
+		"AppsOnly"		{$xDeliveryType = "Applications"; Break}
+		"DesktopsAndApps"	{$xDeliveryType = "Desktops and applications"; Break}
+		Default	{"Delivery Type could not be determined: $($Group.DeliveryType)"; Break}
 	}
 		
 	$xVDAVersion = ""
 	Switch ($Group.MinimumFunctionalLevel)
 	{
-		"L5" 	{$xVDAVersion = "5.6 FP1 (Windows XP and Windows Vista)"}
-		"L7"	{$xVDAVersion = "7.0 (or newer)"}
-		"L7_6"	{$xVDAVersion = "7.6 (or newer)"}
-		"L7_7"	{$xVDAVersion = "7.7 (recommended, to access the latest features)"}
-		Default {"Unable to determine VDA version: $($Group.MinimumFunctionalLevel)"}
+		"L5" 	{$xVDAVersion = "5.6 FP1 (Windows XP and Windows Vista)"; Break}
+		"L7"	{$xVDAVersion = "7.0 (or newer)"; Break}
+		"L7_6"	{$xVDAVersion = "7.6 (or newer)"; Break}
+		"L7_7"	{$xVDAVersion = "7.7 (recommended, to access the latest features)"; Break}
+		Default {"Unable to determine VDA version: $($Group.MinimumFunctionalLevel)"; Break}
 	}
 	
 	$xColorDepth = ""
@@ -8894,50 +8894,50 @@ Function OutputDeliveryGroupDetails
 
 	Switch ($Group.OffPeakDisconnectAction)
 	{
-		"Nothing"	{ $xOffPeakDisconnectAction = "No action"}
-		"Suspend"	{ $xOffPeakDisconnectAction = "Suspend"}
-		"Shutdown"	{ $xOffPeakDisconnectAction = "Shut down"}
-		Default	{ $xOffPeakDisconnectAction = "Unable to determine the OffPeakDisconnectAction action: $($Group.OffPeakDisconnectAction)"}
+		"Nothing"	{ $xOffPeakDisconnectAction = "No action"; Break}
+		"Suspend"	{ $xOffPeakDisconnectAction = "Suspend"; Break}
+		"Shutdown"	{ $xOffPeakDisconnectAction = "Shut down"; Break}
+		Default	{ $xOffPeakDisconnectAction = "Unable to determine the OffPeakDisconnectAction action: $($Group.OffPeakDisconnectAction)"; Break}
 	}
 	
 	Switch ($Group.OffPeakExtendedDisconnectAction)
 	{
-		"Nothing"	{ $xOffPeakExtendedDisconnectAction = "No action"}
-		"Suspend"	{ $xOffPeakExtendedDisconnectAction = "Suspend"}
-		"Shutdown"	{ $xOffPeakExtendedDisconnectAction = "Shut down"}
-		Default	{ $xOffPeakExtendedDisconnectAction = "Unable to determine the OffPeakExtendedDisconnectAction action: $($Group.OffPeakExtendedDisconnectAction)"}
+		"Nothing"	{ $xOffPeakExtendedDisconnectAction = "No action"; Break}
+		"Suspend"	{ $xOffPeakExtendedDisconnectAction = "Suspend"; Break}
+		"Shutdown"	{ $xOffPeakExtendedDisconnectAction = "Shut down"; Break}
+		Default	{ $xOffPeakExtendedDisconnectAction = "Unable to determine the OffPeakExtendedDisconnectAction action: $($Group.OffPeakExtendedDisconnectAction)"; Break}
 	}
 	
 	Switch ($Group.OffPeakLogOffAction)
 	{
-		"Nothing"	{ $xOffPeakLogOffAction = "No action"}
-		"Suspend"	{ $xOffPeakLogOffAction = "Suspend"}
-		"Shutdown"	{ $xOffPeakLogOffAction = "Shut down"}
-		Default	{ $xOffPeakLogOffAction = "Unable to determine $xOffPeakLogOffAction action: $($Group.OffPeakLogOffAction)"}
+		"Nothing"	{ $xOffPeakLogOffAction = "No action"; Break}
+		"Suspend"	{ $xOffPeakLogOffAction = "Suspend"; Break}
+		"Shutdown"	{ $xOffPeakLogOffAction = "Shut down"; Break}
+		Default	{ $xOffPeakLogOffAction = "Unable to determine $xOffPeakLogOffAction action: $($Group.OffPeakLogOffAction)"; Break}
 	}
 	
 	Switch ($Group.PeakDisconnectAction)
 	{
-		"Nothing"	{ $xPeakDisconnectAction = "No action"}
-		"Suspend"	{ $xPeakDisconnectAction = "Suspend"}
-		"Shutdown"	{ $xPeakDisconnectAction = "Shut down"}
-		Default	{ $xPeakDisconnectAction = "Unable to determine $xPeakDisconnectAction action: $($Group.PeakDisconnectAction)"}
+		"Nothing"	{ $xPeakDisconnectAction = "No action"; Break}
+		"Suspend"	{ $xPeakDisconnectAction = "Suspend"; Break}
+		"Shutdown"	{ $xPeakDisconnectAction = "Shut down"; Break}
+		Default	{ $xPeakDisconnectAction = "Unable to determine $xPeakDisconnectAction action: $($Group.PeakDisconnectAction)"; Break}
 	}
 	
 	Switch ($Group.PeakExtendedDisconnectAction)
 	{
-		"Nothing"	{ $xPeakExtendedDisconnectAction = "No action"}
-		"Suspend"	{ $xPeakExtendedDisconnectAction = "Suspend"}
-		"Shutdown"	{ $xPeakExtendedDisconnectAction = "Shut down"}
-		Default	{ $xPeakExtendedDisconnectAction = "Unable to determine $xPeakExtendedDisconnectAction action: $($Group.PeakExtendedDisconnectAction)"}
+		"Nothing"	{ $xPeakExtendedDisconnectAction = "No action"; Break}
+		"Suspend"	{ $xPeakExtendedDisconnectAction = "Suspend"; Break}
+		"Shutdown"	{ $xPeakExtendedDisconnectAction = "Shut down"; Break}
+		Default	{ $xPeakExtendedDisconnectAction = "Unable to determine $xPeakExtendedDisconnectAction action: $($Group.PeakExtendedDisconnectAction)"; Break}
 	}
 	
 	Switch ($Group.PeakLogOffAction)
 	{
-		"Nothing"	{ $xPeakLogOffAction = "No action"}
-		"Suspend"	{ $xPeakLogOffAction = "Suspend"}
-		"Shutdown"	{ $xPeakLogOffAction = "Shut down"}
-		Default	{ $xPeakLogOffAction = "Unable to determine PeakLogOffAction action: $($Group.PeakLogOffAction)"}
+		"Nothing"	{ $xPeakLogOffAction = "No action"; Break}
+		"Suspend"	{ $xPeakLogOffAction = "Suspend"; Break}
+		"Shutdown"	{ $xPeakLogOffAction = "Shut down"; Break}
+		Default	{ $xPeakLogOffAction = "Unable to determine PeakLogOffAction action: $($Group.PeakLogOffAction)"; Break}
 	}
 
 	$xEnabled = "Disabled"
@@ -10211,10 +10211,10 @@ Function OutputDeliveryGroupCatalogs
 			{
 				Switch ($Catalog.AllocationType)
 				{
-					"Static"	{$xAllocationType = "Permanent"}
-					"Permanent"	{$xAllocationType = "Permanent"}
-					"Random"	{$xAllocationType = "Random"}
-					Default	{$xAllocationType = "Allocation type could not be determined: $($Catalog.AllocationType)"}
+					"Static"	{$xAllocationType = "Permanent"; Break}
+					"Permanent"	{$xAllocationType = "Permanent"; Break}
+					"Random"	{$xAllocationType = "Random"; Break}
+					Default	{$xAllocationType = "Allocation type could not be determined: $($Catalog.AllocationType)"; Break}
 				}
 				
 				If($MSWord -or $PDF)
@@ -12555,10 +12555,10 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FlashDefaultBehavior.Value)
 						{
-							"Block"   {$tmp = "Block Flash player"}
-							"Disable" {$tmp = "Disable Flash acceleration"}
-							"Enable"  {$tmp = "Enable Flash acceleration"}
-							Default {$tmp = "Flash Default behavior could not be determined: $($Setting.FlashDefaultBehavior.Value)"}
+							"Block"   {$tmp = "Block Flash player"; Break}
+							"Disable" {$tmp = "Disable Flash acceleration"; Break}
+							"Enable"  {$tmp = "Enable Flash acceleration"; Break}
+							Default {$tmp = "Flash Default behavior could not be determined: $($Setting.FlashDefaultBehavior.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -12876,10 +12876,10 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.HDXFlashLoadManagement.Value)
 						{
-							"Small"   {$tmp = "Only small content"}
-							"SmallContentWRedirection" {$tmp = "Only small content with a supported client"}
-							"NoServerSide"  {$tmp = "No server side content"}
-							Default {$tmp = "Flash video fallback prevention could not be determined: $($Setting.HDXFlashLoadManagement.Value)"}
+							"Small"   {$tmp = "Only small content"; Break}
+							"SmallContentWRedirection" {$tmp = "Only small content with a supported client"; Break}
+							"NoServerSide"  {$tmp = "No server side content"; Break}
+							Default {$tmp = "Flash video fallback prevention could not be determined: $($Setting.HDXFlashLoadManagement.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -12976,10 +12976,10 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.AudioQuality.Value)
 						{
-							"Low"    {$tmp = "Low - for low-speed connections"}
-							"Medium" {$tmp = "Medium - optimized for speech"}
-							"High"   {$tmp = "High - high definition audio"}
-							Default {$tmp = "Audio quality could not be determined: $($Setting.AudioQuality.Value)"}
+							"Low"    {$tmp = "Low - for low-speed connections"; Break}
+							"Medium" {$tmp = "Medium - optimized for speech"; Break}
+							"High"   {$tmp = "High - high definition audio"; Break}
+							Default {$tmp = "Audio quality could not be determined: $($Setting.AudioQuality.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -13076,9 +13076,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.AutoClientReconnectAuthenticationRequired.Value)
 						{
-							"DoNotRequireAuthentication" {$tmp = "Do not require authentication"}
-							"RequireAuthentication"      {$tmp = "Require authentication"}
-							Default {$tmp = "Auto client reconnect authentication could not be determined: $($Setting.AutoClientReconnectAuthenticationRequired.Value)"}
+							"DoNotRequireAuthentication" {$tmp = "Do not require authentication"; Break}
+							"RequireAuthentication"      {$tmp = "Require authentication"; Break}
+							Default {$tmp = "Auto client reconnect authentication could not be determined: $($Setting.AutoClientReconnectAuthenticationRequired.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -13106,9 +13106,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.AutoClientReconnectLogging.Value)
 						{
-							"DoNotLogAutoReconnectEvents" {$tmp = "Do Not Log auto-reconnect events"}
-							"LogAutoReconnectEvents"      {$tmp = "Log auto-reconnect events"}
-							Default {$tmp = "Auto client reconnect logging could not be determined: $($Setting.AutoClientReconnectLogging.Value)"}
+							"DoNotLogAutoReconnectEvents" {$tmp = "Do Not Log auto-reconnect events"; Break}
+							"LogAutoReconnectEvents"      {$tmp = "Log auto-reconnect events"; Break}
+							Default {$tmp = "Auto client reconnect logging could not be determined: $($Setting.AutoClientReconnectLogging.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -14162,9 +14162,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.DisplayDegradePreference.Value)
 						{
-							"ColorDepth" {$tmp = "Degrade color depth first"}
-							"Resolution" {$tmp = "Degrade resolution first"}
-							Default {$tmp = "Display mode degrade preference could not be determined: $($Setting.DisplayDegradePreference.Value)"}
+							"ColorDepth" {$tmp = "Degrade color depth first"; Break}
+							"Resolution" {$tmp = "Degrade resolution first"; Break}
+							Default {$tmp = "Display mode degrade preference could not be determined: $($Setting.DisplayDegradePreference.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -14461,9 +14461,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.IcaKeepAlives.Value)
 						{
-							"DoNotSendKeepAlives" {$tmp = "Do not send ICA keep alive messages"}
-							"SendKeepAlives"      {$tmp = "Send ICA keep alive messages"}
-							Default {$tmp = "ICA keep alives could not be determined: $($Setting.IcaKeepAlives.Value)"}
+							"DoNotSendKeepAlives" {$tmp = "Do not send ICA keep alive messages"; Break}
+							"SendKeepAlives"      {$tmp = "Send ICA keep alive messages"; Break}
+							Default {$tmp = "ICA keep alives could not be determined: $($Setting.IcaKeepAlives.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -14877,10 +14877,10 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.VideoLoadManagement.Value)
 						{
-							"SFSR" {$tmp = "Play all content"}
-							"SFCR" {$tmp = "Play all content only on client"}
-							"CFCR" {$tmp = "Play only client-accessible content on client"}
-							Default {$tmp = "Windows media fallback prevention could not be determined: $($Setting.VideoLoadManagement.Value)"}
+							"SFSR" {$tmp = "Play all content"; Break}
+							"SFCR" {$tmp = "Play all content only on client"; Break}
+							"CFCR" {$tmp = "Play only client-accessible content on client"; Break}
+							Default {$tmp = "Windows media fallback prevention could not be determined: $($Setting.VideoLoadManagement.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -15044,24 +15044,24 @@ Function ProcessCitrixPolicies
 							$cgpport3 = $cgpport3.substring(0, $cgpport3.indexof(","))
 							Switch ($cgpport1priority)
 							{
-								"0"	{$Port1Priority = "Very High"}
-								"2"	{$Port1Priority = "Medium"}
-								"3"	{$Port1Priority = "Low"}
-								Default	{$Port1Priority = "Unknown"}
+								"0"	{$Port1Priority = "Very High"; Break}
+								"2"	{$Port1Priority = "Medium"; Break}
+								"3"	{$Port1Priority = "Low"; Break}
+								Default	{$Port1Priority = "Unknown"; Break}
 							}
 							Switch ($cgpport2priority)
 							{
-								"0"	{$Port2Priority = "Very High"}
-								"2"	{$Port2Priority = "Medium"}
-								"3"	{$Port2Priority = "Low"}
-								Default	{$Port2Priority = "Unknown"}
+								"0"	{$Port2Priority = "Very High"; Break}
+								"2"	{$Port2Priority = "Medium"; Break}
+								"3"	{$Port2Priority = "Low"; Break}
+								Default	{$Port2Priority = "Unknown"; Break}
 							}
 							Switch ($cgpport3priority)
 							{
-								"0"	{$Port3Priority = "Very High"}
-								"2"	{$Port3Priority = "Medium"}
-								"3"	{$Port3Priority = "Low"}
-								Default	{$Port3Priority = "Unknown"}
+								"0"	{$Port3Priority = "Very High"; Break}
+								"2"	{$Port3Priority = "Medium"; Break}
+								"3"	{$Port3Priority = "Low"; Break}
+								Default	{$Port3Priority = "Unknown"; Break}
 							}
 							$txt1 = "ICA\MultiStream Connections\Multi-Port Policy\CGP port1"
 							$txt2 = "ICA\MultiStream Connections\Multi-Port Policy\CGP port1 priority"
@@ -15324,9 +15324,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.DefaultClientPrinter.Value)
 						{
-							"ClientDefault" {$tmp = "Set Default printer to the client's main printer"}
-							"DoNotAdjust"   {$tmp = "Do not adjust the user's Default printer"}
-							Default {$tmp = "Default printer could not be determined: $($Setting.DefaultClientPrinter.Value)"}
+							"ClientDefault" {$tmp = "Set Default printer to the client's main printer"; Break}
+							"DoNotAdjust"   {$tmp = "Do not adjust the user's Default printer"; Break}
+							Default {$tmp = "Default printer could not be determined: $($Setting.DefaultClientPrinter.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -15462,10 +15462,10 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.AutoCreationEventLogPreference.Value)
 						{
-							"LogErrorsOnly"        {$tmp = "Log errors only"}
-							"LogErrorsAndWarnings" {$tmp = "Log errors and warnings"}
-							"DoNotLog"             {$tmp = "Do not log errors or warnings"}
-							Default {$tmp = "Printer auto-creation event log preference could not be determined: $($Setting.AutoCreationEventLogPreference.Value)"}
+							"LogErrorsOnly"        {$tmp = "Log errors only"; Break}
+							"LogErrorsAndWarnings" {$tmp = "Log errors and warnings"; Break}
+							"DoNotLog"             {$tmp = "Do not log errors or warnings"; Break}
+							Default {$tmp = "Printer auto-creation event log preference could not be determined: $($Setting.AutoCreationEventLogPreference.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -15653,11 +15653,11 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.ClientPrinterAutoCreation.Value)
 						{
-							"DoNotAutoCreate"    {$tmp = "Do not auto-create client printers"}
-							"DefaultPrinterOnly" {$tmp = "Auto-create the client's Default printer only"}
-							"LocalPrintersOnly"  {$tmp = "Auto-create local (non-network) client printers only"}
-							"AllPrinters"        {$tmp = "Auto-create all client printers"}
-							Default {$tmp = "Auto-create client printers could not be determined: $($Setting.ClientPrinterAutoCreation.Value)"}
+							"DoNotAutoCreate"    {$tmp = "Do not auto-create client printers"; Break}
+							"DefaultPrinterOnly" {$tmp = "Auto-create the client's Default printer only"; Break}
+							"LocalPrintersOnly"  {$tmp = "Auto-create local (non-network) client printers only"; Break}
+							"AllPrinters"        {$tmp = "Auto-create all client printers"; Break}
+							Default {$tmp = "Auto-create client printers could not be determined: $($Setting.ClientPrinterAutoCreation.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -15729,9 +15729,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.ClientPrinterNames.Value)
 						{
-							"StandardPrinterNames" {$tmp = "Standard printer names"}
-							"LegacyPrinterNames"   {$tmp = "Legacy printer names"}
-							Default {$tmp = "Client printer names could not be determined: $($Setting.ClientPrinterNames.Value)"}
+							"StandardPrinterNames" {$tmp = "Standard printer names"; Break}
+							"LegacyPrinterNames"   {$tmp = "Legacy printer names"; Break}
+							Default {$tmp = "Client printer names could not be determined: $($Setting.ClientPrinterNames.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -15998,11 +15998,11 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.PrinterPropertiesRetention.Value)
 						{
-							"SavedOnClientDevice"   {$tmp = "Saved on the client device only"}
-							"RetainedInUserProfile" {$tmp = "Retained in user profile only"}
-							"FallbackToProfile"     {$tmp = "Held in profile only if not saved on client"}
-							"DoNotRetain"           {$tmp = "Do not retain printer properties"}
-							Default {$tmp = "Printer properties retention could not be determined: $($Setting.PrinterPropertiesRetention.Value)"}
+							"SavedOnClientDevice"   {$tmp = "Saved on the client device only"; Break}
+							"RetainedInUserProfile" {$tmp = "Retained in user profile only"; Break}
+							"FallbackToProfile"     {$tmp = "Held in profile only if not saved on client"; Break}
+							"DoNotRetain"           {$tmp = "Do not retain printer properties"; Break}
+							Default {$tmp = "Printer properties retention could not be determined: $($Setting.PrinterPropertiesRetention.Value)"; Break}
 						}
 
 						If($MSWord -or $PDF)
@@ -16137,11 +16137,11 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.UniversalPrintDriverUsage.Value)
 						{
-							"SpecificOnly"       {$tmp = "Use only printer model specific drivers"}
-							"UpdOnly"            {$tmp = "Use universal printing only"}
-							"FallbackToUpd"      {$tmp = "Use universal printing only if requested driver is unavailable"}
-							"FallbackToSpecific" {$tmp = "Use printer model specific drivers only if universal printing is unavailable"}
-							Default {$tmp = "Universal print driver usage could not be determined: $($Setting.UniversalPrintDriverUsage.Value)"}
+							"SpecificOnly"       {$tmp = "Use only printer model specific drivers"; Break}
+							"UpdOnly"            {$tmp = "Use universal printing only"; Break}
+							"FallbackToUpd"      {$tmp = "Use universal printing only if requested driver is unavailable"; Break}
+							"FallbackToSpecific" {$tmp = "Use printer model specific drivers only if universal printing is unavailable"; Break}
+							Default {$tmp = "Universal print driver usage could not be determined: $($Setting.UniversalPrintDriverUsage.Value)"; Break}
 						}
 
 						If($MSWord -or $PDF)
@@ -16179,9 +16179,9 @@ Function ProcessCitrixPolicies
 						}
 						Switch ($Setting.UpsEnable.Value)
 						{
-							"UpsEnabledWithFallback"	{$tmp = "Enabled with fallback to Windows' native remote printing"}
-							"UpsOnlyEnabled"			{$tmp = "Enabled with no fallback to Windows' native remote printing"}
-							Default				{$tmp = "Universal Print Server enable value could not be determined: $($Setting.UpsEnable.Value)"}
+							"UpsEnabledWithFallback"	{$tmp = "Enabled with fallback to Windows' native remote printing"; Break}
+							"UpsOnlyEnabled"			{$tmp = "Enabled with no fallback to Windows' native remote printing"; Break}
+							Default						{$tmp = "Universal Print Server enable value could not be determined: $($Setting.UpsEnable.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -16277,9 +16277,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.EMFProcessingMode.Value)
 						{
-							"ReprocessEMFsForPrinter" {$tmp = "Reprocess EMFs for printer"}
-							"SpoolDirectlyToPrinter"  {$tmp = "Spool directly to printer"}
-							Default {$tmp = "Universal printing EMF processing mode could not be determined: $($Setting.EMFProcessingMode.Value)"}
+							"ReprocessEMFsForPrinter" {$tmp = "Reprocess EMFs for printer"; Break}
+							"SpoolDirectlyToPrinter"  {$tmp = "Spool directly to printer"; Break}
+							Default {$tmp = "Universal printing EMF processing mode could not be determined: $($Setting.EMFProcessingMode.Value)"; Break}
 						}
 						 
 						If($MSWord -or $PDF)
@@ -16308,12 +16308,12 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.ImageCompressionLimit.Value)
 						{
-							"NoCompression"       {$tmp = "No compression"}
-							"LosslessCompression" {$tmp = "Best quality (lossless compression)"}
-							"MinimumCompression"  {$tmp = "High quality"}
-							"MediumCompression"   {$tmp = "Standard quality"}
-							"MaximumCompression"  {$tmp = "Reduced quality (maximum compression)"}
-							Default {$tmp = "Universal printing image compression limit could not be determined: $($Setting.ImageCompressionLimit.Value)"}
+							"NoCompression"       {$tmp = "No compression"; Break}
+							"LosslessCompression" {$tmp = "Best quality (lossless compression)"; Break}
+							"MinimumCompression"  {$tmp = "High quality"; Break}
+							"MediumCompression"   {$tmp = "Standard quality"; Break}
+							"MaximumCompression"  {$tmp = "Reduced quality (maximum compression)"; Break}
+							Default {$tmp = "Universal printing image compression limit could not be determined: $($Setting.ImageCompressionLimit.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -16480,11 +16480,11 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.UniversalPrintingPreviewPreference.Value)
 						{
-							"NoPrintPreview"        {$tmp = "Do not use print preview for auto-created or generic universal printers"}
-							"AutoCreatedOnly"       {$tmp = "Use print preview for auto-created printers only"}
-							"GenericOnly"           {$tmp = "Use print preview for generic universal printers only"}
-							"AutoCreatedAndGeneric" {$tmp = "Use print preview for both auto-created and generic universal printers"}
-							Default {$tmp = "Universal printing preview preference could not be determined: $($Setting.UniversalPrintingPreviewPreference.Value)"}
+							"NoPrintPreview"        {$tmp = "Do not use print preview for auto-created or generic universal printers"; Break}
+							"AutoCreatedOnly"       {$tmp = "Use print preview for auto-created printers only"; Break}
+							"GenericOnly"           {$tmp = "Use print preview for generic universal printers only"; Break}
+							"AutoCreatedAndGeneric" {$tmp = "Use print preview for both auto-created and generic universal printers"; Break}
+							Default {$tmp = "Universal printing preview preference could not be determined: $($Setting.UniversalPrintingPreviewPreference.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -16513,12 +16513,12 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.DPILimit.Value)
 						{
-							"Draft"            {$tmp = "Draft (150 DPI)"}
-							"LowResolution"    {$tmp = "Low Resolution (300 DPI)"}
-							"MediumResolution" {$tmp = "Medium Resolution (600 DPI)"}
-							"HighResolution"   {$tmp = "High Resolution (1200 DPI)"}
-							"Unlimited"       {$tmp = "No Limit"}
-							Default {$tmp = "Universal printing print quality limit could not be determined: $($Setting.DPILimit.Value)"}
+							"Draft"            {$tmp = "Draft (150 DPI)"; Break}
+							"LowResolution"    {$tmp = "Low Resolution (300 DPI)"; Break}
+							"MediumResolution" {$tmp = "Medium Resolution (600 DPI)"; Break}
+							"HighResolution"   {$tmp = "High Resolution (1200 DPI)"; Break}
+							"Unlimited"       {$tmp = "No Limit"; Break}
+							Default {$tmp = "Universal printing print quality limit could not be determined: $($Setting.DPILimit.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -16549,13 +16549,13 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.MinimumEncryptionLevel.Value)
 						{
-							"Unknown" {$tmp = "Unknown encryption"}
-							"Basic"   {$tmp = "Basic"}
-							"LogOn"   {$tmp = "RC5 (128 bit) logon only"}
-							"Bits40"  {$tmp = "RC5 (40 bit)"}
-							"Bits56"  {$tmp = "RC5 (56 bit)"}
-							"Bits128" {$tmp = "RC5 (128 bit)"}
-							Default {$tmp = "SecureICA minimum encryption level could not be determined: $($Setting.MinimumEncryptionLevel.Value)"}
+							"Unknown" {$tmp = "Unknown encryption"; Break}
+							"Basic"   {$tmp = "Basic"; Break}
+							"LogOn"   {$tmp = "RC5 (128 bit) logon only"; Break}
+							"Bits40"  {$tmp = "RC5 (40 bit)"; Break}
+							"Bits56"  {$tmp = "RC5 (56 bit)"; Break}
+							"Bits128" {$tmp = "RC5 (128 bit)"; Break}
+							Default {$tmp = "SecureICA minimum encryption level could not be determined: $($Setting.MinimumEncryptionLevel.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -16832,9 +16832,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.SessionTimeZone.Value)
 						{
-							"UseServerTimeZone" {$tmp = "Use server time zone"}
-							"UseClientTimeZone" {$tmp = "Use client time zone"}
-							Default {$tmp = "Use local time of client could not be determined: $($Setting.SessionTimeZone.Value)"}
+							"UseServerTimeZone" {$tmp = "Use server time zone"; Break}
+							"UseClientTimeZone" {$tmp = "Use client time zone"; Break}
+							Default {$tmp = "Use local time of client could not be determined: $($Setting.SessionTimeZone.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -16886,11 +16886,11 @@ Function ProcessCitrixPolicies
 						$txt = "ICA\TWAIN devices\TWAIN compression level"
 						Switch ($Setting.TwainCompressionLevel.Value)
 						{
-							"None"   {$tmp = "None"}
-							"Low"    {$tmp = "Low"}
-							"Medium" {$tmp = "Medium"}
-							"High"   {$tmp = "High"}
-							Default {$tmp = "TWAIN compression level could not be determined: $($Setting.TwainCompressionLevel.Value)"}
+							"None"   {$tmp = "None"; Break}
+							"Low"    {$tmp = "Low"; Break}
+							"Medium" {$tmp = "Medium"; Break}
+							"High"   {$tmp = "High"; Break}
+							Default {$tmp = "TWAIN compression level could not be determined: $($Setting.TwainCompressionLevel.Value)"; Break}
 						}
 
 						If($MSWord -or $PDF)
@@ -17181,12 +17181,12 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.VisualQuality.Value)
 						{
-							"BuildToLossless"	{$tmp = "Build to Lossless"}
-							"AlwaysLossless"	{$tmp = "Always Lossless"}
-							"High"				{$tmp = "High"}
-							"Medium"			{$tmp = "Medium"}
-							"Low"				{$tmp = "Low"}
-							"Default" {$tmp = "Visual quality could not be determined: $($Setting.VisualQuality.Value)"}
+							"BuildToLossless"	{$tmp = "Build to Lossless"; Break}
+							"AlwaysLossless"	{$tmp = "Always Lossless"; Break}
+							"High"				{$tmp = "High"; Break}
+							"Medium"			{$tmp = "Medium"; Break}
+							"Low"				{$tmp = "Low"; Break}
+							"Default" {$tmp = "Visual quality could not be determined: $($Setting.VisualQuality.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -17271,13 +17271,13 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.ProgressiveCompressionLevel.Value)
 						{
-							"UltraHigh" {$tmp = "Ultra high"}
-							"VeryHigh"  {$tmp = "Very high"}
-							"High"      {$tmp = "High"}
-							"Normal"    {$tmp = "Normal"}
-							"Low"       {$tmp = "Low"}
-							"None"      {$tmp = "None"}
-							Default {$tmp = "Progressive compression level could not be determined: $($Setting.ProgressiveCompressionLevel.Value)"}
+							"UltraHigh" {$tmp = "Ultra high"; Break}
+							"VeryHigh"  {$tmp = "Very high"; Break}
+							"High"      {$tmp = "High"; Break}
+							"Normal"    {$tmp = "Normal"; Break}
+							"Low"       {$tmp = "Low"; Break}
+							"None"      {$tmp = "None"; Break}
+							Default {$tmp = "Progressive compression level could not be determined: $($Setting.ProgressiveCompressionLevel.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -17418,11 +17418,11 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.LossyCompressionLevel.Value)
 						{
-							"None"   {$tmp = "None"}
-							"Low"    {$tmp = "Low"}
-							"Medium" {$tmp = "Medium"}
-							"High"   {$tmp = "High"}
-							Default {$tmp = "Lossy compression level could not be determined: $($Setting.LossyCompressionLevel.Value)"}
+							"None"   {$tmp = "None"; Break}
+							"Low"    {$tmp = "Low"; Break}
+							"Medium" {$tmp = "Medium"; Break}
+							"High"   {$tmp = "High"; Break}
+							Default {$tmp = "Lossy compression level could not be determined: $($Setting.LossyCompressionLevel.Value)"; Break}
 						}
 						
 						If($MSWord -or $PDF)
@@ -17693,9 +17693,9 @@ Function ProcessCitrixPolicies
 							$tmp = ""
 							Switch ($Setting.CPUUsageExcludedProcessPriority.Value)
 							{
-								"BelowNormalOrLow"	{$tmp = "Below Normal or Low"}
-								"Low"				{$tmp = "Low"}
-								Default {$tmp = "CPU usage excluded process priority could not be determined: $($Setting.CPUUsageExcludedProcessPriority.Value)"}
+								"BelowNormalOrLow"	{$tmp = "Below Normal or Low"; Break}
+								"Low"				{$tmp = "Low"; Break}
+								Default {$tmp = "CPU usage excluded process priority could not be determined: $($Setting.CPUUsageExcludedProcessPriority.Value)"; Break}
 							}
 							If($MSWord -or $PDF)
 							{
@@ -19146,9 +19146,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRAppData_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRAppData_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRAppData_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19269,9 +19269,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRContacts_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRContacts_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRContacts_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19346,9 +19346,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRDesktop_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRDesktop_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRDesktop_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19423,9 +19423,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRDocuments_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRDocuments_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRDocuments_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19500,9 +19500,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRDownloads_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRDownloads_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRDownloads_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19577,9 +19577,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRFavorites_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRFavorites_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRFavorites_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19654,9 +19654,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRLinks_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRLinks_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRLinks_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19731,9 +19731,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRMusic_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRMusic_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRMusic_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19808,9 +19808,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRPictures_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRPictures_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRPictures_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19885,9 +19885,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRSavedGames_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRSavedGames_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRSavedGames_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -19962,9 +19962,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRSearches_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRSearches_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRSearches_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -20039,9 +20039,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRStartMenu_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRStartMenu_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRStartMenu_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -20116,9 +20116,9 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.FRVideos_Part.Value)
 						{
-							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"}
-							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"}
-							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRVideos_Part.Value)"}
+							"RedirectUncPath"			{$tmp = "Redirect to the following UNC path"; Break}
+							"RedirectRelativeDocuments" {$tmp = "Redirect relative to Documents folder"; Break}
+							Default {$tmp = "AppData(Roaming) path cannot be determined: $($Setting.FRVideos_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -20525,10 +20525,10 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.LocalProfileConflictHandling_Part.Value)
 						{
-							"Use"		{$tmp = "Use local profile"}
-							"Delete"	{$tmp = "Delete local profile"}
-							"Rename"	{$tmp = "Rename local profile"}
-							Default	{$tmp = "Local profile conflict handling could not be determined: $($Setting.LocalProfileConflictHandling_Part.Value)"}
+							"Use"		{$tmp = "Use local profile"; Break}
+							"Delete"	{$tmp = "Delete local profile"; Break}
+							"Rename"	{$tmp = "Rename local profile"; Break}
+							Default	{$tmp = "Local profile conflict handling could not be determined: $($Setting.LocalProfileConflictHandling_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -20555,11 +20555,11 @@ Function ProcessCitrixPolicies
 						$tmp = ""
 						Switch ($Setting.MigrateWindowsProfilesToUserStore_Part.Value)
 						{
-							"All"		{$tmp = "Local and Roaming"}
-							"Local"		{$tmp = "Local"}
-							"Roaming"	{$tmp = "Roaming"}
-							"None"		{$tmp = "None"}
-							Default	{$tmp = "Migration of existing profiles could not be determined: $($Setting.MigrateWindowsProfilesToUserStore_Part.Value)"}
+							"All"		{$tmp = "Local and Roaming"; Break}
+							"Local"		{$tmp = "Local"; Break}
+							"Roaming"	{$tmp = "Roaming"; Break}
+							"None"		{$tmp = "None"; Break}
+							Default	{$tmp = "Migration of existing profiles could not be determined: $($Setting.MigrateWindowsProfilesToUserStore_Part.Value)"; Break}
 						}
 						If($MSWord -or $PDF)
 						{
@@ -21836,9 +21836,9 @@ Function Get-PrinterModifiedSettings
 				$tmp1 = $xelement.SubString($index + 1)
 				Switch ($tmp1)
 				{
-					1 {$tmp2 = "Monochrome"}
-					2 {$tmp2 = "Color"}
-					Default {$tmp2 = "Color could not be determined: $($xelement) "}
+					1 {$tmp2 = "Monochrome"; Break}
+					2 {$tmp2 = "Color"; Break}
+					Default {$tmp2 = "Color could not be determined: $($xelement) "; Break}
 				}
 				$ReturnStr = "$txt $tmp2"
 			}
@@ -21852,11 +21852,11 @@ Function Get-PrinterModifiedSettings
 				$tmp1 = $xelement.SubString($index + 1)
 				Switch ($tmp1)
 				{
-					-1 {$tmp2 = "150 dpi"}
-					-2 {$tmp2 = "300 dpi"}
-					-3 {$tmp2 = "600 dpi"}
-					-4 {$tmp2 = "1200 dpi"}
-					Default {$tmp2 = "Custom...X resolution: $tmp1"}
+					-1 {$tmp2 = "150 dpi"; Break}
+					-2 {$tmp2 = "300 dpi"; Break}
+					-3 {$tmp2 = "600 dpi"; Break}
+					-4 {$tmp2 = "1200 dpi"; Break}
+					Default {$tmp2 = "Custom...X resolution: $tmp1"; Break}
 				}
 				$ReturnStr = "$txt $tmp2"
 			}
@@ -21880,9 +21880,9 @@ Function Get-PrinterModifiedSettings
 				$tmp1 = $xelement.SubString($index + 1)
 				Switch ($tmp1)
 				{
-					"portrait"  {$tmp2 = "Portrait"}
-					"landscape" {$tmp2 = "Landscape"}
-					Default {$tmp2 = "Orientation could not be determined: $($xelement) "}
+					"portrait"  {$tmp2 = "Portrait"; Break}
+					"landscape" {$tmp2 = "Landscape"; Break}
+					Default {$tmp2 = "Orientation could not be determined: $($xelement) "; Break}
 				}
 				$ReturnStr = "$txt $tmp2"
 			}
@@ -21896,10 +21896,10 @@ Function Get-PrinterModifiedSettings
 				$tmp1 = $xelement.SubString($index + 1)
 				Switch ($tmp1)
 				{
-					1 {$tmp2 = "Simplex"}
-					2 {$tmp2 = "Vertical"}
-					3 {$tmp2 = "Horizontal"}
-					Default {$tmp2 = "Duplex could not be determined: $($xelement) "}
+					1 {$tmp2 = "Simplex"; Break}
+					2 {$tmp2 = "Vertical"; Break}
+					3 {$tmp2 = "Horizontal"; Break}
+					Default {$tmp2 = "Duplex could not be determined: $($xelement) "; Break}
 				}
 				$ReturnStr = "$txt $tmp2"
 			}
@@ -21913,124 +21913,124 @@ Function Get-PrinterModifiedSettings
 				$tmp1 = $xelement.SubString($index + 1)
 				Switch ($tmp1)
 				{
-					1   {$tmp2 = "Letter"}
-					2   {$tmp2 = "Letter Small"}
-					3   {$tmp2 = "Tabloid"}
-					4   {$tmp2 = "Ledger"}
-					5   {$tmp2 = "Legal"}
-					6   {$tmp2 = "Statement"}
-					7   {$tmp2 = "Executive"}
-					8   {$tmp2 = "A3"}
-					9   {$tmp2 = "A4"}
-					10  {$tmp2 = "A4 Small"}
-					11  {$tmp2 = "A5"}
-					12  {$tmp2 = "B4 (JIS)"}
-					13  {$tmp2 = "B5 (JIS)"}
-					14  {$tmp2 = "Folio"}
-					15  {$tmp2 = "Quarto"}
-					16  {$tmp2 = "10X14"}
-					17  {$tmp2 = "11X17"}
-					18  {$tmp2 = "Note"}
-					19  {$tmp2 = "Envelope #9"}
-					20  {$tmp2 = "Envelope #10"}
-					21  {$tmp2 = "Envelope #11"}
-					22  {$tmp2 = "Envelope #12"}
-					23  {$tmp2 = "Envelope #14"}
-					24  {$tmp2 = "C Size Sheet"}
-					25  {$tmp2 = "D Size Sheet"}
-					26  {$tmp2 = "E Size Sheet"}
-					27  {$tmp2 = "Envelope DL"}
-					28  {$tmp2 = "Envelope C5"}
-					29  {$tmp2 = "Envelope C3"}
-					30  {$tmp2 = "Envelope C4"}
-					31  {$tmp2 = "Envelope C6"}
-					32  {$tmp2 = "Envelope C65"}
-					33  {$tmp2 = "Envelope B4"}
-					34  {$tmp2 = "Envelope B5"}
-					35  {$tmp2 = "Envelope B6"}
-					36  {$tmp2 = "Envelope Italy"}
-					37  {$tmp2 = "Envelope Monarch"}
-					38  {$tmp2 = "Envelope Personal"}
-					39  {$tmp2 = "US Std Fanfold"}
-					40  {$tmp2 = "German Std Fanfold"}
-					41  {$tmp2 = "German Legal Fanfold"}
-					42  {$tmp2 = "B4 (ISO)"}
-					43  {$tmp2 = "Japanese Postcard"}
-					44  {$tmp2 = "9X11"}
-					45  {$tmp2 = "10X11"}
-					46  {$tmp2 = "15X11"}
-					47  {$tmp2 = "Envelope Invite"}
-					48  {$tmp2 = "Reserved - DO NOT USE"}
-					49  {$tmp2 = "Reserved - DO NOT USE"}
-					50  {$tmp2 = "Letter Extra"}
-					51  {$tmp2 = "Legal Extra"}
-					52  {$tmp2 = "Tabloid Extra"}
-					53  {$tmp2 = "A4 Extra"}
-					54  {$tmp2 = "Letter Transverse"}
-					55  {$tmp2 = "A4 Transverse"}
-					56  {$tmp2 = "Letter Extra Transverse"}
-					57  {$tmp2 = "A Plus"}
-					58  {$tmp2 = "B Plus"}
-					59  {$tmp2 = "Letter Plus"}
-					60  {$tmp2 = "A4 Plus"}
-					61  {$tmp2 = "A5 Transverse"}
-					62  {$tmp2 = "B5 (JIS) Transverse"}
-					63  {$tmp2 = "A3 Extra"}
-					64  {$tmp2 = "A5 Extra"}
-					65  {$tmp2 = "B5 (ISO) Extra"}
-					66  {$tmp2 = "A2"}
-					67  {$tmp2 = "A3 Transverse"}
-					68  {$tmp2 = "A3 Extra Transverse"}
-					69  {$tmp2 = "Japanese Double Postcard"}
-					70  {$tmp2 = "A6"}
-					71  {$tmp2 = "Japanese Envelope Kaku #2"}
-					72  {$tmp2 = "Japanese Envelope Kaku #3"}
-					73  {$tmp2 = "Japanese Envelope Chou #3"}
-					74  {$tmp2 = "Japanese Envelope Chou #4"}
-					75  {$tmp2 = "Letter Rotated"}
-					76  {$tmp2 = "A3 Rotated"}
-					77  {$tmp2 = "A4 Rotated"}
-					78  {$tmp2 = "A5 Rotated"}
-					79  {$tmp2 = "B4 (JIS) Rotated"}
-					80  {$tmp2 = "B5 (JIS) Rotated"}
-					81  {$tmp2 = "Japanese Postcard Rotated"}
-					82  {$tmp2 = "Double Japanese Postcard Rotated"}
-					83  {$tmp2 = "A6 Rotated"}
-					84  {$tmp2 = "Japanese Envelope Kaku #2 Rotated"}
-					85  {$tmp2 = "Japanese Envelope Kaku #3 Rotated"}
-					86  {$tmp2 = "Japanese Envelope Chou #3 Rotated"}
-					87  {$tmp2 = "Japanese Envelope Chou #4 Rotated"}
-					88  {$tmp2 = "B6 (JIS)"}
-					89  {$tmp2 = "B6 (JIS) Rotated"}
-					90  {$tmp2 = "12X11"}
-					91  {$tmp2 = "Japanese Envelope You #4"}
-					92  {$tmp2 = "Japanese Envelope You #4 Rotated"}
-					93  {$tmp2 = "PRC 16K"}
-					94  {$tmp2 = "PRC 32K"}
-					95  {$tmp2 = "PRC 32K(Big)"}
-					96  {$tmp2 = "PRC Envelope #1"}
-					97  {$tmp2 = "PRC Envelope #2"}
-					98  {$tmp2 = "PRC Envelope #3"}
-					99  {$tmp2 = "PRC Envelope #4"}
-					100 {$tmp2 = "PRC Envelope #5"}
-					101 {$tmp2 = "PRC Envelope #6"}
-					102 {$tmp2 = "PRC Envelope #7"}
-					103 {$tmp2 = "PRC Envelope #8"}
-					104 {$tmp2 = "PRC Envelope #9"}
-					105 {$tmp2 = "PRC Envelope #10"}
-					106 {$tmp2 = "PRC 16K Rotated"}
-					107 {$tmp2 = "PRC 32K Rotated"}
-					108 {$tmp2 = "PRC 32K(Big) Rotated"}
-					109 {$tmp2 = "PRC Envelope #1 Rotated"}
-					110 {$tmp2 = "PRC Envelope #2 Rotated"}
-					111 {$tmp2 = "PRC Envelope #3 Rotated"}
-					112 {$tmp2 = "PRC Envelope #4 Rotated"}
-					113 {$tmp2 = "PRC Envelope #5 Rotated"}
-					114 {$tmp2 = "PRC Envelope #6 Rotated"}
-					115 {$tmp2 = "PRC Envelope #7 Rotated"}
-					116 {$tmp2 = "PRC Envelope #8 Rotated"}
-					117 {$tmp2 = "PRC Envelope #9 Rotated"}
-					Default {$tmp2 = "Paper Size could not be determined: $($xelement) "}
+					1   {$tmp2 = "Letter"; Break}
+					2   {$tmp2 = "Letter Small"; Break}
+					3   {$tmp2 = "Tabloid"; Break}
+					4   {$tmp2 = "Ledger"; Break}
+					5   {$tmp2 = "Legal"; Break}
+					6   {$tmp2 = "Statement"; Break}
+					7   {$tmp2 = "Executive"; Break}
+					8   {$tmp2 = "A3"; Break}
+					9   {$tmp2 = "A4"; Break}
+					10  {$tmp2 = "A4 Small"; Break}
+					11  {$tmp2 = "A5"; Break}
+					12  {$tmp2 = "B4 (JIS)"; Break}
+					13  {$tmp2 = "B5 (JIS)"; Break}
+					14  {$tmp2 = "Folio"; Break}
+					15  {$tmp2 = "Quarto"; Break}
+					16  {$tmp2 = "10X14"; Break}
+					17  {$tmp2 = "11X17"; Break}
+					18  {$tmp2 = "Note"; Break}
+					19  {$tmp2 = "Envelope #9"; Break}
+					20  {$tmp2 = "Envelope #10"; Break}
+					21  {$tmp2 = "Envelope #11"; Break}
+					22  {$tmp2 = "Envelope #12"; Break}
+					23  {$tmp2 = "Envelope #14"; Break}
+					24  {$tmp2 = "C Size Sheet"; Break}
+					25  {$tmp2 = "D Size Sheet"; Break}
+					26  {$tmp2 = "E Size Sheet"; Break}
+					27  {$tmp2 = "Envelope DL"; Break}
+					28  {$tmp2 = "Envelope C5"; Break}
+					29  {$tmp2 = "Envelope C3"; Break}
+					30  {$tmp2 = "Envelope C4"; Break}
+					31  {$tmp2 = "Envelope C6"; Break}
+					32  {$tmp2 = "Envelope C65"; Break}
+					33  {$tmp2 = "Envelope B4"; Break}
+					34  {$tmp2 = "Envelope B5"; Break}
+					35  {$tmp2 = "Envelope B6"; Break}
+					36  {$tmp2 = "Envelope Italy"; Break}
+					37  {$tmp2 = "Envelope Monarch"; Break}
+					38  {$tmp2 = "Envelope Personal"; Break}
+					39  {$tmp2 = "US Std Fanfold"; Break}
+					40  {$tmp2 = "German Std Fanfold"; Break}
+					41  {$tmp2 = "German Legal Fanfold"; Break}
+					42  {$tmp2 = "B4 (ISO)"; Break}
+					43  {$tmp2 = "Japanese Postcard"; Break}
+					44  {$tmp2 = "9X11"; Break}
+					45  {$tmp2 = "10X11"; Break}
+					46  {$tmp2 = "15X11"; Break}
+					47  {$tmp2 = "Envelope Invite"; Break}
+					48  {$tmp2 = "Reserved - DO NOT USE"; Break}
+					49  {$tmp2 = "Reserved - DO NOT USE"; Break}
+					50  {$tmp2 = "Letter Extra"; Break}
+					51  {$tmp2 = "Legal Extra"; Break}
+					52  {$tmp2 = "Tabloid Extra"; Break}
+					53  {$tmp2 = "A4 Extra"; Break}
+					54  {$tmp2 = "Letter Transverse"; Break}
+					55  {$tmp2 = "A4 Transverse"; Break}
+					56  {$tmp2 = "Letter Extra Transverse"; Break}
+					57  {$tmp2 = "A Plus"; Break}
+					58  {$tmp2 = "B Plus"; Break}
+					59  {$tmp2 = "Letter Plus"; Break}
+					60  {$tmp2 = "A4 Plus"; Break}
+					61  {$tmp2 = "A5 Transverse"; Break}
+					62  {$tmp2 = "B5 (JIS) Transverse"; Break}
+					63  {$tmp2 = "A3 Extra"; Break}
+					64  {$tmp2 = "A5 Extra"; Break}
+					65  {$tmp2 = "B5 (ISO) Extra"; Break}
+					66  {$tmp2 = "A2"; Break}
+					67  {$tmp2 = "A3 Transverse"; Break}
+					68  {$tmp2 = "A3 Extra Transverse"; Break}
+					69  {$tmp2 = "Japanese Double Postcard"; Break}
+					70  {$tmp2 = "A6"; Break}
+					71  {$tmp2 = "Japanese Envelope Kaku #2"; Break}
+					72  {$tmp2 = "Japanese Envelope Kaku #3"; Break}
+					73  {$tmp2 = "Japanese Envelope Chou #3"; Break}
+					74  {$tmp2 = "Japanese Envelope Chou #4"; Break}
+					75  {$tmp2 = "Letter Rotated"; Break}
+					76  {$tmp2 = "A3 Rotated"; Break}
+					77  {$tmp2 = "A4 Rotated"; Break}
+					78  {$tmp2 = "A5 Rotated"; Break}
+					79  {$tmp2 = "B4 (JIS) Rotated"; Break}
+					80  {$tmp2 = "B5 (JIS) Rotated"; Break}
+					81  {$tmp2 = "Japanese Postcard Rotated"; Break}
+					82  {$tmp2 = "Double Japanese Postcard Rotated"; Break}
+					83  {$tmp2 = "A6 Rotated"; Break}
+					84  {$tmp2 = "Japanese Envelope Kaku #2 Rotated"; Break}
+					85  {$tmp2 = "Japanese Envelope Kaku #3 Rotated"; Break}
+					86  {$tmp2 = "Japanese Envelope Chou #3 Rotated"; Break}
+					87  {$tmp2 = "Japanese Envelope Chou #4 Rotated"; Break}
+					88  {$tmp2 = "B6 (JIS)"; Break}
+					89  {$tmp2 = "B6 (JIS) Rotated"; Break}
+					90  {$tmp2 = "12X11"; Break}
+					91  {$tmp2 = "Japanese Envelope You #4"; Break}
+					92  {$tmp2 = "Japanese Envelope You #4 Rotated"; Break}
+					93  {$tmp2 = "PRC 16K"; Break}
+					94  {$tmp2 = "PRC 32K"; Break}
+					95  {$tmp2 = "PRC 32K(Big)"; Break}
+					96  {$tmp2 = "PRC Envelope #1"; Break}
+					97  {$tmp2 = "PRC Envelope #2"; Break}
+					98  {$tmp2 = "PRC Envelope #3"; Break}
+					99  {$tmp2 = "PRC Envelope #4"; Break}
+					100 {$tmp2 = "PRC Envelope #5"; Break}
+					101 {$tmp2 = "PRC Envelope #6"; Break}
+					102 {$tmp2 = "PRC Envelope #7"; Break}
+					103 {$tmp2 = "PRC Envelope #8"; Break}
+					104 {$tmp2 = "PRC Envelope #9"; Break}
+					105 {$tmp2 = "PRC Envelope #10"; Break}
+					106 {$tmp2 = "PRC 16K Rotated"; Break}
+					107 {$tmp2 = "PRC 32K Rotated"; Break}
+					108 {$tmp2 = "PRC 32K(Big) Rotated"; Break}
+					109 {$tmp2 = "PRC Envelope #1 Rotated"; Break}
+					110 {$tmp2 = "PRC Envelope #2 Rotated"; Break}
+					111 {$tmp2 = "PRC Envelope #3 Rotated"; Break}
+					112 {$tmp2 = "PRC Envelope #4 Rotated"; Break}
+					113 {$tmp2 = "PRC Envelope #5 Rotated"; Break}
+					114 {$tmp2 = "PRC Envelope #6 Rotated"; Break}
+					115 {$tmp2 = "PRC Envelope #7 Rotated"; Break}
+					116 {$tmp2 = "PRC Envelope #8 Rotated"; Break}
+					117 {$tmp2 = "PRC Envelope #9 Rotated"; Break}
+					Default {$tmp2 = "Paper Size could not be determined: $($xelement) "; Break}
 				}
 				$ReturnStr = "$txt $tmp2"
 			}
@@ -22057,11 +22057,11 @@ Function Get-PrinterModifiedSettings
 				$tmp1 = $xelement.SubString($index + 1)
 				Switch ($tmp1)
 				{
-					1 {$tmp2 = "Bitmap"}
-					2 {$tmp2 = "Download"}
-					3 {$tmp2 = "Substitute"}
-					4 {$tmp2 = "Outline"}
-					Default {$tmp2 = "TrueType could not be determined: $($xelement) "}
+					1 {$tmp2 = "Bitmap"; Break}
+					2 {$tmp2 = "Download"; Break}
+					3 {$tmp2 = "Substitute"; Break}
+					4 {$tmp2 = "Outline"; Break}
+					Default {$tmp2 = "TrueType could not be determined: $($xelement) "; Break}
 				}
 			}
 			$ReturnStr = "$txt $tmp2"
@@ -22243,11 +22243,11 @@ Function OutputConfigLogPreferences
 					$Pair = $csitem.split('=').trimstart()
 					Switch ($Pair[0])
 					{
-						"Server"					{$LogSQLServerPrincipalName = $Pair[1]}
-						{"Failover Partner"}		{$LogSQLServerMirrorName = $Pair[1]}
-						{"MultiSubnetFailover"}		{$LogSQLServerMirrorName = ""}
-						"Database"					{$LogDatabaseName = $Pair[1]}
-						{$Pair[0] -match "Initial"}	{$LogDatabaseName = $Pair[1]}
+						"Server"					{$LogSQLServerPrincipalName = $Pair[1]; Break}
+						{"Failover Partner"}		{$LogSQLServerMirrorName = $Pair[1]; Break}
+						{"MultiSubnetFailover"}		{$LogSQLServerMirrorName = ""; Break}
+						"Database"					{$LogDatabaseName = $Pair[1]; Break}
+						{$Pair[0] -match "Initial"}	{$LogDatabaseName = $Pair[1]; Break}
 					}
 				}
 			}
@@ -22439,8 +22439,8 @@ Function OutputConfigLog
 		'Status',($htmlsilver -bor $htmlbold))
 
 		$msg = ""
-		$columnWidths = @("120","210","60","60","50")
-		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "500"
+		$columnWidths = @("125","300","150","150","50")
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "775"
 		WriteHTMLLine 0 0 " "
 	}
 }
@@ -22610,11 +22610,11 @@ Function OutputDatastores
 			$Pair = $csitem.split('=').trimstart()
 			Switch ($Pair[0])
 			{
-				"Server"				{$ConfigSQLServerPrincipalName = $Pair[1]}
-				{"Failover Partner"}	{$ConfigSQLServerMirrorName = $Pair[1]}
-				{"MultiSubnetFailover"}	{$ConfigSQLServerMirrorName = ""}
-				"Database"				{$ConfigDatabaseName = $Pair[1]}
-				{$Pair[0] -match "Initial"}	{$ConfigDatabaseName = $Pair[1]}
+				"Server"					{$ConfigSQLServerPrincipalName = $Pair[1]; Break}
+				{"Failover Partner"}		{$ConfigSQLServerMirrorName = $Pair[1]; Break}
+				{"MultiSubnetFailover"}		{$ConfigSQLServerMirrorName = ""; Break}
+				"Database"					{$ConfigDatabaseName = $Pair[1]; Break}
+				{$Pair[0] -match "Initial"}	{$ConfigDatabaseName = $Pair[1]; Break}
 			}
 		}
 	}
@@ -22642,11 +22642,11 @@ Function OutputDatastores
 					$Pair = $csitem.split('=').trimstart()
 					Switch ($Pair[0])
 					{
-						"Server"				{$LogSQLServerPrincipalName = $Pair[1]}
-						{"Failover Partner"}	{$LogSQLServerMirrorName = $Pair[1]}
-						{"MultiSubnetFailover"}	{$LogSQLServerMirrorName = ""}
-						"Database"				{$LogDatabaseName = $Pair[1]}
-						{$Pair[0] -match "Initial"}	{$LogDatabaseName = $Pair[1]}
+						"Server"					{$LogSQLServerPrincipalName = $Pair[1]; Break}
+						{"Failover Partner"}		{$LogSQLServerMirrorName = $Pair[1]; Break}
+						{"MultiSubnetFailover"}		{$LogSQLServerMirrorName = ""; Break}
+						"Database"					{$LogDatabaseName = $Pair[1]; Break}
+						{$Pair[0] -match "Initial"}	{$LogDatabaseName = $Pair[1]; Break}
 					}
 				}
 			}
@@ -22680,11 +22680,11 @@ Function OutputDatastores
 					$Pair = $csitem.split('=').trimstart()
 					Switch ($Pair[0])
 					{
-						"Server"				{$MonitorSQLServerPrincipalName = $Pair[1]}
-						{"Failover Partner"}	{$MonitorSQLServerMirrorName = $Pair[1]}
-						{"MultiSubnetFailover"}	{$MonitorSQLServerMirrorName = ""}
-						"Database"				{$MonitorDatabaseName = $Pair[1]}
-						{$Pair[0] -match "Initial"}	{$MonitorDatabaseName = $Pair[1]}
+						"Server"				{$MonitorSQLServerPrincipalName = $Pair[1]; Break}
+						{"Failover Partner"}	{$MonitorSQLServerMirrorName = $Pair[1]; Break}
+						{"MultiSubnetFailover"}	{$MonitorSQLServerMirrorName = ""; Break}
+						"Database"				{$MonitorDatabaseName = $Pair[1]; Break}
+						{$Pair[0] -match "Initial"}	{$MonitorDatabaseName = $Pair[1]; Break}
 					}
 				}
 			}
@@ -22967,13 +22967,13 @@ Function OutputAdministrators
 	{
 		Switch ($Admin.Rights.RoleName)
 		{
-			"Delivery Group Administrator"	{$Global:TotalDeliveryGroupAdmins++}
-			"Full Administrator"			{$Global:TotalFullAdmins++}
-			"Help Desk Administrator"		{$Global:TotalHelpDeskAdmins++}
-			"Host Administrator"			{$Global:TotalHostAdmins++}
-			"Machine Catalog Administrator"	{$Global:TotalMachineCatalogAdmins++}
-			"Read Only Administrator"		{$Global:TotalReadOnlyAdmins++}
-			Default							{$Global:TotalCustomAdmins++}
+			"Delivery Group Administrator"	{$Global:TotalDeliveryGroupAdmins++; Break}
+			"Full Administrator"			{$Global:TotalFullAdmins++; Break}
+			"Help Desk Administrator"		{$Global:TotalHelpDeskAdmins++; Break}
+			"Host Administrator"			{$Global:TotalHostAdmins++; Break}
+			"Machine Catalog Administrator"	{$Global:TotalMachineCatalogAdmins++; Break}
+			"Read Only Administrator"		{$Global:TotalReadOnlyAdmins++; Break}
+			Default							{$Global:TotalCustomAdmins++; Break}
 		}
 	}
 	
@@ -23955,116 +23955,116 @@ Function GetRolePermissions
 	{
 		Switch ($Permission)
 		{
-			"Admin_FullControl" {If(-not($Results.ContainsKey("Manage Administrators"))){$Results.Add("Manage Administrators", "Administrators")}}
-			"Admin_Read" {If(-not($Results.ContainsKey("View Administrators"))){$Results.Add("View Administrators", "Administrators")}}
-			"Applications_AttachClientHostedApplicationToDesktopGroup" {If(-not($Results.ContainsKey("Attach Local Access Application to Delivery Group"))){$Results.Add("Attach Local Access Application to Delivery Group", "Delivery Groups")}}
-			"Applications_ChangeMaintenanceMode" {If(-not($Results.ContainsKey("Enable/disable maintenance mode of an Application"))){$Results.Add("Enable/disable maintenance mode of an Application", "Delivery Groups")}}
-			"Applications_ChangeTags" {If(-not($Results.ContainsKey("Edit Application tags"))){$Results.Add("Edit Application tags", "Delivery Groups")}}
-			"Applications_ChangeUserAssignment" {If(-not($Results.ContainsKey("Change users assigned to an application"))){$Results.Add("Change users assigned to an application", "Delivery Groups")}}
-			"Applications_Create" {If(-not($Results.ContainsKey("Create Application"))){$Results.Add("Create Application", "Delivery Groups")}}
-			"Applications_CreateFolder" {If(-not($Results.ContainsKey("Create Application Folder"))){$Results.Add("Create Application Folder", "Delivery Groups")}}
-			"Applications_Delete" {If(-not($Results.ContainsKey("Delete Application"))){$Results.Add("Delete Application", "Delivery Groups")}}
-			"Applications_DetachClientHostedApplicationToDesktopGroup" {If(-not($Results.ContainsKey("Detach Local Access Application from Delivery Group"))){$Results.Add("Detach Local Access Application from Delivery Group", "Delivery Groups")}}
-			"Applications_EditFolder" {If(-not($Results.ContainsKey("Edit Application Folder"))){$Results.Add("Edit Application Folder", "Delivery Groups")}}
-			"Applications_EditProperties" {If(-not($Results.ContainsKey("Edit Application Properties"))){$Results.Add("Edit Application Properties", "Delivery Groups")}}
-			"Applications_MoveFolder" {If(-not($Results.ContainsKey("Move Application Folder"))){$Results.Add("Move Application Folder", "Delivery Groups")}}
-			"Applications_Read" {If(-not($Results.ContainsKey("View Applications"))){$Results.Add("View Applications", "Delivery Groups")}}
-			"Applications_RemoveFolder" {If(-not($Results.ContainsKey("Remove Application Folder"))){$Results.Add("Remove Application Folder", "Delivery Groups")}}
-			"AppV_AddServer" {If(-not($Results.ContainsKey("Add App-V publishing server"))){$Results.Add("Add App-V publishing server", "App-V")}}
-			"AppV_DeleteServer" {If(-not($Results.ContainsKey("Delete App-V publishing server"))){$Results.Add("Delete App-V publishing server", "App-V")}}
-			"AppV_Read" {If(-not($Results.ContainsKey("Read App-V servers"))){$Results.Add("Read App-V servers", "App-V")}}
-			"Catalog_AddMachines" {If(-not($Results.ContainsKey("Add Machines to Machine Catalog"))){$Results.Add("Add Machines to Machine Catalog", "Machine Catalogs")}}
-			"Catalog_AddScope" {If(-not($Results.ContainsKey("Add Machine Catalog to Scope"))){$Results.Add("Add Machine Catalog to Scope", "Machine Catalogs")}}
-			"Catalog_CancelProvTask" {If(-not($Results.ContainsKey("Cancel Provisioning Task"))){$Results.Add("Cancel Provisioning Task", "Machine Catalogs")}}
-			"Catalog_ChangeMachineMaintenanceMode" {$Results.Add("Enable/disable maintenance mode of a machine via Machine Catalog membership", "Machine Catalogs")}
-			"Catalog_ChangeMaintenanceMode" {$Results.Add("Enable/disable maintenance mode on Desktop via Machine Catalog membership", "Machine Catalogs")}
-			"Catalog_ChangeUserAssignment" {$Results.Add("Change users assigned to a machine", "Machine Catalogs")}
-			"Catalog_ConsumeMachines" {$Results.Add("Allow machines to be consumed by a Delivery Group", "Machine Catalogs")}
-			"Catalog_Create" {$Results.Add("Create Machine Catalog", "Machine Catalogs")}
-			"Catalog_Delete" {$Results.Add("Delete Machine Catalog", "Machine Catalogs")}
-			"Catalog_EditProperties" {$Results.Add("Edit Machine Catalog Properties", "Machine Catalogs")}
-			"Catalog_ManageAccounts" {$Results.Add("Manage Active Directory Accounts", "Machine Catalogs")}
-			"Catalog_PowerOperations_RDS" {$Results.Add("Perform power operations on Windows Server machines via Machine Catalog membership", "Machine Catalogs")}
-			"Catalog_PowerOperations_VDI" {$Results.Add("Perform power operations on Windows Desktop machines via Machine Catalog membership", "Machine Catalogs")}
-			"Catalog_Read" {$Results.Add("View Machine Catalogs", "Machine Catalogs")}
-			"Catalog_RemoveMachine" {$Results.Add("Remove Machines from Machine Catalog", "Machine Catalogs")}
-			"Catalog_RemoveScope" {$Results.Add("Remove Machine Catalog from Scope", "Machine Catalogs")}
-			"Catalog_SessionManagement" {$Results.Add("Perform session management on machines via Machine Catalog membership", "Machine Catalogs")}
-			"Catalog_UpdateMasterImage" {$Results.Add("Perform Machine update", "Machine Catalogs")}
-			"Configuration_Read" {If(-not($Results.ContainsKey("Read Site Configuration"))){$Results.Add("Read Site Configuration", "Other permissions")}}
-			"Configuration_Write" {If(-not($Results.ContainsKey("Update Site Configuration"))){$Results.Add("Update Site Configuration", "Other permissions")}}
-			"Controllers_Remove" {$Results.Add("Remove Delivery Controller", "Controllers")}
-			"DesktopGroup_AddApplication" {$Results.Add("Add Application to Delivery Group", "Delivery Groups")}
-			"DesktopGroup_AddMachines" {$Results.Add("Add Machines to Delivery Group", "Delivery Groups")}
-			"DesktopGroup_AddScope" {$Results.Add("Add Delivery Group to Scope", "Delivery Groups")}
-			"DesktopGroup_ChangeMachineMaintenanceMode" {$Results.Add("Enable/disable maintenance mode of a machine via Delivery Group membership", "Delivery Groups")}
-			"DesktopGroup_ChangeMaintenanceMode" {$Results.Add("Enable/disable maintenance mode of a Delivery Group", "Delivery Groups")}
-			"DesktopGroup_ChangeTags" {$Results.Add("Edit Delivery Group tags", "Delivery Groups")}
-			"DesktopGroup_ChangeUserAssignment" {$Results.Add("Change users assigned to a desktop", "Delivery Groups")}
-			"DesktopGroup_Create" {$Results.Add("Create Delivery Group", "Delivery Groups")}
-			"DesktopGroup_Delete" {$Results.Add("Delete Delivery Group", "Delivery Groups")}
-			"DesktopGroup_EditProperties" {$Results.Add("Edit Delivery Group Properties", "Delivery Groups")}
-			"DesktopGroup_PowerOperations_RDS" {$Results.Add("Perform power operations on Windows Server machines via Delivery Group membership", "Delivery Groups")}
-			"DesktopGroup_PowerOperations_VDI" {$Results.Add("Perform power operations on Windows Desktop machines via Delivery Group membership", "Delivery Groups")}
-			"DesktopGroup_Read" {$Results.Add("View Delivery Groups", "Delivery Groups")}
-			"DesktopGroup_RemoveApplication" {$Results.Add("Remove Application from Delivery Group", "Delivery Groups")}
-			"DesktopGroup_RemoveDesktop" {$Results.Add("Remove Desktop from Delivery Group", "Delivery Groups")}
-			"DesktopGroup_RemoveScope" {$Results.Add("Remove Delivery Group from Scope", "Delivery Groups")}
-			"DesktopGroup_SessionManagement" {$Results.Add("Perform session management on machines via Delivery Group membership", "Delivery Groups")}
-			"Director_ClientDetails_Read" {$Results.Add("View Client Details page", "Director")}
-			"Director_ClientHelpDesk_Read" {$Results.Add("View Client Activity Manager page", "Director")}
-			"Director_Dashboard_Read" {$Results.Add("View Dashboard page", "Director")}
-			"Director_DesktopHardwareInformation_Edit" {$Results.Add("Edit Machine Hardware related Broker machine command properties", "Director")}
-			"Director_HDXInformation_Edit" {$Results.Add("Edit HDX related Broker machine command properties", "Director")}
-			"Director_HelpDesk_Read" {$Results.Add("View Activity Manager page", "Director")}
-			"Director_KillApplication" {$Results.Add("Perform Kill Application running on a machine", "Director")}
-			"Director_KillApplication_Edit" {$Results.Add("Edit Kill Application related Broker machine command properties", "Director")}
-			"Director_KillProcess" {$Results.Add("Perform Kill Process running on a machine", "Director")}
-			"Director_KillProcess_Edit" {$Results.Add("Edit Kill Process related Broker machine command properties", "Director")}
-			"Director_LatencyInformation_Edit" {$Results.Add("Edit Latency related Broker machine command properties", "Director")}
-			"Director_MachineDetails_Read" {$Results.Add("View Machine Details page", "Director")}
-			"Director_MachineMetricValues_Edit" {$Results.Add("Edit Machine metric related Broker machine command properties", "Director")}
-			"Director_PersonalizationInformation_Edit" {$Results.Add("Edit Personalization related Broker machine command properties", "Director")}
-			"Director_PoliciesInformation_Edit" {$Results.Add("Edit Policies related Broker machine command properties", "Director")}
-			"Director_ResetVDisk" {$Results.Add("Perform Reset VDisk operation", "Director")}
-			"Director_ResetVDisk_Edit" {$Results.Add("Edit Reset VDisk related Broker machine command properties", "Director")}
-			"Director_RoundTripInformation_Edit" {$Results.Add("Edit Roundtrip Time related Broker machine command properties", "Director")}
-			"Director_ShadowSession" {$Results.Add("Perform Remote Assistance on a machine", "Director")}
-			"Director_ShadowSession_Edit" {$Results.Add("Edit Remote Assistance related Broker machine command properties", "Director")}
-			"Director_SliceAndDice_Read" {$Results.Add("View Filters page", "Director")}
-			"Director_TaskManagerInformation_Edit" {$Results.Add("Edit Task Manager related Broker machine command properties", "Director")}
-			"Director_Trends_Read" {$Results.Add("View Trends page", "Director")}
-			"Director_UserDetails_Read" {$Results.Add("View User Details page", "Director")}
-			"Director_WindowsSessionId_Edit" {$Results.Add("Edit Windows Sessionid related Broker machine command properties", "Director")}
-			"EnvTest" {$Results.Add("Run environment tests", "Other permissions")}
-			"Global_Read" {If(-not($Results.ContainsKey("Read Site Configuration"))){$Results.Add("Read Site Configuration", "Other permissions")}}
-			"Global_Write" {If(-not($Results.ContainsKey("Update Site Configuration"))){$Results.Add("Update Site Configuration", "Other permissions")}}
-			"Hosts_AddScope" {$Results.Add("Add Host Connection to Scope", "Hosts")}
-			"Hosts_AddStorage" {$Results.Add("Add storage to Resources", "Hosts")}
-			"Hosts_ChangeMaintenanceMode" {$Results.Add("Enable/disable maintenance mode of a Host Connection", "Hosts")}
-			"Hosts_Consume" {$Results.Add("Use Host Connection or Resources to Create Catalog", "Hosts")}
-			"Hosts_CreateHost" {$Results.Add("Add Host Connection or Resources", "Hosts")}
-			"Hosts_DeleteConnection" {$Results.Add("Delete Host Connection", "Hosts")}
-			"Hosts_DeleteHost" {$Results.Add("Delete Resources", "Hosts")}
-			"Hosts_EditConnectionProperties" {$Results.Add("Edit Host Connection properties", "Hosts")}
-			"Hosts_EditHostProperties" {$Results.Add("Edit Resources", "Hosts")}
-			"Hosts_Read" {$Results.Add("View Host Connections and Resources", "Hosts")}
-			"Hosts_RemoveScope" {$Results.Add("Remove Host Connection from Scope", "Hosts")}
-			"Licensing_ChangeLicenseServer" {$Results.Add("Change licensing server", "Licensing")}
-			"Licensing_EditLicensingProperties" {$Results.Add("Edit product edition", "Licensing")}
-			"Licensing_Read" {$Results.Add("View Licensing", "Licensing")}
-			"Logging_Delete" {$Results.Add("Delete Configuration Logs", "Logging")}
-			"Logging_EditPreferences" {$Results.Add("Edit Logging Preferences", "Logging")}
-			"Logging_Read" {$Results.Add("View Configuration Logs", "Logging")}
-			"PerformUpgrade" {$Results.Add("Perform upgrade", "Other permissions")}
-			"Policies_Manage" {$Results.Add("Manage Policies", "Policies")}
-			"Policies_Read" {$Results.Add("View Policies", "Policies")}
-			"Storefront_Create" {$Results.Add("Create a new StoreFront definition", "StoreFronts")}
-			"Storefront_Delete" {$Results.Add("Delete a StoreFront definition", "StoreFronts")}
-			"Storefront_Read" {$Results.Add("Read StoreFront definitions", "StoreFronts")}
-			"Storefront_Update" {$Results.Add("Update a StoreFront definition", "StoreFronts")}
-			"UPM_Reset_Profiles" {$Results.Add("Reset user profiles", "Director")}
-			"UPM_Reset_Profiles_Edit" {$Results.Add("Edit Reset User Profiles related Broker machine command properties", "Director")}
+			"Admin_FullControl"											{$Results.Add("Manage Administrators", "Administrators"); Break}
+			"Admin_Read"												{$Results.Add("View Administrators", "Administrators"); Break}
+			"Applications_AttachClientHostedApplicationToDesktopGroup"	{$Results.Add("Attach Local Access Application to Delivery Group", "Delivery Groups"); Break}
+			"Applications_ChangeMaintenanceMode"						{$Results.Add("Enable/disable maintenance mode of an Application", "Delivery Groups"); Break}
+			"Applications_ChangeTags"									{$Results.Add("Edit Application tags", "Delivery Groups"); Break}
+			"Applications_ChangeUserAssignment"							{$Results.Add("Change users assigned to an application", "Delivery Groups"); Break}
+			"Applications_Create"										{$Results.Add("Create Application", "Delivery Groups"); Break}
+			"Applications_CreateFolder"									{$Results.Add("Create Application Folder", "Delivery Groups"); Break}
+			"Applications_Delete"										{$Results.Add("Delete Application", "Delivery Groups"); Break}
+			"Applications_DetachClientHostedApplicationToDesktopGroup"	{$Results.Add("Detach Local Access Application from Delivery Group", "Delivery Groups"); Break}
+			"Applications_EditFolder"									{$Results.Add("Edit Application Folder", "Delivery Groups"); Break}
+			"Applications_EditProperties"								{$Results.Add("Edit Application Properties", "Delivery Groups"); Break}
+			"Applications_MoveFolder"									{$Results.Add("Move Application Folder", "Delivery Groups"); Break}
+			"Applications_Read"											{$Results.Add("View Applications", "Delivery Groups"); Break}
+			"Applications_RemoveFolder"									{$Results.Add("Remove Application Folder", "Delivery Groups"); Break}
+			"AppV_AddServer"											{$Results.Add("Add App-V publishing server", "App-V"); Break}
+			"AppV_DeleteServer"											{$Results.Add("Delete App-V publishing server", "App-V"); Break}
+			"AppV_Read"													{$Results.Add("Read App-V servers", "App-V"); Break}
+			"Catalog_AddMachines"										{$Results.Add("Add Machines to Machine Catalog", "Machine Catalogs"); Break}
+			"Catalog_AddScope"											{$Results.Add("Add Machine Catalog to Scope", "Machine Catalogs"); Break}
+			"Catalog_CancelProvTask"									{$Results.Add("Cancel Provisioning Task", "Machine Catalogs"); Break}
+			"Catalog_ChangeMachineMaintenanceMode"						{$Results.Add("Enable/disable maintenance mode of a machine via Machine Catalog membership", "Machine Catalogs"); Break}
+			"Catalog_ChangeMaintenanceMode"								{$Results.Add("Enable/disable maintenance mode on Desktop via Machine Catalog membership", "Machine Catalogs"); Break}
+			"Catalog_ChangeUserAssignment"								{$Results.Add("Change users assigned to a machine", "Machine Catalogs"); Break}
+			"Catalog_ConsumeMachines"									{$Results.Add("Allow machines to be consumed by a Delivery Group", "Machine Catalogs"); Break}
+			"Catalog_Create"											{$Results.Add("Create Machine Catalog", "Machine Catalogs"); Break}
+			"Catalog_Delete"											{$Results.Add("Delete Machine Catalog", "Machine Catalogs"); Break}
+			"Catalog_EditProperties"									{$Results.Add("Edit Machine Catalog Properties", "Machine Catalogs"); Break}
+			"Catalog_ManageAccounts"									{$Results.Add("Manage Active Directory Accounts", "Machine Catalogs"); Break}
+			"Catalog_PowerOperations_RDS"								{$Results.Add("Perform power operations on Windows Server machines via Machine Catalog membership", "Machine Catalogs"); Break}
+			"Catalog_PowerOperations_VDI"								{$Results.Add("Perform power operations on Windows Desktop machines via Machine Catalog membership", "Machine Catalogs"); Break}
+			"Catalog_Read"												{$Results.Add("View Machine Catalogs", "Machine Catalogs"); Break}
+			"Catalog_RemoveMachine"										{$Results.Add("Remove Machines from Machine Catalog", "Machine Catalogs"); Break}
+			"Catalog_RemoveScope"										{$Results.Add("Remove Machine Catalog from Scope", "Machine Catalogs"); Break}
+			"Catalog_SessionManagement"									{$Results.Add("Perform session management on machines via Machine Catalog membership", "Machine Catalogs"); Break}
+			"Catalog_UpdateMasterImage"									{$Results.Add("Perform Machine update", "Machine Catalogs"); Break}
+			"Configuration_Read"										{$Results.Add("Read Site Configuration (Configuration_Read)", "Other permissions"); Break}
+			"Configuration_Write"										{$Results.Add("Update Site Configuration (Configuration_Write)", "Other permissions"); Break}
+			"Controllers_Remove"										{$Results.Add("Remove Delivery Controller", "Controllers"); Break}
+			"DesktopGroup_AddApplication"								{$Results.Add("Add Application to Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_AddMachines"									{$Results.Add("Add Machines to Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_AddScope"										{$Results.Add("Add Delivery Group to Scope", "Delivery Groups"); Break}
+			"DesktopGroup_ChangeMachineMaintenanceMode"					{$Results.Add("Enable/disable maintenance mode of a machine via Delivery Group membership", "Delivery Groups"); Break}
+			"DesktopGroup_ChangeMaintenanceMode"						{$Results.Add("Enable/disable maintenance mode of a Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_ChangeTags"									{$Results.Add("Edit Delivery Group tags", "Delivery Groups"); Break}
+			"DesktopGroup_ChangeUserAssignment"							{$Results.Add("Change users assigned to a desktop", "Delivery Groups"); Break}
+			"DesktopGroup_Create"										{$Results.Add("Create Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_Delete"										{$Results.Add("Delete Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_EditProperties"								{$Results.Add("Edit Delivery Group Properties", "Delivery Groups"); Break}
+			"DesktopGroup_PowerOperations_RDS"							{$Results.Add("Perform power operations on Windows Server machines via Delivery Group membership", "Delivery Groups"); Break}
+			"DesktopGroup_PowerOperations_VDI"							{$Results.Add("Perform power operations on Windows Desktop machines via Delivery Group membership", "Delivery Groups"); Break}
+			"DesktopGroup_Read"											{$Results.Add("View Delivery Groups", "Delivery Groups"); Break}
+			"DesktopGroup_RemoveApplication"							{$Results.Add("Remove Application from Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_RemoveDesktop"								{$Results.Add("Remove Desktop from Delivery Group", "Delivery Groups"); Break}
+			"DesktopGroup_RemoveScope"									{$Results.Add("Remove Delivery Group from Scope", "Delivery Groups"); Break}
+			"DesktopGroup_SessionManagement"							{$Results.Add("Perform session management on machines via Delivery Group membership", "Delivery Groups"); Break}
+			"Director_ClientDetails_Read"								{$Results.Add("View Client Details page", "Director"); Break}
+			"Director_ClientHelpDesk_Read"								{$Results.Add("View Client Activity Manager page", "Director"); Break}
+			"Director_Dashboard_Read"									{$Results.Add("View Dashboard page", "Director"); Break}
+			"Director_DesktopHardwareInformation_Edit"					{$Results.Add("Edit Machine Hardware related Broker machine command properties", "Director"); Break}
+			"Director_HDXInformation_Edit"								{$Results.Add("Edit HDX related Broker machine command properties", "Director"); Break}
+			"Director_HelpDesk_Read"									{$Results.Add("View Activity Manager page", "Director"); Break}
+			"Director_KillApplication"									{$Results.Add("Perform Kill Application running on a machine", "Director"); Break}
+			"Director_KillApplication_Edit"								{$Results.Add("Edit Kill Application related Broker machine command properties", "Director"); Break}
+			"Director_KillProcess"										{$Results.Add("Perform Kill Process running on a machine", "Director"); Break}
+			"Director_KillProcess_Edit"									{$Results.Add("Edit Kill Process related Broker machine command properties", "Director"); Break}
+			"Director_LatencyInformation_Edit"							{$Results.Add("Edit Latency related Broker machine command properties", "Director"); Break}
+			"Director_MachineDetails_Read"								{$Results.Add("View Machine Details page", "Director"); Break}
+			"Director_MachineMetricValues_Edit"							{$Results.Add("Edit Machine metric related Broker machine command properties", "Director"); Break}
+			"Director_PersonalizationInformation_Edit"					{$Results.Add("Edit Personalization related Broker machine command properties", "Director"); Break}
+			"Director_PoliciesInformation_Edit"							{$Results.Add("Edit Policies related Broker machine command properties", "Director"); Break}
+			"Director_ResetVDisk"										{$Results.Add("Perform Reset VDisk operation", "Director"); Break}
+			"Director_ResetVDisk_Edit"									{$Results.Add("Edit Reset VDisk related Broker machine command properties", "Director"); Break}
+			"Director_RoundTripInformation_Edit"						{$Results.Add("Edit Roundtrip Time related Broker machine command properties", "Director"); Break}
+			"Director_ShadowSession"									{$Results.Add("Perform Remote Assistance on a machine", "Director"); Break}
+			"Director_ShadowSession_Edit"								{$Results.Add("Edit Remote Assistance related Broker machine command properties", "Director"); Break}
+			"Director_SliceAndDice_Read"								{$Results.Add("View Filters page", "Director"); Break}
+			"Director_TaskManagerInformation_Edit"						{$Results.Add("Edit Task Manager related Broker machine command properties", "Director"); Break}
+			"Director_Trends_Read"										{$Results.Add("View Trends page", "Director"); Break}
+			"Director_UserDetails_Read"									{$Results.Add("View User Details page", "Director"); Break}
+			"Director_WindowsSessionId_Edit"							{$Results.Add("Edit Windows Sessionid related Broker machine command properties", "Director"); Break}
+			"EnvTest"													{$Results.Add("Run environment tests", "Other permissions"); Break}
+			"Global_Read"												{$Results.Add("Read Site Configuration (Global_Read)", "Other permissions"); Break}
+			"Global_Write"												{$Results.Add("Update Site Configuration (Global_Write)", "Other permissions"); Break}
+			"Hosts_AddScope"											{$Results.Add("Add Host Connection to Scope", "Hosts"); Break}
+			"Hosts_AddStorage"											{$Results.Add("Add storage to Resources", "Hosts"); Break}
+			"Hosts_ChangeMaintenanceMode"								{$Results.Add("Enable/disable maintenance mode of a Host Connection", "Hosts"); Break}
+			"Hosts_Consume"												{$Results.Add("Use Host Connection or Resources to Create Catalog", "Hosts"); Break}
+			"Hosts_CreateHost"											{$Results.Add("Add Host Connection or Resources", "Hosts"); Break}
+			"Hosts_DeleteConnection"									{$Results.Add("Delete Host Connection", "Hosts"); Break}
+			"Hosts_DeleteHost"											{$Results.Add("Delete Resources", "Hosts"); Break}
+			"Hosts_EditConnectionProperties"							{$Results.Add("Edit Host Connection properties", "Hosts"); Break}
+			"Hosts_EditHostProperties"									{$Results.Add("Edit Resources", "Hosts"); Break}
+			"Hosts_Read"												{$Results.Add("View Host Connections and Resources", "Hosts"); Break}
+			"Hosts_RemoveScope"											{$Results.Add("Remove Host Connection from Scope", "Hosts"); Break}
+			"Licensing_ChangeLicenseServer"								{$Results.Add("Change licensing server", "Licensing"); Break}
+			"Licensing_EditLicensingProperties"							{$Results.Add("Edit product edition", "Licensing"); Break}
+			"Licensing_Read"											{$Results.Add("View Licensing", "Licensing"); Break}
+			"Logging_Delete"											{$Results.Add("Delete Configuration Logs", "Logging"); Break}
+			"Logging_EditPreferences"									{$Results.Add("Edit Logging Preferences", "Logging"); Break}
+			"Logging_Read"												{$Results.Add("View Configuration Logs", "Logging"); Break}
+			"PerformUpgrade"											{$Results.Add("Perform upgrade", "Other permissions"); Break}
+			"Policies_Manage"											{$Results.Add("Manage Policies", "Policies"); Break}
+			"Policies_Read"												{$Results.Add("View Policies", "Policies"); Break}
+			"Storefront_Create"											{$Results.Add("Create a new StoreFront definition", "StoreFronts"); Break}
+			"Storefront_Delete"											{$Results.Add("Delete a StoreFront definition", "StoreFronts"); Break}
+			"Storefront_Read"											{$Results.Add("Read StoreFront definitions", "StoreFronts"); Break}
+			"Storefront_Update"											{$Results.Add("Update a StoreFront definition", "StoreFronts"); Break}
+			"UPM_Reset_Profiles"										{$Results.Add("Reset user profiles", "Director"); Break}
+			"UPM_Reset_Profiles_Edit"									{$Results.Add("Edit Reset User Profiles related Broker machine command properties", "Director"); Break}
 		}
 	}
 
@@ -24538,11 +24538,11 @@ Function OutputHosting
 	$xxConnectionType = ""
 	Switch ($xConnectionType)
 	{
-		"XenServer" {$xxConnectionType = "XenServer"}
-		"SCVMM"     {$xxConnectionType = "Microsoft System Center Virtual Machine Manager"}
-		"vCenter"   {$xxConnectionType = "VMware virtualization"}
-		"Custom"    {$xxConnectionType = "Custom"}
-		Default     {$xxConnectionType = "Hypervisor Type could not be determined: $($xConnectionType)"}
+		"XenServer" {$xxConnectionType = "XenServer"; Break}
+		"SCVMM"     {$xxConnectionType = "Microsoft System Center Virtual Machine Manager"; Break}
+		"vCenter"   {$xxConnectionType = "VMware virtualization"; Break}
+		"Custom"    {$xxConnectionType = "Custom"; Break}
+		Default     {$xxConnectionType = "Hypervisor Type could not be determined: $($xConnectionType)"; Break}
 	}
 
 	$xxState = ""
@@ -25366,21 +25366,21 @@ Function OutputLicensingOverview
 	{
 		Switch ($Script:XDSite2.ProductEdition)
 		{
-			"PLT" {$LicenseEditionType = "Platinum Edition"}
-			"ENT" {$LicenseEditionType = "Enterprise Edition"}
-			"APP" {$LicenseEditionType = "App Edition"}
-			"STD" {$LicenseEditionType = "VDI Edition"}
-			Default {$LicenseEditionType = "License edition could not be determined: $($Script:XDSite2.ProductEdition)"}
+			"PLT" {$LicenseEditionType = "Platinum Edition"; Break}
+			"ENT" {$LicenseEditionType = "Enterprise Edition"; Break}
+			"APP" {$LicenseEditionType = "App Edition"; Break}
+			"STD" {$LicenseEditionType = "VDI Edition"; Break}
+			Default {$LicenseEditionType = "License edition could not be determined: $($Script:XDSite2.ProductEdition)"; Break}
 		}
 	}
 	ElseIf($Script:XDSite2.ProductCode -eq "MPS")
 	{
 		Switch ($Script:XDSite2.ProductEdition)
 		{
-			"PLT" {$LicenseEditionType = "Platinum Edition"}
-			"ENT" {$LicenseEditionType = "Enterprise Edition"}
-			"ADV" {$LicenseEditionType = "Advanced Edition"}
-			Default {$LicenseEditionType = "License edition could not be determined: $($Script:XDSite2.ProductEdition)"}
+			"PLT" {$LicenseEditionType = "Platinum Edition"; Break}
+			"ENT" {$LicenseEditionType = "Enterprise Edition"; Break}
+			"ADV" {$LicenseEditionType = "Advanced Edition"; Break}
+			Default {$LicenseEditionType = "License edition could not be determined: $($Script:XDSite2.ProductEdition)"; Break}
 		}
 	}
 
@@ -26710,20 +26710,20 @@ Function ProcessScriptSetup
 	[string]$Script:XDSiteName = $Script:XDSite2.SiteName
 	Switch ($Section)
 	{
-		"Admins" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Administrators Only)"}
-		"Apps" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Applications Only)"}
-		"AppV" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (App-V Only"}
-		"Catalogs" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Machine Catalogs Only)"}
-		"Config" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Only)"}
-		"Controllers" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Controllers Only)"}
-		"Groups" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Delivery Groups Only)"}
-		"Hosting" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Hosting Only)"}
-		"Licensing" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Licensing Only)"}
-		"Logging" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Logging Only"}
-		"Policies" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Policies Only)"}
-		"StoreFront" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (StoreFront Only)"}
-		"Zones" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Zones Only)"}
-		"All" {[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site"}
+		"Admins" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Administrators Only)"; Break}
+		"Apps" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Applications Only)"; Break}
+		"AppV" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (App-V Only"; Break}
+		"Catalogs" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Machine Catalogs Only)"; Break}
+		"Config" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Only)"; Break}
+		"Controllers"	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Controllers Only)"; Break}
+		"Groups" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Delivery Groups Only)"; Break}
+		"Hosting" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Hosting Only)"; Break}
+		"Licensing" 	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Licensing Only)"; Break}
+		"Logging" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Logging Only"; Break}
+		"Policies" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Policies Only)"; Break}
+		"StoreFront" 	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (StoreFront Only)"; Break}
+		"Zones" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Zones Only)"; Break}
+		"All" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site"; Break}
 	}
 	Write-Verbose "$(Get-Date): Initial Site data has been gathered"
 }
