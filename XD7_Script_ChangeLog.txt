@@ -8,9 +8,10 @@
 #		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
 #		is not found on the computer running the script, then look on the computer specified for -AdminAddress
 #		If still not found on that computer, abort the script
+#	Added "Database Size" to the Datastores output
 #	Cleaned up many Switch () Statements
+#	Updated Function OutputDatastores to add database size and fix output for mirrored databases
 #	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
-#	Working on why Mirrored database information is not shown properly
 
 #Version 1.35 21-Jun-2017
 #	Added new parameter MaxDetails:
