@@ -1218,17 +1218,21 @@ Param(
 #			StoreFront
 #	Updated help text
 #
-#Version 1.36
+#Version 1.36 26-Jun-2017
 #	Added additional error checking for Site version information
 #		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
 #		is not found on the computer running the script, then look on the computer specified for -AdminAddress
 #		If still not found on that computer, abort the script
 #	Added "Database Size" to the Datastores output
 #	Added loading the SQL Server assembly so the database size calculations work consistently (thanks to Michael B. Smith)
+#	Added showing the XenApp/XenDesktop version at the beginning of the script
 #	Cleaned up many Switch () Statements
 #	Fixed the "CPU Usage", "Disk Usage", and "Memory Usage" policy settings
 #		When those settings are Disabled, they are stored as Enabled with a Value of -1
-#	Updated Function OutputDatastores to add database size and fix output for mirrored databases
+#	Updated Function OutputDatastores to:
+#		Add database size
+#		Fix output for mirrored databases
+#		Check if SQL Server assembly is loaded before calculating database size
 #	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
 #	
 #endregion
@@ -26774,6 +26778,10 @@ Function ProcessScriptSetup
 	[int]$MajorVersion = $tmp[0]
 	[int]$MinorVersion = $tmp[1]
 	
+	Write-Verbose "$(Get-Date): You are running version $($value)"
+	Write-Verbose "$(Get-Date): Major version $($MajorVersion)"
+	Write-Verbose "$(Get-Date): Minor version $($MinorVersion)"
+
 	#first check to make sure this is a Site between 7.0 and 7.7
 	If($MajorVersion -eq 7)
 	{
@@ -26783,6 +26791,12 @@ Function ProcessScriptSetup
 			Write-Warning "This script is designed for XenDesktop 7.7 and prior and should not be run on 7.8 and later.`n`nScript cannot continue`n"
 			AbortScript
 		}
+	}
+	ElseIf($MajorVersion -eq 0 -and $MinorVersion -eq 0)
+	{
+		#something is wrong, we shouldn't be here
+		Write-Verbose "$(Get-Date): Something bad happened. We shouldn't be here. Could not find the version information.`n`nScript cannot continue`n"
+		AbortScript
 	}
 	Else
 	{
@@ -26828,7 +26842,7 @@ Function ProcessScriptSetup
 	Write-Verbose "$(Get-Date): Initial Site data has been gathered"
 	
 	#added 25-Jun-2017 with a lot of help from Michael B. Smith
-	#make sure the SQL Server assemble is loaded, if not, later on don't bother calculating the various database sizes
+	#make sure the SQL Server assembly is loaded, if not, later on don't bother calculating the various database sizes
 	Write-Verbose "$(Get-Date): Loading SQL Server Assembly"
 	[bool]$Script:SQLServerLoaded = $False
 	
@@ -26842,24 +26856,6 @@ Function ProcessScriptSetup
 	{
 		Write-Verbose "$(Get-Date): `tSQL Server Assembly successefully loaded"
 		$Script:SQLServerLoaded = $True
-		$version = ( $asm.FullName.Split( ',' ).Trim() )[1]
-		$verNum = $version.SubString( $version.IndexOf( '=' ) + 1 )
-		$objVer = $verNum –as [Version]
-		$Major = $objVer.Major
-		$Minor = $objVer.Minor
-		$SQLVer = ""
-		Switch ($Major)
-		{
-			8						{$SQLVer = "SQL Server 2000"; Break}
-			9						{$SQLVer = "SQL Server 2005"; Break}
-			{10 -and $Minor -eq 0}	{$SQLVer = "SQL Server 2008"}
-			{10 -and $Minor -eq 5}	{$SQLVer = "SQL Server 2008 R2"}
-			11						{$SQLVer = "SQL Server 2012"; Break}
-			12						{$SQLVer = "SQL Server 2014"; Break}
-			13						{$SQLVer = "SQL Server 2016"; Break}
-			Default					{$SQLVer = "Unable to determine SQL Server version"; Break}
-		}
-		Write-Verbose "$(Get-Date): `t`tRunning SQL Server version $($Major).$($Minor) $($SQLVer)"
 	}
 }
 #endregion

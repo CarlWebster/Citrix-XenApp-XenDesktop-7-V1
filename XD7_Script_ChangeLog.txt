@@ -3,13 +3,14 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
-#Version 1.36
+#Version 1.36 26-Jun-2017
 #	Added additional error checking for Site version information
 #		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
 #		is not found on the computer running the script, then look on the computer specified for -AdminAddress
 #		If still not found on that computer, abort the script
 #	Added "Database Size" to the Datastores output
 #	Added loading the SQL Server assembly so the database size calculations work consistently (thanks to Michael B. Smith)
+#	Added showing the XenApp/XenDesktop version at the beginning of the script
 #	Cleaned up many Switch () Statements
 #	Fixed the "CPU Usage", "Disk Usage", and "Memory Usage" policy settings
 #		When those settings are Disabled, they are stored as Enabled with a Value of -1
