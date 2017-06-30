@@ -1,16 +1,8 @@
-#Version 1.36 26-Jun-2017
-#	Added additional error checking for Site version information
-#		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
-#		is not found on the computer running the script, then look on the computer specified for -AdminAddress
-#		If still not found on that computer, abort the script
-#	Added "Database Size" to the Datastores output
-#	Added loading the SQL Server assembly so the database size calculations work consistently (thanks to Michael B. Smith)
-#	Added showing the XenApp/XenDesktop version at the beginning of the script
-#	Cleaned up many Switch () Statements
-#	Fixed the "CPU Usage", "Disk Usage", and "Memory Usage" policy settings
-#		When those settings are Disabled, they are stored as Enabled with a Value of -1
-#	Updated Function OutputDatastores to:
-#		Add database size
-#		Fix output for mirrored databases
-#		Check if SQL Server assembly is loaded before calculating database size
-#	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
+#Version 1.37 30-Jun-2017
+#	Added Function GetSQLVersion
+#	Added Read-Committed Snapshot and SQL Server version data to Datastore table
+#	If any of the databases are configured for mirroring and the database size is null,
+#		use the mirror server's name to calculate the size
+#		if the size is still null, report "Unable to determine"
+#	If SQL Server mirroring is not configured, in the Datastore table use "Not Configured" for the Mirror Server Address
+#
