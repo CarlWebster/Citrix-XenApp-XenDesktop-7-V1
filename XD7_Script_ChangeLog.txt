@@ -3,6 +3,14 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.37 30-Jun-2017
+#	Added Function GetSQLVersion
+#	Added Read-Committed Snapshot and SQL Server version data to Datastore table
+#	If any of the databases are configured for mirroring and the database size is null,
+#		use the mirror server's name to calculate the size
+#		if the size is still null, report "Unable to determine"
+#	If SQL Server mirroring is not configured, in the Datastore table use "Not Configured" for the Mirror Server Address
+
 #Version 1.36 26-Jun-2017
 #	Added additional error checking for Site version information
 #		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
