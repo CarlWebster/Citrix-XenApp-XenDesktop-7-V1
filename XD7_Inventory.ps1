@@ -832,9 +832,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.37
+	VERSION: 1.38
 	AUTHOR: Carl Webster
-	LASTEDIT: June 30, 2017
+	LASTEDIT: October 9, 2017
 #>
 
 #endregion
@@ -1243,6 +1243,14 @@ Param(
 #		if the size is still null, report "Unable to determine"
 #	If SQL Server mirroring is not configured, in the Datastore table use "Not Configured" for the Mirror Server Address
 #
+#Version 1.38 9-Oct-2017
+#	From version 1.33:
+#		Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
+#		This is only valid for XenApp/XenDesktop version 7.6 and later
+#		Use (Get-BrokerServiceAddedCapability) -contains "ApplicationFolders" to determine version info
+#		For XA/XD versions before 7.6, sort applications by Name property only
+#		For versions 7.0 thru 7.5, use the Name property for output, 7.6+ use ApplicationName
+#	
 #endregion
 
 #region initial variable testing and setup
@@ -10112,7 +10120,14 @@ Function OutputDeliveryGroupApplicationDetails
 
 		ForEach($Application in $AllApplications)
 		{
-			Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.ApplicationName)"
+			If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+			{
+				Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.ApplicationName)"
+			}
+			Else
+			{
+				Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.Name)"
+			}
 
 			$xEnabled = "Enabled"
 			If($Application.Enabled -eq $False)
@@ -10128,29 +10143,63 @@ Function OutputDeliveryGroupApplicationDetails
 			
 			If($MSWord -or $PDF)
 			{
-				$WordTableRowHash = @{
-				ApplicationName = $Application.ApplicationName; 
-				Description = $Application.Description; 
-				Location = $xLocation;
-				Enabled = $xEnabled; 
+				If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+				{
+					$WordTableRowHash = @{
+					ApplicationName = $Application.ApplicationName; 
+					Description = $Application.Description; 
+					Location = $xLocation;
+					Enabled = $xEnabled; 
+					}
+				}
+				Else
+				{
+					$WordTableRowHash = @{
+					ApplicationName = $Application.Name; 
+					Description = $Application.Description; 
+					Location = $xLocation;
+					Enabled = $xEnabled; 
+					}
 				}
 				$AllApplicationsWordTable += $WordTableRowHash;
 			}
 			ElseIf($Text)
 			{
-				Line 1 "Name`t`t: " $Application.ApplicationName
-				Line 1 "Description`t: " $Application.Description
-				Line 1 "Location`t: " $xLocation
-				Line 1 "State`t`t: " $xEnabled
-				Line 0 ""
+				If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+				{
+					Line 1 "Name`t`t: " $Application.ApplicationName
+					Line 1 "Description`t: " $Application.Description
+					Line 1 "Location`t: " $xLocation
+					Line 1 "State`t`t: " $xEnabled
+					Line 0 ""
+				}
+				Else
+				{
+					Line 1 "Name`t`t: " $Application.Name
+					Line 1 "Description`t: " $Application.Description
+					Line 1 "Location`t: " $xLocation
+					Line 1 "State`t`t: " $xEnabled
+					Line 0 ""
+				}
 			}
 			ElseIf($HTML)
 			{
-				$rowdata += @(,(
-				$Application.ApplicationName,$htmlwhite,
-				$Application.Description,$htmlwhite,
-				$xLocation,$htmlwhite,
-				$xEnabled,$htmlwhite))
+				If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+				{
+					$rowdata += @(,(
+					$Application.ApplicationName,$htmlwhite,
+					$Application.Description,$htmlwhite,
+					$xLocation,$htmlwhite,
+					$xEnabled,$htmlwhite))
+				}
+				Else
+				{
+					$rowdata += @(,(
+					$Application.Name,$htmlwhite,
+					$Application.Description,$htmlwhite,
+					$xLocation,$htmlwhite,
+					$xEnabled,$htmlwhite))
+				}
 			}
 		}
 
@@ -10318,7 +10367,15 @@ Function ProcessApplications
 	$Global:TotalPublishedApplications = 0
 	$Global:TotalAppvApplications = 0
 	
-	$AllApplications = Get-BrokerApplication @XDParams2 -SortBy "AdminFolderName,ApplicationName"
+	If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+	{
+		$AllApplications = Get-BrokerApplication @XDParams2 -SortBy "AdminFolderName,ApplicationName"
+	}
+	Else
+	{
+		$AllApplications = Get-BrokerApplication @XDParams2 -SortBy "Name"
+	}
+	
 	If($? -and $Null -ne $AllApplications)
 	{
 		OutputApplications $AllApplications
@@ -10369,7 +10426,14 @@ Function OutputApplications
 
 	ForEach($Application in $AllApplications)
 	{
-		Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.ApplicationName)"
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.ApplicationName)"
+		}
+		Else
+		{
+			Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.Name)"
+		}
 
 		$xEnabled = "Enabled"
 		If($Application.Enabled -eq $False)
@@ -10394,50 +10458,102 @@ Function OutputApplications
 		
 		If($MSWord -or $PDF)
 		{
-			$WordTableRowHash = @{
-			FolderName = $Application.AdminFolderName;
-			ApplicationName = $Application.ApplicationName; 
-			Description = $Application.Description; 
-			Location = $xLocation;
-			Enabled = $xEnabled; 
+			If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+			{
+				$WordTableRowHash = @{
+				FolderName = $Application.AdminFolderName;
+				ApplicationName = $Application.ApplicationName; 
+				Description = $Application.Description; 
+				Location = $xLocation;
+				Enabled = $xEnabled; 
+				}
+			}
+			Else
+			{
+				$WordTableRowHash = @{
+				ApplicationName = $Application.Name; 
+				Description = $Application.Description; 
+				Location = $xLocation;
+				Enabled = $xEnabled; 
+				}
 			}
 			$AllApplicationsWordTable += $WordTableRowHash;
 		}
 		ElseIf($Text)
 		{
-			Line 1 "Folder`t`t: " $Application.AdminFolderName
-			Line 1 "Name`t`t: " $Application.ApplicationName
-			Line 1 "Description`t: " $Application.Description
-			Line 1 "Location`t: " $xLocation
-			Line 1 "State`t`t: " $xEnabled
-			Line 0 ""
+			If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+			{
+				Line 1 "Folder`t`t: " $Application.AdminFolderName
+				Line 1 "Name`t`t: " $Application.ApplicationName
+				Line 1 "Description`t: " $Application.Description
+				Line 1 "Location`t: " $xLocation
+				Line 1 "State`t`t: " $xEnabled
+				Line 0 ""
+			}
+			Else
+			{
+				Line 1 "Name`t`t: " $Application.Name
+				Line 1 "Description`t: " $Application.Description
+				Line 1 "Location`t: " $xLocation
+				Line 1 "State`t`t: " $xEnabled
+				Line 0 ""
+			}
 		}
 		ElseIf($HTML)
 		{
-			$rowdata += @(,(
-			$Application.AdminFolderName,$htmlwhite,
-			$Application.ApplicationName,$htmlwhite,
-			$Application.Description,$htmlwhite,
-			$xLocation,$htmlwhite,
-			$xEnabled,$htmlwhite))
+			If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+			{
+				$rowdata += @(,(
+				$Application.AdminFolderName,$htmlwhite,
+				$Application.ApplicationName,$htmlwhite,
+				$Application.Description,$htmlwhite,
+				$xLocation,$htmlwhite,
+				$xEnabled,$htmlwhite))
+			}
+			Else
+			{
+				$rowdata += @(,(
+				$Application.Name,$htmlwhite,
+				$Application.Description,$htmlwhite,
+				$xLocation,$htmlwhite,
+				$xEnabled,$htmlwhite))
+			}
 		}
 	}
 
 	If($MSWord -or $PDF)
 	{
-		$Table = AddWordTable -Hashtable $AllApplicationsWordTable `
-		-Columns  FolderName,ApplicationName,Description,Location,Enabled `
-		-Headers  "Folder","Name","Description","Location","State" `
-		-Format $wdTableGrid `
-		-AutoFit $wdAutoFitFixed;
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			$Table = AddWordTable -Hashtable $AllApplicationsWordTable `
+			-Columns  FolderName,ApplicationName,Description,Location,Enabled `
+			-Headers  "Folder","Name","Description","Location","State" `
+			-Format $wdTableGrid `
+			-AutoFit $wdAutoFitFixed;
 
-		SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+			SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
 
-		$Table.Columns.Item(1).Width = 100;
-		$Table.Columns.Item(2).Width = 145;
-		$Table.Columns.Item(3).Width = 125;
-		$Table.Columns.Item(4).Width = 80;
-		$Table.Columns.Item(5).Width = 50;
+			$Table.Columns.Item(1).Width = 100;
+			$Table.Columns.Item(2).Width = 145;
+			$Table.Columns.Item(3).Width = 125;
+			$Table.Columns.Item(4).Width = 80;
+			$Table.Columns.Item(5).Width = 50;
+		}
+		Else
+		{
+			$Table = AddWordTable -Hashtable $AllApplicationsWordTable `
+			-Columns  ApplicationName,Description,Location,Enabled `
+			-Headers  "Name","Description","Location","State" `
+			-Format $wdTableGrid `
+			-AutoFit $wdAutoFitFixed;
+
+			SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+
+			$Table.Columns.Item(2).Width = 145;
+			$Table.Columns.Item(3).Width = 125;
+			$Table.Columns.Item(4).Width = 80;
+			$Table.Columns.Item(5).Width = 50;
+		}
 
 		$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
 
@@ -10447,16 +10563,31 @@ Function OutputApplications
 	}
 	ElseIf($HTML)
 	{
-		$columnHeaders = @(
-		'Folder',($htmlsilver -bor $htmlbold),
-		'Name',($htmlsilver -bor $htmlbold),
-		'Description',($htmlsilver -bor $htmlbold),
-		'Location',($htmlsilver -bor $htmlbold),
-		'State',($htmlsilver -bor $htmlbold))
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			$columnHeaders = @(
+			'Folder',($htmlsilver -bor $htmlbold),
+			'Name',($htmlsilver -bor $htmlbold),
+			'Description',($htmlsilver -bor $htmlbold),
+			'Location',($htmlsilver -bor $htmlbold),
+			'State',($htmlsilver -bor $htmlbold))
 
-		$msg = ""
-		$columnWidths = @("100","145","125","80","50")
-		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "500"
+			$msg = ""
+			$columnWidths = @("100","145","125","80","50")
+			FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "500"
+		}
+		Else
+		{
+			$columnHeaders = @(
+			'Name',($htmlsilver -bor $htmlbold),
+			'Description',($htmlsilver -bor $htmlbold),
+			'Location',($htmlsilver -bor $htmlbold),
+			'State',($htmlsilver -bor $htmlbold))
+
+			$msg = ""
+			$columnWidths = @("145","125","80","50")
+			FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "400"
+		}
 		WriteHTMLLine 0 0 " "
 	}
 
@@ -10467,16 +10598,37 @@ Function OutputApplications
 			If($MSWord -or $PDF)
 			{
 				$Selection.InsertNewPage()
-				WriteWordLine 2 0 $Application.ApplicationName
+				If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+				{
+					WriteWordLine 2 0 $Application.ApplicationName
+				}
+				Else
+				{
+					WriteWordLine 2 0 $Application.Name
+				}
 			}
 			ElseIf($Text)
 			{
 				Line 0 ""
-				Line 0 $Application.ApplicationName
+				If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+				{
+					Line 0 $Application.ApplicationName
+				}
+				Else
+				{
+					Line 0 $Application.Name
+				}
 			}
 			ElseIf($HTML)
 			{
-				WriteHTMLLine 2 0 $Application.ApplicationName
+				If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+				{
+					WriteHTMLLine 2 0 $Application.ApplicationName
+				}
+				Else
+				{
+					WriteHTMLLine 2 0 $Application.Name
+				}
 			}
 			
 			OutputApplicationDetails $Application
@@ -10490,7 +10642,15 @@ Function OutputApplicationDetails
 {
 	Param([object] $Application)
 	
-	Write-Verbose "$(Get-Date): `t`tApplication details for $($Application.ApplicationName)"
+	If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+	{
+		Write-Verbose "$(Get-Date): `t`tApplication details for $($Application.ApplicationName)"
+	}
+	Else
+	{
+		Write-Verbose "$(Get-Date): `t`tApplication details for $($Application.Name)"
+	}
+	
 	$txt = "Details"
 	If($MSWord -or $PDF)
 	{
@@ -10587,8 +10747,11 @@ Function OutputApplicationDetails
 				$ScriptInformation += @{ Data = ""; Value = $Group; }
 			}
 		}
-		$ScriptInformation += @{ Data = "Folder (for administrators)"; Value = $Application.AdminFolderName; }
-		$ScriptInformation += @{ Data = "Folder (for user)"; Value = $Application.ClientFolder; }
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			$ScriptInformation += @{ Data = "Folder (for administrators)"; Value = $Application.AdminFolderName; }
+			$ScriptInformation += @{ Data = "Folder (for user)"; Value = $Application.ClientFolder; }
+		}
 		$ScriptInformation += @{ Data = "Visibility"; Value = $xVisibility[0]; }
 		$cnt = -1
 		ForEach($tmp in $xVisibility)
@@ -10690,8 +10853,11 @@ Function OutputApplicationDetails
 				Line 5 "  " $Group
 			}
 		}
-		Line 1 "Folder (for administrators)`t: " $Application.AdminFolderName
-		Line 1 "Folder (for user)`t`t: " $Application.ClientFolder
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			Line 1 "Folder (for administrators)`t: " $Application.AdminFolderName
+			Line 1 "Folder (for user)`t`t: " $Application.ClientFolder
+		}
 		Line 1 "Visibility`t`t`t: " $xVisibility[0]
 		$cnt = -1
 		ForEach($tmp in $xVisibility)
@@ -10771,8 +10937,11 @@ Function OutputApplicationDetails
 				$rowdata += @(,('',($htmlsilver -bor $htmlbold),$Group,$htmlwhite))
 			}
 		}
-		$rowdata += @(,('Folder (for administrators)',($htmlsilver -bor $htmlbold),$Application.AdminFolderName,$htmlwhite))
-		$rowdata += @(,('Folder (for user)',($htmlsilver -bor $htmlbold),$Application.ClientFolder,$htmlwhite))
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			$rowdata += @(,('Folder (for administrators)',($htmlsilver -bor $htmlbold),$Application.AdminFolderName,$htmlwhite))
+			$rowdata += @(,('Folder (for user)',($htmlsilver -bor $htmlbold),$Application.ClientFolder,$htmlwhite))
+		}
 		$rowdata += @(,('Visibility',($htmlsilver -bor $htmlbold),$xVisibility[0],$htmlwhite))
 		$cnt = -1
 		ForEach($tmp in $xVisibility)
@@ -10964,12 +11133,26 @@ Function OutputApplicationSessions
 	}
 	ElseIf($? -and $Null -eq $Sessions)
 	{
-		$txt = "There are no Sessions for Application $($Application.ApplicationName)"
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			$txt = "There are no Sessions for Application $($Application.ApplicationName)"
+		}
+		Else
+		{
+			$txt = "There are no Sessions for Application $($Application.Name)"
+		}
 		OutputWarning $txt
 	}
 	Else
 	{
-		$txt = "Unable to retrieve Sessions for Application $($Application.ApplicationName)"
+		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+		{
+			$txt = "Unable to retrieve Sessions for Application $($Application.ApplicationName)"
+		}
+		Else
+		{
+			$txt = "Unable to retrieve Sessions for Application $($Application.Name)"
+		}
 		OutputWarning $txt
 	}
 }
@@ -10978,7 +11161,15 @@ Function OutputApplicationAdministrators
 {
 	Param([object] $Application)
 	
-	Write-Verbose "$(Get-Date): `t`tApplication administrators for $($Application.ApplicationName)"
+	If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
+	{
+		Write-Verbose "$(Get-Date): `t`tApplication administrators for $($Application.ApplicationName)"
+	}
+	Else
+	{
+		Write-Verbose "$(Get-Date): `t`tApplication administrators for $($Application.Name)"
+	}
+	
 	$txt = "Administrators"
 	If($MSWord -or $PDF)
 	{
@@ -11856,10 +12047,10 @@ Function ProcessCitrixPolicies
 						ElseIf($Text)
 						{
 							Line 1 $txt
+						}	
 						ElseIf($HTML)
 						{
 							WriteHTMLLine 3 0 $txt
-						}
 						}
 					}
 					$First = $False
