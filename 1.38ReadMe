@@ -1,7 +1,8 @@
-#Version 1.38 9-Oct-2017
-#	From version 1.33:
-#		Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
-#		This is only valid for XenApp/XenDesktop version 7.6 and later
-#		Use (Get-BrokerServiceAddedCapability) -contains "ApplicationFolders" to determine version info
-#		For XA/XD versions before 7.6, sort applications by Name property only
-#		For versions 7.0 thru 7.5, use the Name property for output, 7.6+ use ApplicationName
+#Version 1.37 30-Jun-2017
+#	Added Function GetSQLVersion
+#	Added Read-Committed Snapshot and SQL Server version data to Datastore table
+#	If any of the databases are configured for mirroring and the database size is null,
+#		use the mirror server's name to calculate the size
+#		if the size is still null, report "Unable to determine"
+#	If SQL Server mirroring is not configured, in the Datastore table use "Not Configured" for the Mirror Server Address
+#
