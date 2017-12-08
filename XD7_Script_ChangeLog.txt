@@ -3,6 +3,9 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.39 8-Dec-2017
+#	Updated Function WriteHTMLLine with fixes from the script template
+
 #Version 1.38 9-Oct-2017
 #	From version 1.33:
 #		Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
