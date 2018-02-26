@@ -1,0 +1,12 @@
+#Version 1.40
+#	Added additional SQL database information to the Configuration section
+#	Added Log switch to create a transcript log
+#		Added function TranscriptLogging
+#		Citrix.GroupPolicy.Commands and New-PSDrive break transcript logging so restart logging after each New-PSDrive call
+#		Removed the Log Alias from the Logging parameter
+#	Added new function GetDBCompatibilityLevel
+#	Updated function GetSQLVersion to add support for SQL Server 2017
+#	Updated function OutputDatastores for the additional SQL Server and Database information
+#		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
+#	Updated help text
+#	Updated the "Default" message in function GetSQLVersion

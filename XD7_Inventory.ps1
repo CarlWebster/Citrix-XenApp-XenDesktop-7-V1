@@ -42,14 +42,14 @@
 		Hosting
 		StoreFront
 
-	Using the MachineCatalogs parameter can cause the report to take a very long time to complete 
-	and can generate an extremely long report.
+	Using the MachineCatalogs parameter can cause the report to take a very long time to 
+	complete and can generate an extremely long report.
 	
-	Using the DeliveryGroups parameter can cause the report to take a very long time to complete 
-	and can generate an extremely long report.
+	Using the DeliveryGroups parameter can cause the report to take a very long time to 
+	complete and can generate an extremely long report.
 
-	Using both the MachineCatalogs and DeliveryGroups parameters can cause the report to take an
-	extremely long time to complete and generate an exceptionally long report.
+	Using both the MachineCatalogs and DeliveryGroups parameters can cause the report to 
+	take an extremely long time to complete and generate an exceptionally long report.
 
 	Creates an output file named after the XenDesktop 7.x Site.
 	
@@ -69,7 +69,8 @@
 		Swedish
 		
 .PARAMETER AdminAddress
-	Specifies the address of a XenDesktop controller the PowerShell snapins will connect to. 
+	Specifies the address of a XenDesktop controller the PowerShell snapins will connect 
+	to. 
 	This can be provided as a host name or an IP address. 
 	This parameter defaults to LocalHost.
 	This parameter has an alias of AA.
@@ -217,8 +218,8 @@
 	This option is only available when the report is generated in Word and requires 
 	Micosoft Excel to be locally installed.
 	
-	Using the DeliveryGroupsUtilization parameter causes the report to take a longer time to 
-	complete and generates a longer report.
+	Using the DeliveryGroupsUtilization parameter causes the report to take a longer 
+	time to complete and generates a longer report.
 	
 	This parameter is disabled by default.
 	This parameter has an alias of DGU.
@@ -227,9 +228,9 @@
 	This parameter is disabled by default.
 	This parameter has an alias of Host.
 .PARAMETER Logging
-	Give the Configuration Logging report with, by default, details for the previous seven days.
+	Give the Configuration Logging report with, by default, details for the previous 
+	seven days.
 	This parameter is disabled by default.
-	This parameter has an alias of Log.
 .PARAMETER StartDate
 	Start date for the Configuration Logging report.
 	
@@ -327,15 +328,15 @@
 .PARAMETER Folder
 	Specifies the optional output folder to save the output report. 
 .PARAMETER Hardware
-	Use WMI to gather hardware information on: Computer System, Disks, Processor and Network 
-	Interface Cards
+	Use WMI to gather hardware information on: Computer System, Disks, Processor and 
+	Network Interface Cards
 
 	This parameter may require the script be run from an elevated PowerShell session 
-	using an account with permission to retrieve hardware information (i.e. Domain Admin or 
-	Local Administrator).
+	using an account with permission to retrieve hardware information (i.e. Domain Admin 
+	or Local Administrator).
 
-	Selecting this parameter will add to both the time it takes to run the script and size 
-	of the report.
+	Selecting this parameter will add to both the time it takes to run the script and 
+	size of the report.
 
 	This parameter is disabled by default.
 	This parameter has an alias of HW.
@@ -391,11 +392,14 @@
 	
 	This parameter is disabled by default.
 	This parameter has an alias of SI.
+.PARAMETER Log
+	Generates a log file for troubleshooting.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1
 	
 	Will use all default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -407,7 +411,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -AdminAddress DDC01
 	
 	Will use all default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -419,7 +424,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF
 	
 	Will use all default values and save the document as a PDF file.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -431,7 +437,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -TEXT
 
 	Will use all default values and save the document as a formatted text file.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -442,7 +449,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -HTML
 
 	Will use all default values and save the document as an HTML file.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -454,7 +462,8 @@
 	
 	Creates a report with full details for all machines in all Machine Catalogs.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -466,7 +475,8 @@
 	
 	Creates a report with full details for all desktops in all Desktop (Delivery) Groups.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -478,7 +488,8 @@
 	
 	Creates a report with utilization details for all Desktop (Delivery) Groups.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -491,7 +502,8 @@
 	Creates a report with full details for all machines in all Machine Catalogs and 
 	all desktops in all Delivery Groups.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -503,7 +515,8 @@
 	
 	Creates a report with full details for all applications.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -515,7 +528,8 @@
 	
 	Creates a report with full details for Policies.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -527,7 +541,8 @@
 	
 	Creates a report with no Policy information.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -539,7 +554,8 @@
 	
 	Creates a report with no Citrix AD based Policy information.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -553,7 +569,8 @@
 	no Citrix AD based Policy information.
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -566,7 +583,8 @@
 	Creates a report with full details on Administrator Scopes and Roles.
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -580,7 +598,8 @@
 	01/31/2017.
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -588,7 +607,8 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2017 10:00:00" -EndDate "06/01/2017 14:00:00"
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2017 10:00:00" -EndDate 
+	"06/01/2017 14:00:00"
 	
 	Creates a report with Configuration Logging details for the time range 
 	06/01/2017 10:00:00AM through 06/01/2017 02:00:00PM.
@@ -596,7 +616,8 @@
 	Narrowing the report down to seconds does not work. Seconds must be either 00 or 59.
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -608,7 +629,8 @@
 	
 	Creates a report with full details for Hosts, Host Connections and Resources.
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -628,7 +650,8 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -MachineCatalogs -DeliveryGroups -Applications -Policies -Hosting -StoreFront
+	PS C:\PSScript > .\XD7_Inventory.ps1 -MachineCatalogs -DeliveryGroups -Applications 
+	-Policies -Hosting -StoreFront
 	
 	Creates a report with full details for all:
 		Machines in all Machine Catalogs
@@ -663,7 +686,8 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Carl Webster Consulting" -CoverPage "Mod" -UserName "Carl Webster" -AdminAddress DDC01
+	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Carl Webster Consulting" 
+	-CoverPage "Mod" -UserName "Carl Webster" -AdminAddress DDC01
 
 	Will use:
 		Carl Webster Consulting for the Company Name.
@@ -671,7 +695,8 @@
 		Carl Webster for the User Name.
 		Controller named DDC01 for the AdminAddress.
 .EXAMPLE
-	PS C:\PSScript .\XD7_Inventory.ps1 -CN "Carl Webster Consulting" -CP "Mod" -UN "Carl Webster"
+	PS C:\PSScript .\XD7_Inventory.ps1 -CN "Carl Webster Consulting" -CP "Mod" -UN 
+	"Carl Webster"
 
 	Will use:
 		Carl Webster Consulting for the Company Name (alias CN).
@@ -706,7 +731,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -AddDateTime
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -722,7 +748,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF -AddDateTime
 	
 	Will use all Default values and save the document as a PDF file.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -738,7 +765,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hardware
 	
 	Will use all default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -749,7 +777,8 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Folder \\FileServer\ShareName
 	
 	Will use all default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -759,10 +788,12 @@
 	
 	Output file will be saved in the path \\FileServer\ShareName
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer mail.domain.tld -From XDAdmin@domain.tld -To ITGroup@domain.tld
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer mail.domain.tld -From 
+	XDAdmin@domain.tld -To ITGroup@domain.tld
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -770,14 +801,18 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 	
-	Script will use the email server mail.domain.tld, sending from XDAdmin@domain.tld, sending to ITGroup@domain.tld.
+	Script will use the email server mail.domain.tld, sending from XDAdmin@domain.tld, 
+	sending to ITGroup@domain.tld.
 	Script will use the default SMPTP port 25 and will not use SSL.
-	If the current user's credentials are not valid to send email, the user will be prompted to enter valid credentials.
+	If the current user's credentials are not valid to send email, the user will be prompted 
+	to enter valid credentials.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer smtp.office365.com -SmtpPort 587 -UseSSL -From Webster@CarlWebster.com -To ITGroup@CarlWebster.com
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer smtp.office365.com -SmtpPort 587 
+	-UseSSL -From Webster@CarlWebster.com -To ITGroup@CarlWebster.com
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -785,13 +820,16 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 	
-	Script will use the email server smtp.office365.com on port 587 using SSL, sending from webster@carlwebster.com, sending to ITGroup@carlwebster.com.
-	If the current user's credentials are not valid to send email, the user will be prompted to enter valid credentials.
+	Script will use the email server smtp.office365.com on port 587 using SSL, sending from 
+	webster@carlwebster.com, sending to ITGroup@carlwebster.com.
+	If the current user's credentials are not valid to send email, the user will be prompted 
+	to enter valid credentials.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Section Policies
 	
 	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -825,6 +863,27 @@
 		
 		NoPolicies          = False
 		Section             = "All"
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Dev -ScriptInfo -Log
+	
+	Will use all Default values.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or 
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
+	$env:username = Administrator
+
+	Carl Webster for the Company Name.
+	Sideline for the Cover Page format.
+	Administrator for the User Name.
+	
+	Creates a text file named XAXDV1InventoryScriptErrors_yyyy-MM-dd_HHmm.txt that 
+	contains up to the last 250 errors reported by the script.
+	
+	Creates a text file named XAXDV1InventoryScriptInfo_yyyy-MM-dd_HHmm.txt that 
+	contains all the script parameters and other basic information.
+	
+	Creates a text file for transcript logging named 
+	XDV1DocScriptTranscript_yyyy-MM-dd_HHmm.txt.
 .INPUTS
 	None.  You cannot pipe objects to this script.
 .OUTPUTS
@@ -832,9 +891,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.39
+	VERSION: 1.40
 	AUTHOR: Carl Webster
-	LASTEDIT: December 8, 2017
+	LASTEDIT: February 26, 2018
 #>
 
 #endregion
@@ -935,7 +994,6 @@ Param(
 	[Switch]$Hosting=$False,	
 	
 	[parameter(Mandatory=$False)] 
-	[Alias("Log")]
 	[Switch]$Logging=$False,	
 	
 	[parameter(Mandatory=$False)] 
@@ -1004,7 +1062,10 @@ Param(
 	
 	[parameter(Mandatory=$False)] 
 	[Alias("SI")]
-	[Switch]$ScriptInfo=$False
+	[Switch]$ScriptInfo=$False,
+	
+	[parameter(Mandatory=$False)] 
+	[Switch]$Log=$False
 	
 	)
 #endregion
@@ -1254,6 +1315,19 @@ Param(
 #Version 1.39 8-Dec-2017
 #	Updated Function WriteHTMLLine with fixes from the script template
 #
+#Version 1.40
+#	Added additional SQL database information to the Configuration section
+#	Added Log switch to create a transcript log
+#		Added function TranscriptLogging
+#		Citrix.GroupPolicy.Commands and New-PSDrive break transcript logging so restart logging after each New-PSDrive call
+#		Removed the Log Alias from the Logging parameter
+#	Added new function GetDBCompatibilityLevel
+#	Updated function GetSQLVersion to add support for SQL Server 2017
+#	Updated function OutputDatastores for the additional SQL Server and Database information
+#		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
+#	Updated help text
+#	Updated the "Default" message in function GetSQLVersion
+#
 #endregion
 
 #region initial variable testing and setup
@@ -1263,6 +1337,26 @@ Set-StrictMode -Version 2
 $PSDefaultParameterValues = @{"*:Verbose"=$True}
 $SaveEAPreference = $ErrorActionPreference
 $ErrorActionPreference = 'SilentlyContinue'
+
+#V1.40 added
+If($Log) 
+{
+	#start transcript logging
+	$Script:ThisScriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
+	$Script:LogPath = "$Script:ThisScriptPath\XDV1DocScriptTranscript_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
+	
+	try 
+	{
+		Start-Transcript -Path $Script:LogPath -Force -Verbose:$false | Out-Null
+		Write-Verbose "$(Get-Date): Transcript/log started at $Script:LogPath"
+		$Script:StartLog = $true
+	} 
+	catch 
+	{
+		Write-Verbose "$(Get-Date): Transcript/log failed at $Script:LogPath"
+		$Script:StartLog = $false
+	}
+}
 
 If($Dev)
 {
@@ -5202,6 +5296,7 @@ Function ShowScriptOptions
 	Write-Verbose "$(Get-Date): From            : $($From)"
 	Write-Verbose "$(Get-Date): Hosting         : $($Hosting)"
 	Write-Verbose "$(Get-Date): HW Inventory    : $($Hardware)"
+	Write-Verbose "$(Get-Date): Log             : $($Log)"
 	Write-Verbose "$(Get-Date): Logging         : $($Logging)"
 	If($Logging)
 	{
@@ -5379,6 +5474,31 @@ Function OutputAdminsForDetails
 		$columnWidths = @("225","200","60")
 		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "485"
 		WriteHTMLLine 0 0 " "
+	}
+}
+
+Function TranscriptLogging
+{
+	If($Log) 
+	{
+		try 
+		{
+			If($Script:StartLog -eq $false)
+			{
+				Start-Transcript -Path $Script:LogPath -Force -Verbose:$false | Out-Null
+			}
+			Else
+			{
+				Start-Transcript -Path $Script:LogPath -Append -Verbose:$false | Out-Null
+			}
+			Write-Verbose "$(Get-Date): Transcript/log started at $Script:LogPath"
+			$Script:StartLog = $true
+		} 
+		catch 
+		{
+			Write-Verbose "$(Get-Date): Transcript/log failed at $Script:LogPath"
+			$Script:StartLog = $false
+		}
 	}
 }
 #endregion
@@ -11345,6 +11465,9 @@ Function ProcessPolicies
 		
 		Write-Verbose "$(Get-Date): Creating localfarmgpo PSDrive for Computer policies"
 		New-PSDrive localfarmgpo -psprovider citrixgrouppolicy -root \ -controller $AdminAddress -Scope Global *>$Null
+		
+		#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
+		TranscriptLogging
 		If(Get-PSDrive localfarmgpo -EA 0)
 		{
 			ProcessCitrixPolicies "localfarmgpo" "Computer"
@@ -11358,6 +11481,9 @@ Function ProcessPolicies
 
 		Write-Verbose "$(Get-Date): Creating localfarmgpo PSDrive for User policies"
 		New-PSDrive localfarmgpo -psprovider citrixgrouppolicy -root \ -controller $AdminAddress -Scope Global *>$Null
+		
+		#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
+		TranscriptLogging
 		If(Get-PSDrive localfarmgpo -EA 0)
 		{
 			ProcessCitrixPolicies "localfarmgpo" "User"
@@ -11392,6 +11518,9 @@ Function ProcessPolicies
 				{
 					Write-Verbose "$(Get-Date): `tCreating ADGpoDrv PSDrive for Computer Policies"
 					New-PSDrive -Name ADGpoDrv -PSProvider CitrixGroupPolicy -Root \ -DomainGpo $($CtxGPO) -Scope Global *>$Null
+		
+					#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
+					TranscriptLogging
 					If(Get-PSDrive ADGpoDrv -EA 0)
 					{
 						Write-Verbose "$(Get-Date): `tProcessing Citrix AD Policy $($CtxGPO)"
@@ -11409,6 +11538,9 @@ Function ProcessPolicies
 
 					Write-Verbose "$(Get-Date): `tCreating ADGpoDrv PSDrive for UserPolicies"
 					New-PSDrive -Name ADGpoDrv -PSProvider CitrixGroupPolicy -Root \ -DomainGpo $($CtxGPO) -Scope Global *>$Null
+		
+					#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
+					TranscriptLogging
 					If(Get-PSDrive ADGpoDrv -EA 0)
 					{
 						Write-Verbose "$(Get-Date): `tProcessing Citrix AD Policy $($CtxGPO)"
@@ -11449,6 +11581,9 @@ Function ProcessPolicySummary
 	Write-Verbose "$(Get-Date): `tRetrieving Site Policies"
 	Write-Verbose "$(Get-Date): `t`tCreating localfarmgpo PSDrive"
 	New-PSDrive localfarmgpo -psprovider citrixgrouppolicy -root \ -controller $AdminAddress -Scope Global *>$Null
+		
+	#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
+	TranscriptLogging
 
 	If(Get-PSDrive localfarmgpo -EA 0)
 	{
@@ -11484,6 +11619,9 @@ Function ProcessPolicySummary
 			{
 				Write-Verbose "$(Get-Date): `tCreating ADGpoDrv PSDrive"
 				New-PSDrive -Name ADGpoDrv -PSProvider CitrixGroupPolicy -Root \ -DomainGpo $($CtxGPO) -Scope "Global" *>$Null
+		
+				#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
+				TranscriptLogging
 				If(Get-PSDrive ADGpoDrv -EA 0)
 				{
 					Write-Verbose "$(Get-Date): `tProcessing Citrix AD Policy $($CtxGPO)"
@@ -22838,7 +22976,9 @@ Function OutputCEIPSetting
 Function GetSQLVersion
 {
 	Param([object]$SQLsrv)
-	
+
+	#V1.40 add SQL 2017
+	#V1.40 add more info to the Default message
 	$Major = $SQLsrv.VersionMajor
 	$Minor = $SQLsrv.VersionMinor
 	$SQLVer = ""
@@ -22852,16 +22992,60 @@ Function GetSQLVersion
 		11                         {$SQLVer = "SQL Server 2012"; Break}
 		12                         {$SQLVer = "SQL Server 2014"; Break}
 		13                         {$SQLVer = "SQL Server 2016"; Break}
-		Default                    {$SQLVer = "Unable to determine SQL Server version"; Break}
+		14                         {$SQLVer = "SQL Server 2017"; Break}
+		Default                    {$SQLVer = "Unable to determine SQL Server version. Major: $($Major) Minor: $($Minor) Edition: $($SQLEdition)"; Break}
 	}
 
 	Return $SQLVersion = "$($SQLVer) $($SQLEdition)"
 }
 
+Function GetDBCompatibilityLevel
+{
+	Param([string]$DBCompat)
+
+	#Added in version V1.40
+	<#
+		https://www.spiria.com/en/blog/web-applications/understanding-sql-server-compatibility-levels
+		
+		Database Compatibility Level	Description
+		140								SQL Server 2017
+		130								SQL Server 2016	
+		120								SQL Server 2014	
+		110								SQL Server 2012	
+		100								SQL Server 2008 
+		90								SQL Server 2005	
+		80								SQL Server 2000	
+	#>
+
+	$tmp = ""
+	Switch($DBCompat)
+	{
+		"140"			{$tmp = "SQL Server 2017"}
+		"130"			{$tmp = "SQL Server 2016"}
+		"120"			{$tmp = "SQL Server 2014"}
+		"110"			{$tmp = "SQL Server 2012"}
+		"100"			{$tmp = "SQL Server 2008"}
+		"90"			{$tmp = "SQL Server 2005"}
+		"80"			{$tmp = "SQL Server 2000"}
+		"Version140"	{$tmp = "SQL Server 2017"}
+		"Version130"	{$tmp = "SQL Server 2016"}
+		"Version120"	{$tmp = "SQL Server 2014"}
+		"Version110"	{$tmp = "SQL Server 2012"}
+		"Version100"	{$tmp = "SQL Server 2008"}
+		"Version90"		{$tmp = "SQL Server 2005"}
+		"Version80"		{$tmp = "SQL Server 2000"}
+		Default			{$tmp = "Unable to determine Database Compatibility Level: $DBCompat"}
+	}
+	
+	Return $tmp
+}
+
 Function OutputDatastores
 {
 	#2-Mar-2017 Fix bug reported by P. Ewing
-
+	
+	#V1.40 add additional database details and change from a horizontal table to a vertical table
+	
 	#line starts with server=SQLServerName;
 	#only need what is between the = and ;
 	
@@ -22875,11 +23059,11 @@ Function OutputDatastores
 	[string]$ConfigDBSize = "Unable to determine"
 	[string]$ConfigDBReadCommittedSnapshot = "Unable to determine"
 	[string]$ConfigDBSQLVersion = "Unable to determine"
-	$ConfigDB = Get-ConfigDBConnection @XDParams1
+	$ConfigDBs = Get-ConfigDBConnection @XDParams1
 
-	If($? -and ($Null -ne $ConfigDB))
+	If($? -and ($Null -ne $ConfigDBs))
 	{
-		$tmp = $ConfigDB
+		$tmp = $ConfigDBs
 		$csitems = $tmp.Split(';')
 		ForEach($csitem in $csitems)
 		{
@@ -22897,9 +23081,31 @@ Function OutputDatastores
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($ConfigSQLServerPrincipalName)")
-			$db = New-Object Microsoft.SqlServer.Management.Smo.Database
-			$db = $SQLsrv.Databases.Item("$($ConfigDatabaseName)")
-			If($db.IsReadCommittedSnapshotOn)
+			$Configdb = New-Object Microsoft.SqlServer.Management.Smo.Database
+			$Configdb = $SQLsrv.Databases.Item("$($ConfigDatabaseName)")
+			[string]$Configdbsize = "Unable to determine" -f $Configdb.size
+			If($Null -ne $Configdb.size)
+			{
+				[string]$Configdbsize = "{0:F2} MB" -f $Configdb.size
+			}
+			ElseIf($Null -eq $Configdb.size -and $ConfigSQLServerMirrorName -ne "Not Configured")
+			{
+				$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($ConfigSQLServerMirrorName)")
+				$Configdb = New-Object Microsoft.SqlServer.Management.Smo.Database
+				$Configdb = $SQLsrv.Databases.Item("$($ConfigDatabaseName)")
+				If($Null -ne $Configdb.size)
+				{
+					[string]$Configdbsize = "{0:F2} MB" -f $Configdb.size
+				}
+			}
+			
+			$ConfigDBParent 									= $Configdb.Parent
+			$ConfigDBCollation 									= $Configdb.Collation
+			$ConfigDBSQLVersion 								= GetSQLVersion $SQLsrv
+			$ConfigDBCompatibilityLevel 						= GetDBCompatibilityLevel $Configdb.CompatibilityLevel
+			$ConfigDBCreateDate 								= $Configdb.CreateDate.ToString()
+
+			If($Configdb.IsReadCommittedSnapshotOn)
 			{
 				$ConfigDBReadCommittedSnapshot = "Enabled"
 			}
@@ -22907,21 +23113,39 @@ Function OutputDatastores
 			{
 				$ConfigDBReadCommittedSnapshot = "Disabled"
 			}
-			$ConfigDBSQLVersion = GetSQLVersion $SQLsrv
-			[string]$Configdbsize = "Unable to determine" -f $db.size
-			If($Null -ne $db.size)
+
+			$ConfigDBLastBackupDate 	= $Configdb.LastBackupDate.ToString()
+			$ConfigDBLastLogBackupDate 	= $Configdb.LastLogBackupDate.ToString()
+			$ConfigDBRecoveryModel 		= $Configdb.RecoveryModel
+
+			If(![String]::IsNullOrEmpty($Configdb.AvailabilityGroupName))
 			{
-				[string]$Configdbsize = "{0:F2} MB" -f $db.size
+				$ConfigDBAvailabilityGroupName 						= $Configdb.AvailabilityGroupName
+				$ConfigDBAvailabilityDatabaseSynchronizationState 	= $Configdb.AvailabilityDatabaseSynchronizationState
 			}
-			ElseIf($Null -eq $db.size -and $ConfigSQLServerMirrorName -ne "Not Configured")
+			Else
 			{
-				$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($ConfigSQLServerMirrorName)")
-				$db = New-Object Microsoft.SqlServer.Management.Smo.Database
-				$db = $SQLsrv.Databases.Item("$($ConfigDatabaseName)")
-				If($Null -ne $db.size)
-				{
-					[string]$Configdbsize = "{0:F2} MB" -f $db.size
-				}
+				$ConfigDBAvailabilityGroupName 						= "-"
+				$ConfigDBAvailabilityDatabaseSynchronizationState 	= "-"
+			}
+			
+			If($Configdb.IsMirroringEnabled)
+			{
+				$ConfigDBMirroringPartner			= $Configdb.MirroringPartner
+				$ConfigDBMirroringPartnerInstance	= $Configdb.MirroringPartnerInstance
+				$ConfigDBMirroringSafetyLevel		= $Configdb.MirroringSafetyLevel
+				$ConfigDBMirroringStatus			= $Configdb.MirroringStatus
+				$ConfigDBMirroringWitness			= $Configdb.MirroringWitness
+				$ConfigDBMirroringWitnessStatus		= $Configdb.MirroringWitnessStatus
+			}
+			Else
+			{
+				$ConfigDBMirroringPartner			= "-"
+				$ConfigDBMirroringPartnerInstance	= "-"
+				$ConfigDBMirroringSafetyLevel		= "-"
+				$ConfigDBMirroringStatus			= "-"
+				$ConfigDBMirroringWitness			= "-"
+				$ConfigDBMirroringWitnessStatus		= "-"
 			}
 		}
 	}
@@ -22965,9 +23189,31 @@ Function OutputDatastores
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($LogSQLServerPrincipalName)")
-			$db = New-Object Microsoft.SqlServer.Management.Smo.Database
-			$db = $SQLsrv.Databases.Item("$($LogDatabaseName)")
-			If($db.IsReadCommittedSnapshotOn)
+			$Logdb = New-Object Microsoft.SqlServer.Management.Smo.Database
+			$Logdb = $SQLsrv.Databases.Item("$($LogDatabaseName)")
+			[string]$Logdbsize = "Unable to determine" -f $Logdb.size
+			If($Null -ne $Logdb.size)
+			{
+				[string]$Logdbsize = "{0:F2} MB" -f $Logdb.size
+			}
+			ElseIf($Null -eq $Logdb.size -and $LogSQLServerMirrorName -ne "Not Configured")
+			{
+				$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($LogSQLServerMirrorName)")
+				$Logdb = New-Object Microsoft.SqlServer.Management.Smo.Database
+				$Logdb = $SQLsrv.Databases.Item("$($LogDatabaseName)")
+				If($Null -ne $Logdb.size)
+				{
+					[string]$Logdbsize = "{0:F2} MB" -f $Logdb.size
+				}
+			}
+
+			$LogDBParent 									= $LogDB.Parent
+			$LogDBCollation 								= $LogDB.Collation
+			$LogDBSQLVersion 								= GetSQLVersion $SQLsrv
+			$LogDBCompatibilityLevel 						= GetDBCompatibilityLevel $LogDB.CompatibilityLevel
+			$LogDBCreateDate 								= $LogDB.CreateDate.ToString()
+
+			If($LogDB.IsReadCommittedSnapshotOn)
 			{
 				$LogDBReadCommittedSnapshot = "Enabled"
 			}
@@ -22975,21 +23221,39 @@ Function OutputDatastores
 			{
 				$LogDBReadCommittedSnapshot = "Disabled"
 			}
-			$LogDBSQLVersion = GetSQLVersion $SQLsrv
-			[string]$Logdbsize = "Unable to determine" -f $db.size
-			If($Null -ne $db.size)
+
+			$LogDBLastBackupDate 	= $LogDB.LastBackupDate.ToString()
+			$LogDBLastLogBackupDate	= $LogDB.LastLogBackupDate.ToString()
+			$LogDBRecoveryModel 	= $LogDB.RecoveryModel
+
+			If(![String]::IsNullOrEmpty($LogDB.AvailabilityGroupName))
 			{
-				[string]$Logdbsize = "{0:F2} MB" -f $db.size
+				$LogDBAvailabilityGroupName 					= $LogDB.AvailabilityGroupName
+				$LogDBAvailabilityDatabaseSynchronizationState 	= $LogDB.AvailabilityDatabaseSynchronizationState
 			}
-			ElseIf($Null -eq $db.size -and $LogSQLServerMirrorName -ne "Not Configured")
+			Else
 			{
-				$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($LogSQLServerMirrorName)")
-				$db = New-Object Microsoft.SqlServer.Management.Smo.Database
-				$db = $SQLsrv.Databases.Item("$($LogDatabaseName)")
-				If($Null -ne $db.size)
-				{
-					[string]$Logdbsize = "{0:F2} MB" -f $db.size
-				}
+				$LogDBAvailabilityGroupName 					= "-"
+				$LogDBAvailabilityDatabaseSynchronizationState 	= "-"
+			}
+			
+			If($LogDB.IsMirroringEnabled)
+			{
+				$LogDBMirroringPartner			= $LogDB.MirroringPartner
+				$LogDBMirroringPartnerInstance	= $LogDB.MirroringPartnerInstance
+				$LogDBMirroringSafetyLevel		= $LogDB.MirroringSafetyLevel
+				$LogDBMirroringStatus			= $LogDB.MirroringStatus
+				$LogDBMirroringWitness			= $LogDB.MirroringWitness
+				$LogDBMirroringWitnessStatus	= $LogDB.MirroringWitnessStatus
+			}
+			Else
+			{
+				$LogDBMirroringPartner			= "-"
+				$LogDBMirroringPartnerInstance	= "-"
+				$LogDBMirroringSafetyLevel		= "-"
+				$LogDBMirroringStatus			= "-"
+				$LogDBMirroringWitness			= "-"
+				$LogDBMirroringWitnessStatus	= "-"
 			}
 		}
 	}
@@ -23037,9 +23301,31 @@ Function OutputDatastores
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($MonitorSQLServerPrincipalName)")
-			$db = New-Object Microsoft.SqlServer.Management.Smo.Database
-			$db = $SQLsrv.Databases.Item("$($MonitorDatabaseName)")
-			If($db.IsReadCommittedSnapshotOn)
+			$Monitordb = New-Object Microsoft.SqlServer.Management.Smo.Database
+			$Monitordb = $SQLsrv.Databases.Item("$($MonitorDatabaseName)")
+			[string]$Monitordbsize = "Unable to determine" -f $Monitordb.size
+			If($Null -ne $Monitordb.size)
+			{
+				[string]$Monitordbsize = "{0:F2} MB" -f $Monitordb.size
+			}
+			ElseIf($Null -eq $Monitordb.size -and $MonitorSQLServerMirrorName -ne "Not Configured")
+			{
+				$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($MonitorSQLServerMirrorName)")
+				$Monitordb = New-Object Microsoft.SqlServer.Management.Smo.Database
+				$Monitordb = $SQLsrv.Databases.Item("$($MonitorDatabaseName)")
+				If($Null -ne $Monitordb.size)
+				{
+					[string]$Monitordbsize = "{0:F2} MB" -f $Monitordb.size
+				}
+			}
+
+			$MonitorDBParent 				= $MonitorDB.Parent
+			$MonitorDBCollation 			= $MonitorDB.Collation
+			$MonitorDBSQLVersion 			= GetSQLVersion $SQLsrv
+			$MonitorDBCompatibilityLevel	= GetDBCompatibilityLevel $MonitorDB.CompatibilityLevel
+			$MonitorDBCreateDate 			= $MonitorDB.CreateDate.ToString()
+
+			If($MonitorDB.IsReadCommittedSnapshotOn)
 			{
 				$MonitorDBReadCommittedSnapshot = "Enabled"
 			}
@@ -23047,21 +23333,39 @@ Function OutputDatastores
 			{
 				$MonitorDBReadCommittedSnapshot = "Disabled"
 			}
-			$MonitorDBSQLVersion = GetSQLVersion $SQLsrv
-			[string]$Monitordbsize = "Unable to determine" -f $db.size
-			If($Null -ne $db.size)
+
+			$MonitorDBLastBackupDate 	= $MonitorDB.LastBackupDate.ToString()
+			$MonitorDBLastLogBackupDate	= $MonitorDB.LastLogBackupDate.ToString()
+			$MonitorDBRecoveryModel 	= $MonitorDB.RecoveryModel
+
+			If(![String]::IsNullOrEmpty($MonitorDB.AvailabilityGroupName))
 			{
-				[string]$Monitordbsize = "{0:F2} MB" -f $db.size
+				$MonitorDBAvailabilityGroupName 					= $MonitorDB.AvailabilityGroupName
+				$MonitorDBAvailabilityDatabaseSynchronizationState 	= $MonitorDB.AvailabilityDatabaseSynchronizationState
 			}
-			ElseIf($Null -eq $db.size -and $MonitorSQLServerMirrorName -ne "Not Configured")
+			Else
 			{
-				$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($MonitorSQLServerMirrorName)")
-				$db = New-Object Microsoft.SqlServer.Management.Smo.Database
-				$db = $SQLsrv.Databases.Item("$($MonitorDatabaseName)")
-				If($Null -ne $db.size)
-				{
-					[string]$Monitordbsize = "{0:F2} MB" -f $db.size
-				}
+				$MonitorDBAvailabilityGroupName 					= "-"
+				$MonitorDBAvailabilityDatabaseSynchronizationState 	= "-"
+			}
+			
+			If($MonitorDB.IsMirroringEnabled)
+			{
+				$MonitorDBMirroringPartner			= $MonitorDB.MirroringPartner
+				$MonitorDBMirroringPartnerInstance	= $MonitorDB.MirroringPartnerInstance
+				$MonitorDBMirroringSafetyLevel		= $MonitorDB.MirroringSafetyLevel
+				$MonitorDBMirroringStatus			= $MonitorDB.MirroringStatus
+				$MonitorDBMirroringWitness			= $MonitorDB.MirroringWitness
+				$MonitorDBMirroringWitnessStatus	= $MonitorDB.MirroringWitnessStatus
+			}
+			Else
+			{
+				$MonitorDBMirroringPartner			= "-"
+				$MonitorDBMirroringPartnerInstance	= "-"
+				$MonitorDBMirroringSafetyLevel		= "-"
+				$MonitorDBMirroringStatus			= "-"
+				$MonitorDBMirroringWitness			= "-"
+				$MonitorDBMirroringWitnessStatus	= "-"
 			}
 		}
 		
@@ -23107,67 +23411,148 @@ Function OutputDatastores
 	If($MSWord -or $PDF)
 	{
 		WriteWordLine 2 0 "Datastores"
-		[System.Collections.Hashtable[]] $DBsWordTable = @();
-		$WordTableRowHash = @{ 
-		DataStore = "Site";
-		DatabaseName = $ConfigDatabaseName;
-		ServerAddress = $ConfigSQLServerPrincipalName;
-		MirrorServerAddress = $ConfigSQLServerMirrorName;
-		DBSize = $ConfigDBSize;
-		ReadCommittedSnapshot = $ConfigDBReadCommittedSnapshot;
-		SQLVersion = $ConfigDBSQLVersion;
-		}
-		$DBsWordTable += $WordTableRowHash;
-
-		$WordTableRowHash = @{ 
-		DataStore = "Logging";
-		DatabaseName = $LogDatabaseName;
-		ServerAddress = $LogSQLServerPrincipalName;
-		MirrorServerAddress = $LogSQLServerMirrorName;
-		DBSize = $LogDBSize;
-		ReadCommittedSnapshot = $LogDBReadCommittedSnapshot;
-		SQLVersion = $LogDBSQLVersion;
-		}
-		$DBsWordTable += $WordTableRowHash;
-
-		$WordTableRowHash = @{ 
-		DataStore = "Monitoring";
-		DatabaseName = $MonitorDatabaseName;
-		ServerAddress = $MonitorSQLServerPrincipalName;
-		MirrorServerAddress = $MonitorSQLServerMirrorName;
-		DBSize = $MonitorDBSize;
-		ReadCommittedSnapshot = $MonitorDBReadCommittedSnapshot;
-		SQLVersion = $MonitorDBSQLVersion;
-		}
-		$DBsWordTable += $WordTableRowHash;
-
-		$Table = AddWordTable -Hashtable $DBsWordTable `
-		-Columns DataStore, DatabaseName, ServerAddress, MirrorServerAddress, DBSize, ReadCommittedSnapshot, SQLVersion `
-		-Headers "Datastore", "Database Name", "Server Address", "Mirror Server Address", "Database Size", "Read-Committed Snapshot", "SQL Server Version" `
+		[System.Collections.Hashtable[]] $ScriptInformation = @()
+		$ScriptInformation += @{Data = "Datastore"; Value = "Site"; }
+		$ScriptInformation += @{Data = "Database Name"; Value = $ConfigDatabaseName; }
+		$ScriptInformation += @{Data = "Availability Database Synchronization State"; Value = $ConfigDBAvailabilityDatabaseSynchronizationState; }
+		$ScriptInformation += @{Data = "Availability Group Name"; Value = $ConfigDBAvailabilityGroupName; }
+		$ScriptInformation += @{Data = "Collation"; Value = $ConfigDBCollation; }
+		$ScriptInformation += @{Data = "Compatibility Level"; Value = $ConfigDBCompatibilityLevel; }
+		$ScriptInformation += @{Data = "Create Date"; Value = $ConfigDBCreateDate; }
+		$ScriptInformation += @{Data = "Database Size"; Value = $ConfigDBSize; }
+		$ScriptInformation += @{Data = "Last Backup Date"; Value = $ConfigDBLastBackupDate; }
+		$ScriptInformation += @{Data = "Last Log Backup Date"; Value = $ConfigDBLastLogBackupDate; }
+		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $ConfigSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirroring Partner"; Value = $ConfigDBMirroringPartner; }
+		$ScriptInformation += @{Data = "Mirroring Partner Instance"; Value = $ConfigDBMirroringPartnerInstance; }
+		$ScriptInformation += @{Data = "Mirroring Safety Level"; Value = $ConfigDBMirroringSafetyLevel; }
+		$ScriptInformation += @{Data = "Mirroring Status"; Value = $ConfigDBMirroringStatus; }
+		$ScriptInformation += @{Data = "Mirroring Witness"; Value = $ConfigDBMirroringWitness; }
+		$ScriptInformation += @{Data = "Mirroring Witness Status"; Value = $ConfigDBMirroringWitnessStatus; }
+		$ScriptInformation += @{Data = "Parent"; Value = $ConfigDBParent; }
+		$ScriptInformation += @{Data = "Read-Committed Snapshot"; Value = $ConfigDBReadCommittedSnapshot; }
+		$ScriptInformation += @{Data = "Recovery Model"; Value = $ConfigDBRecoveryModel; }
+		$ScriptInformation += @{Data = "Server Address"; Value = $ConfigSQLServerPrincipalName; }
+		$ScriptInformation += @{Data = "SQL Server Version"; Value = $ConfigDBSQLVersion; }
+		$Table = AddWordTable -Hashtable $ScriptInformation `
+		-Columns Data,Value `
+		-List `
 		-Format $wdTableGrid `
-		-AutoFit $wdAutoFitContent;
+		-AutoFit $wdAutoFitFixed;
 
-		SetWordCellFormat -Collection $Table -Size 9
-		SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+		SetWordCellFormat -Collection $Table.Columns.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+
+		$Table.Columns.Item(1).Width = 250;
+		$Table.Columns.Item(2).Width = 200;
 
 		$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
 
 		FindWordDocumentEnd
 		$Table = $Null
-		
-		If(($ConfigSQLServerMirrorName -ne "Not Configured" -and $ConfigDBSize -eq " MB") -or 
-		($LogSQLServerMirrorName -ne "Not Configured" -and $LogDBSize -eq " MB") -or 
-		($MonitorSQLServerMirrorName -ne "Not Configured" -and $MonitorDBSize -eq " MB"))
-		{
-			WriteWordLine 0 0 "One or more databases report a Null size which means the database has failed over to the Mirror Server" "" $Null 8 $False $True
-		}
+		WriteWordLine 0 0 ""
+
+		[System.Collections.Hashtable[]] $ScriptInformation = @()
+		$ScriptInformation += @{Data = "Datastore"; Value = "Logging"; }
+		$ScriptInformation += @{Data = "Database Name"; Value = $LogDatabaseName; }
+		$ScriptInformation += @{Data = "Availability Database Synchronization State"; Value = $LogDBAvailabilityDatabaseSynchronizationState; }
+		$ScriptInformation += @{Data = "Availability Group Name"; Value = $LogDBAvailabilityGroupName; }
+		$ScriptInformation += @{Data = "Collation"; Value = $LogDBCollation; }
+		$ScriptInformation += @{Data = "Compatibility Level"; Value = $LogDBCompatibilityLevel; }
+		$ScriptInformation += @{Data = "Create Date"; Value = $LogDBCreateDate; }
+		$ScriptInformation += @{Data = "Database Size"; Value = $LogDBSize; }
+		$ScriptInformation += @{Data = "Last Backup Date"; Value = $LogDBLastBackupDate; }
+		$ScriptInformation += @{Data = "Last Log Backup Date"; Value = $LogDBLastLogBackupDate; }
+		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $ConfigSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirroring Partner"; Value = $LogDBMirroringPartner; }
+		$ScriptInformation += @{Data = "Mirroring Partner Instance"; Value = $LogDBMirroringPartnerInstance; }
+		$ScriptInformation += @{Data = "Mirroring Safety Level"; Value = $LogDBMirroringSafetyLevel; }
+		$ScriptInformation += @{Data = "Mirroring Status"; Value = $LogDBMirroringStatus; }
+		$ScriptInformation += @{Data = "Mirroring Witness"; Value = $LogDBMirroringWitness; }
+		$ScriptInformation += @{Data = "Mirroring Witness Status"; Value = $LogDBMirroringWitnessStatus; }
+		$ScriptInformation += @{Data = "Parent"; Value = $LogDBParent; }
+		$ScriptInformation += @{Data = "Read-Committed Snapshot"; Value = $LogDBReadCommittedSnapshot; }
+		$ScriptInformation += @{Data = "Recovery Model"; Value = $LogDBRecoveryModel; }
+		$ScriptInformation += @{Data = "Server Address"; Value = $LogSQLServerPrincipalName; }
+		$ScriptInformation += @{Data = "SQL Server Version"; Value = $LogDBSQLVersion; }
+		$Table = AddWordTable -Hashtable $ScriptInformation `
+		-Columns Data,Value `
+		-List `
+		-Format $wdTableGrid `
+		-AutoFit $wdAutoFitFixed;
+
+		SetWordCellFormat -Collection $Table.Columns.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+
+		$Table.Columns.Item(1).Width = 250;
+		$Table.Columns.Item(2).Width = 200;
+
+		$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
+
+		FindWordDocumentEnd
+		$Table = $Null
+		WriteWordLine 0 0 ""
+
+		[System.Collections.Hashtable[]] $ScriptInformation = @()
+		$ScriptInformation += @{Data = "Datastore"; Value = "Monitoring"; }
+		$ScriptInformation += @{Data = "Database Name"; Value = $MonitorDatabaseName; }
+		$ScriptInformation += @{Data = "Availability Database Synchronization State"; Value = $MonitorDBAvailabilityDatabaseSynchronizationState; }
+		$ScriptInformation += @{Data = "Availability Group Name"; Value = $MonitorDBAvailabilityGroupName; }
+		$ScriptInformation += @{Data = "Collation"; Value = $MonitorDBCollation; }
+		$ScriptInformation += @{Data = "Compatibility Level"; Value = $MonitorDBCompatibilityLevel; }
+		$ScriptInformation += @{Data = "Create Date"; Value = $MonitorDBCreateDate; }
+		$ScriptInformation += @{Data = "Database Size"; Value = $MonitorDBSize; }
+		$ScriptInformation += @{Data = "Last Backup Date"; Value = $MonitorDBLastBackupDate; }
+		$ScriptInformation += @{Data = "Last Log Backup Date"; Value = $MonitorDBLastLogBackupDate; }
+		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $ConfigSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirroring Partner"; Value = $MonitorDBMirroringPartner; }
+		$ScriptInformation += @{Data = "Mirroring Partner Instance"; Value = $MonitorDBMirroringPartnerInstance; }
+		$ScriptInformation += @{Data = "Mirroring Safety Level"; Value = $MonitorDBMirroringSafetyLevel; }
+		$ScriptInformation += @{Data = "Mirroring Status"; Value = $MonitorDBMirroringStatus; }
+		$ScriptInformation += @{Data = "Mirroring Witness"; Value = $MonitorDBMirroringWitness; }
+		$ScriptInformation += @{Data = "Mirroring Witness Status"; Value = $MonitorDBMirroringWitnessStatus; }
+		$ScriptInformation += @{Data = "Parent"; Value = $MonitorDBParent; }
+		$ScriptInformation += @{Data = "Read-Committed Snapshot"; Value = $MonitorDBReadCommittedSnapshot; }
+		$ScriptInformation += @{Data = "Recovery Model"; Value = $MonitorDBRecoveryModel; }
+		$ScriptInformation += @{Data = "Server Address"; Value = $MonitorSQLServerPrincipalName; }
+		$ScriptInformation += @{Data = "SQL Server Version"; Value = $MonitorDBSQLVersion; }
+		$Table = AddWordTable -Hashtable $ScriptInformation `
+		-Columns Data,Value `
+		-List `
+		-Format $wdTableGrid `
+		-AutoFit $wdAutoFitFixed;
+
+		SetWordCellFormat -Collection $Table.Columns.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+
+		$Table.Columns.Item(1).Width = 250;
+		$Table.Columns.Item(2).Width = 200;
+
+		$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
+
+		FindWordDocumentEnd
+		$Table = $Null
+		WriteWordLine 0 0 ""
 
 		WriteWordLine 3 0 "Monitoring Database Details"
 		[System.Collections.Hashtable[]] $ScriptInformation = @()
 		$ScriptInformation += @{Data = "Collect Hotfix Data"; Value = $MonitorCollectHotfix; }
 		$ScriptInformation += @{Data = "Data Collection"; Value = $MonitorDataCollection; }
 		$ScriptInformation += @{Data = "Detail SQL Output"; Value = $MonitorDetailedSQL; }
+		If($MonitorConfig.ContainsKey("EnableDayLevelGranularityProcessUtilization"))
+		{
+			$ScriptInformation += @{Data = "Enable Day Level Granularity"; Value = $MonitorConfig.EnableDayLevelGranularityProcessUtilization; }
+		}
+		If($MonitorConfig.ContainsKey("EnableHourLevelGranularityProcessUtilization"))
+		{
+			$ScriptInformation += @{Data = "Enable Hour Level Granularity"; Value = $MonitorConfig.EnableHourLevelGranularityProcessUtilization; }
+		}
+		If($MonitorConfig.ContainsKey("EnableMinLevelGranularityProcessUtilization"))
+		{
+			$ScriptInformation += @{Data = "Enable Minute Level Granularity"; Value = $MonitorConfig.EnableMinLevelGranularityProcessUtilization; }
+		}
 		$ScriptInformation += @{Data = "Full Poll Start Hour"; Value = $MonitorConfig.FullPollStartHour; }
+		If($MonitorConfig.ContainsKey("MonitorQueryTimeoutSeconds"))
+		{
+			$ScriptInformation += @{Data = "Monitor Query Timeout Seconds"; Value = $MonitorConfig.MonitorQueryTimeoutSeconds; }
+		}
 		$ScriptInformation += @{Data = "Resolution Poll Time Hours"; Value = $MonitorConfig.FullPollStartHour; }
 		$ScriptInformation += @{Data = "Sync Poll Time Hours"; Value = $MonitorConfig.SyncPollTimeHours; }
 		$Table = AddWordTable -Hashtable $ScriptInformation `
@@ -23187,12 +23572,73 @@ Function OutputDatastores
 		$Table = $Null
 		WriteWordLine 3 0 "Groom Retention Settings in Days"
 		[System.Collections.Hashtable[]] $ScriptInformation = @()
+
+		If($MonitorConfig.ContainsKey("GroomApplicationErrorsRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Application Errors"; Value = $MonitorConfig.GroomApplicationErrorsRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomApplicationFaultsRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Application Faults"; Value = $MonitorConfig.GroomApplicationFaultsRetentionDays; }
+		}
 		$ScriptInformation += @{Data = "Application Instance"; Value = $MonitorConfig.GroomApplicationInstanceRetentionDays; }
 		$ScriptInformation += @{Data = "Deleted"; Value = $MonitorConfig.GroomDeletedRetentionDays; }
 		$ScriptInformation += @{Data = "Failures"; Value = $MonitorConfig.GroomFailuresRetentionDays; }
+		If($MonitorConfig.ContainsKey("GroomHourlyRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Hourly Retention"; Value = $MonitorConfig.GroomHourlyRetentionDays; }
+		}
 		$ScriptInformation += @{Data = "Load Indexes"; Value = $MonitorConfig.GroomLoadIndexesRetentionDays; }
 		$ScriptInformation += @{Data = "Machine Hotfix Log"; Value = $MonitorConfig.GroomMachineHotfixLogRetentionDays; }
+		If($MonitorConfig.ContainsKey("GroomMachineMetricDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Machine Metric Data"; Value = $MonitorConfig.GroomMachineMetricDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomMachineMetricDaySummaryDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Machine Metric Day Summary"; Value = $MonitorConfig.GroomMachineMetricDaySummaryDataRetentionDays; }
+		}
 		$ScriptInformation += @{Data = "Minute"; Value = $MonitorConfig.GroomMinuteRetentionDays; }
+		If($MonitorConfig.ContainsKey("GroomNotificationLogRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Notification"; Value = $MonitorConfig.GroomNotificationLogRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageDayDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Process Usage Day Data"; Value = $MonitorConfig.GroomProcessUsageDayDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageHourDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Process Usage Hour Data"; Value = $MonitorConfig.GroomProcessUsageHourDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageMinuteDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Process Usage Minute Data"; Value = $MonitorConfig.GroomProcessUsageMinuteDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageRawDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Process Usage Raw Data"; Value = $MonitorConfig.GroomProcessUsageRawDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageDayDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Resource Usage Day Data"; Value = $MonitorConfig.GroomResourceUsageDayDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageHourDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Resource Usage Hour Data"; Value = $MonitorConfig.GroomResourceUsageHourDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageMinuteDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Resource Usage Minute Data"; Value = $MonitorConfig.GroomResourceUsageMinuteDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageRawDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Resource Usage Raw Data"; Value = $MonitorConfig.GroomResourceUsageRawDataRetentionDays; }
+		}
+		If($MonitorConfig.ContainsKey("GroomSessionMetricsDataRetentionDays"))
+		{
+			$ScriptInformation += @{Data = "Session Metrics"; Value = $MonitorConfig.GroomSessionMetricsDataRetentionDays; }
+		}
 		$ScriptInformation += @{Data = "Sessions"; Value = $MonitorConfig.GroomSessionsRetentionDays; }
 		$ScriptInformation += @{Data = "Summaries"; Value = $MonitorConfig.GroomSummariesRetentionDays; }
 		$Table = AddWordTable -Hashtable $ScriptInformation `
@@ -23217,54 +23663,168 @@ Function OutputDatastores
 		Line 0 "Datastores"
 		Line 0 ""
 		Line 1 "Datastore: Site"
-		Line 2 "Database Name`t`t: " $ConfigDatabaseName
-		Line 2 "Server Address`t`t: " $ConfigSQLServerPrincipalName
-		Line 2 "Mirror Server Address`t: " $ConfigSQLServerMirrorName
-		Line 2 "Database Size`t`t: " $ConfigDBSize
-		Line 2 "Read-Committed Snapshot`t: " $ConfigDBReadCommittedSnapshot
-		Line 2 "SQL Server Version`t: " $ConfigDBSQLVersion
+		Line 2 "Database Name`t`t`t`t`t: " $ConfigDatabaseName
+		Line 2 "Availability Database Synchronization State`t: " $ConfigDBAvailabilityDatabaseSynchronizationState
+		Line 2 "Availability Group Name`t`t`t`t: " $ConfigDBAvailabilityGroupName
+		Line 2 "Collation`t`t`t`t`t: " $ConfigDBCollation
+		Line 2 "Compatibility Level`t`t`t`t: " $ConfigDBCompatibilityLevel
+		Line 2 "Create Date`t`t`t`t`t: " $ConfigDBCreateDate
+		Line 2 "Database Size`t`t`t`t`t: " $ConfigDBSize
+		Line 2 "Last Backup Date`t`t`t`t: " $ConfigDBLastBackupDate
+		Line 2 "Last Log Backup Date`t`t`t`t: " $ConfigDBLastLogBackupDate
+		Line 2 "Mirror Server Address`t`t`t`t: " $ConfigSQLServerMirrorName
+		Line 2 "Mirroring Partner`t`t`t`t: " $ConfigDBMirroringPartner
+		Line 2 "Mirroring Partner Instance`t`t`t: " $ConfigDBMirroringPartnerInstance
+		Line 2 "Mirroring Safety Level`t`t`t`t: " $ConfigDBMirroringSafetyLevel
+		Line 2 "Mirroring Status`t`t`t`t: " $ConfigDBMirroringStatus
+		Line 2 "Mirroring Witness`t`t`t`t: " $ConfigDBMirroringWitness
+		Line 2 "Mirroring Witness Status`t`t`t: " $ConfigDBMirroringWitnessStatus
+		Line 2 "Parent`t`t`t`t`t`t: " $ConfigDBParent
+		Line 2 "Read-Committed Snapshot`t`t`t`t: " $ConfigDBReadCommittedSnapshot
+		Line 2 "Recovery Model`t`t`t`t`t: " $ConfigDBRecoveryModel
+		Line 2 "Server Address`t`t`t`t`t: " $ConfigSQLServerPrincipalName
+		Line 2 "SQL Server Version`t`t`t`t: " $ConfigDBSQLVersion
 		Line 0 ""
 		Line 1 "Datastore: Logging"
-		Line 2 "Database Name`t`t: " $LogDatabaseName
-		Line 2 "Server Address`t`t: " $LogSQLServerPrincipalName
-		Line 2 "Mirror Server Address`t: " $LogSQLServerMirrorName
-		Line 2 "Database Size`t`t: " $LogDBSize
-		Line 2 "Read-Committed Snapshot`t: " $LogDBReadCommittedSnapshot
-		Line 2 "SQL Server Version`t: " $LogDBSQLVersion
+		Line 2 "Database Name`t`t`t`t`t: " $LogDatabaseName
+		Line 2 "Availability Database Synchronization State`t: " $LogDBAvailabilityDatabaseSynchronizationState
+		Line 2 "Availability Group Name`t`t`t`t: " $LogDBAvailabilityGroupName
+		Line 2 "Collation`t`t`t`t`t: " $LogDBCollation
+		Line 2 "Compatibility Level`t`t`t`t: " $LogDBCompatibilityLevel
+		Line 2 "Create Date`t`t`t`t`t: " $LogDBCreateDate
+		Line 2 "Database Size`t`t`t`t`t: " $LogDBSize
+		Line 2 "Last Backup Date`t`t`t`t: " $LogDBLastBackupDate
+		Line 2 "Last Log Backup Date`t`t`t`t: " $LogDBLastLogBackupDate
+		Line 2 "Mirror Server Address`t`t`t`t: " $LogSQLServerMirrorName
+		Line 2 "Mirroring Partner`t`t`t`t: " $LogDBMirroringPartner
+		Line 2 "Mirroring Partner Instance`t`t`t: " $LogDBMirroringPartnerInstance
+		Line 2 "Mirroring Safety Level`t`t`t`t: " $LogDBMirroringSafetyLevel
+		Line 2 "Mirroring Status`t`t`t`t: " $LogDBMirroringStatus
+		Line 2 "Mirroring Witness`t`t`t`t: " $LogDBMirroringWitness
+		Line 2 "Mirroring Witness Status`t`t`t: " $LogDBMirroringWitnessStatus
+		Line 2 "Parent`t`t`t`t`t`t: " $LogDBParent
+		Line 2 "Read-Committed Snapshot`t`t`t`t: " $LogDBReadCommittedSnapshot
+		Line 2 "Recovery Model`t`t`t`t`t: " $LogDBRecoveryModel
+		Line 2 "Server Address`t`t`t`t`t: " $LogSQLServerPrincipalName
+		Line 2 "SQL Server Version`t`t`t`t: " $LogDBSQLVersion
 		Line 0 ""
 		Line 1 "Datastore: Monitoring"
-		Line 2 "Database Name`t`t: " $MonitorDatabaseName
-		Line 2 "Server Address`t`t: " $MonitorSQLServerPrincipalName
-		Line 2 "Mirror Server Address`t: " $MonitorSQLServerMirrorName
-		Line 2 "Database Size`t`t: " $MonitorDBSize
-		Line 2 "Read-Committed Snapshot`t: " $MonitorDBReadCommittedSnapshot
-		Line 2 "SQL Server Version`t: " $MonitorDBSQLVersion
+		Line 2 "Database Name`t`t`t`t`t: " $MonitorDatabaseName
+		Line 2 "Availability Database Synchronization State`t: " $MonitorDBAvailabilityDatabaseSynchronizationState
+		Line 2 "Availability Group Name`t`t`t`t: " $MonitorDBAvailabilityGroupName
+		Line 2 "Collation`t`t`t`t`t: " $MonitorDBCollation
+		Line 2 "Compatibility Level`t`t`t`t: " $MonitorDBCompatibilityLevel
+		Line 2 "Create Date`t`t`t`t`t: " $MonitorDBCreateDate
+		Line 2 "Database Size`t`t`t`t`t: " $MonitorDBSize
+		Line 2 "Last Backup Date`t`t`t`t: " $MonitorDBLastBackupDate
+		Line 2 "Last Log Backup Date`t`t`t`t: " $MonitorDBLastLogBackupDate
+		Line 2 "Mirror Server Address`t`t`t`t: " $MonitorSQLServerMirrorName
+		Line 2 "Mirroring Partner`t`t`t`t: " $MonitorDBMirroringPartner
+		Line 2 "Mirroring Partner Instance`t`t`t: " $MonitorDBMirroringPartnerInstance
+		Line 2 "Mirroring Safety Level`t`t`t`t: " $MonitorDBMirroringSafetyLevel
+		Line 2 "Mirroring Status`t`t`t`t: " $MonitorDBMirroringStatus
+		Line 2 "Mirroring Witness`t`t`t`t: " $MonitorDBMirroringWitness
+		Line 2 "Mirroring Witness Status`t`t`t: " $MonitorDBMirroringWitnessStatus
+		Line 2 "Parent`t`t`t`t`t`t: " $MonitorDBParent
+		Line 2 "Read-Committed Snapshot`t`t`t`t: " $MonitorDBReadCommittedSnapshot
+		Line 2 "Recovery Model`t`t`t`t`t: " $MonitorDBRecoveryModel
+		Line 2 "Server Address`t`t`t`t`t: " $MonitorSQLServerPrincipalName
+		Line 2 "SQL Server Version`t`t`t`t: " $MonitorDBSQLVersion
 		Line 0 ""
 
-		If(($ConfigSQLServerMirrorName -ne "Not Configured" -and $ConfigDBSize -eq " MB") -or 
-		($LogSQLServerMirrorName -ne "Not Configured" -and $LogDBSize -eq " MB") -or 
-		($MonitorSQLServerMirrorName -ne "Not Configured" -and $MonitorDBSize -eq " MB"))
-		{
-			Line 0 "One or more databases report a Null size which means the database has failed over to the Mirror Server"
-			Line 0 ""
-		}
-
 		Line 1 "Monitoring Database Details"
-		Line 1 "Collect Hotfix Data`t`t: " $MonitorCollectHotfix
-		Line 1 "Data Collection`t`t`t: " $MonitorDataCollection
-		Line 1 "Detail SQL Output`t`t: " $MonitorDetailedSQL
-		Line 1 "Full Poll Start Hour`t`t: " $MonitorConfig.FullPollStartHour
-		Line 1 "Resolution Poll Time Hours`t: " $MonitorConfig.FullPollStartHour
-		Line 1 "Sync Poll Time Hours`t`t: " $MonitorConfig.SyncPollTimeHours
+		Line 2 "Collect Hotfix Data`t`t: " $MonitorCollectHotfix
+		Line 2 "Data Collection`t`t`t: " $MonitorDataCollection
+		Line 2 "Detail SQL Output`t`t: " $MonitorDetailedSQL
+		If($MonitorConfig.ContainsKey("EnableDayLevelGranularityProcessUtilization"))
+		{
+			Line 2 "Enable Day Level Granularity`t: " $MonitorConfig.EnableDayLevelGranularityProcessUtilization
+		}
+		If($MonitorConfig.ContainsKey("EnableHourLevelGranularityProcessUtilization"))
+		{
+			Line 2 "Enable Hour Level Granularity`t: " $MonitorConfig.EnableHourLevelGranularityProcessUtilization
+		}
+		If($MonitorConfig.ContainsKey("EnableMinLevelGranularityProcessUtilization"))
+		{
+			Line 2 "Enable Minute Level Granularity`t: " $MonitorConfig.EnableMinLevelGranularityProcessUtilization
+		}
+		Line 2 "Full Poll Start Hour`t`t: " $MonitorConfig.FullPollStartHour
+		If($MonitorConfig.ContainsKey("MonitorQueryTimeoutSeconds"))
+		{
+			Line 2 "Monitor Query Timeout Seconds`t: " $MonitorConfig.MonitorQueryTimeoutSeconds
+		}
+		Line 2 "Resolution Poll Time Hours`t: " $MonitorConfig.FullPollStartHour
+		Line 2 "Sync Poll Time Hours`t`t: " $MonitorConfig.SyncPollTimeHours
+		Line 0 ""
 		Line 1 "Groom Retention Settings in Days" 
-		Line 2 "Application Instance`t: " $MonitorConfig.GroomApplicationInstanceRetentionDays
-		Line 2 "Deleted`t`t`t: " $MonitorConfig.GroomDeletedRetentionDays
-		Line 2 "Failures`t`t: " $MonitorConfig.GroomFailuresRetentionDays
-		Line 2 "Load Indexes`t`t: " $MonitorConfig.GroomLoadIndexesRetentionDays 
-		Line 2 "Machine Hotfix Log`t: " $MonitorConfig.GroomMachineHotfixLogRetentionDays
-		Line 2 "Minute`t`t`t: " $MonitorConfig.GroomMinuteRetentionDays
-		Line 2 "Sessions`t`t: " $MonitorConfig.GroomSessionsRetentionDays
-		Line 2 "Summaries`t`t: " $MonitorConfig.GroomSummariesRetentionDays
+		If($MonitorConfig.ContainsKey("GroomApplicationErrorsRetentionDays"))
+		{
+			Line 2 "Application Errors`t`t: " $MonitorConfig.GroomApplicationErrorsRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomApplicationFaultsRetentionDays"))
+		{
+			Line 2 "Application Faults`t`t: " $MonitorConfig.GroomApplicationFaultsRetentionDays
+		}
+		Line 2 "Application Instance`t`t: " $MonitorConfig.GroomApplicationInstanceRetentionDays
+		Line 2 "Deleted`t`t`t`t: " $MonitorConfig.GroomDeletedRetentionDays
+		Line 2 "Failures`t`t`t: " $MonitorConfig.GroomFailuresRetentionDays
+		If($MonitorConfig.ContainsKey("GroomHourlyRetentionDays"))
+		{
+			Line 2 "Hourly Retention`t`t: " $MonitorConfig.GroomHourlyRetentionDays
+		}
+		Line 2 "Load Indexes`t`t`t: " $MonitorConfig.GroomLoadIndexesRetentionDays
+		Line 2 "Machine Hotfix Log`t`t: " $MonitorConfig.GroomMachineHotfixLogRetentionDays
+		If($MonitorConfig.ContainsKey("GroomMachineMetricDataRetentionDays"))
+		{
+			Line 2 "Machine Metric Data`t`t: " $MonitorConfig.GroomMachineMetricDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomMachineMetricDaySummaryDataRetentionDays"))
+		{
+			Line 2 "Machine Metric Day Summary`t: " $MonitorConfig.GroomMachineMetricDaySummaryDataRetentionDays
+		}
+		Line 2 "Minute`t`t`t`t: " $MonitorConfig.GroomMinuteRetentionDays
+		If($MonitorConfig.ContainsKey("GroomNotificationLogRetentionDays"))
+		{
+			Line 2 "Notification`t`t`t: " $MonitorConfig.GroomNotificationLogRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageDayDataRetentionDays"))
+		{
+			Line 2 "Process Usage Day Data`t`t: " $MonitorConfig.GroomProcessUsageDayDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageHourDataRetentionDays"))
+		{
+			Line 2 "Process Usage Hour Data`t`t: " $MonitorConfig.GroomProcessUsageHourDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageMinuteDataRetentionDays"))
+		{
+			Line 2 "Process Usage Minute Data`t: " $MonitorConfig.GroomProcessUsageMinuteDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageRawDataRetentionDays"))
+		{
+			Line 2 "Process Usage Raw Data`t`t: " $MonitorConfig.GroomProcessUsageRawDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageDayDataRetentionDays"))
+		{
+			Line 2 "Resource Usage Day Data`t`t: " $MonitorConfig.GroomResourceUsageDayDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageHourDataRetentionDays"))
+		{
+			Line 2 "Resource Usage Hour Data`t: " $MonitorConfig.GroomResourceUsageHourDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageMinuteDataRetentionDays"))
+		{
+			Line 2 "Resource Usage Minute Data`t: " $MonitorConfig.GroomResourceUsageMinuteDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageRawDataRetentionDays"))
+		{
+			Line 2 "Resource Usage Raw Data`t`t: " $MonitorConfig.GroomResourceUsageRawDataRetentionDays
+		}
+		If($MonitorConfig.ContainsKey("GroomSessionMetricsDataRetentionDays"))
+		{
+			Line 2 "Session Metrics`t`t`t: " $MonitorConfig.GroomSessionMetricsDataRetentionDays
+		}
+		Line 2 "Sessions`t`t`t: " $MonitorConfig.GroomSessionsRetentionDays
+		Line 2 "Summaries`t`t`t: " $MonitorConfig.GroomSummariesRetentionDays
 		Line 0 ""
 	}
 	ElseIf($HTML)
@@ -23272,53 +23832,87 @@ Function OutputDatastores
 		WriteHTMLLine 2 0 "Datastores"
 		
 		$rowdata = @()
-
-		$rowdata += @(,(
-		'Site',$htmlwhite,
-		$ConfigDatabaseName,$htmlwhite,
-		$ConfigSQLServerPrincipalName,$htmlwhite,
-		$ConfigSQLServerMirrorName,$htmlwhite,
-		$ConfigDBSize,$htmlwhite,
-		$ConfigDBReadCommittedSnapshot,$htmlwhite,
-		$ConfigDBSQLVersion,$htmlwhite))
-
-		$rowdata += @(,(
-		'Logging',$htmlwhite,
-		$LogDatabaseName,$htmlwhite,
-		$LogSQLServerPrincipalName,$htmlwhite,
-		$LogSQLServerMirrorName,$htmlwhite,
-		$LogDBSize,$htmlwhite,
-		$LogDBReadCommittedSnapshot,$htmlwhite,
-		$LogDBSQLVersion,$htmlwhite))
-		
-
-		$rowdata += @(,(
-		'Monitoring',$htmlwhite,
-		$MonitorDatabaseName,$htmlwhite,
-		$MonitorSQLServerPrincipalName,$htmlwhite,
-		$MonitorSQLServerMirrorName,$htmlwhite,
-		$MonitorDBSize,$htmlwhite,
-		$MonitorDBReadCommittedSnapshot,$htmlwhite,
-		$MonitorDBSQLVersion,$htmlwhite))
-
-		$columnHeaders = @(
-		'Datastore',($htmlsilver -bor $htmlbold),
-		'Database Name',($htmlsilver -bor $htmlbold),
-		'Server Address',($htmlsilver -bor $htmlbold),
-		'Mirror Server Address',($htmlsilver -bor $htmlbold),
-		'Database Size',($htmlsilver -bor $htmlbold),
-		'Read-Committed Snapshot',($htmlsilver -bor $htmlbold),
-		'SQL Server Version',($htmlsilver -bor $htmlbold))
-
+		$columnHeaders = @("Datastore",($htmlsilver -bor $htmlbold),"Site",$htmlwhite)
+		$rowdata += @(,("Database Name",($htmlsilver -bor $htmlbold),$ConfigDatabaseName,$htmlwhite))
+		$rowdata += @(,("Availability Database Synchronization State",($htmlsilver -bor $htmlbold),$ConfigDBAvailabilityDatabaseSynchronizationState,$htmlwhite))
+		$rowdata += @(,("Availability Group Name",($htmlsilver -bor $htmlbold),$ConfigDBAvailabilityGroupName,$htmlwhite))
+		$rowdata += @(,("Collation",($htmlsilver -bor $htmlbold),$ConfigDBCollation,$htmlwhite))
+		$rowdata += @(,("Compatibility Level",($htmlsilver -bor $htmlbold),$ConfigDBCompatibilityLevel,$htmlwhite))
+		$rowdata += @(,("Create Date",($htmlsilver -bor $htmlbold),$ConfigDBCreateDate,$htmlwhite))
+		$rowdata += @(,("Database Size",($htmlsilver -bor $htmlbold),$ConfigDBSize,$htmlwhite))
+		$rowdata += @(,("Last Backup Date",($htmlsilver -bor $htmlbold),$ConfigDBLastBackupDate,$htmlwhite))
+		$rowdata += @(,("Last Log Backup Date",($htmlsilver -bor $htmlbold),$ConfigDBLastLogBackupDate,$htmlwhite))
+		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner",($htmlsilver -bor $htmlbold),$ConfigDBMirroringPartner,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner Instance",($htmlsilver -bor $htmlbold),$ConfigDBMirroringPartnerInstance,$htmlwhite))
+		$rowdata += @(,("Mirroring Safety Level",($htmlsilver -bor $htmlbold),$ConfigDBMirroringSafetyLevel,$htmlwhite))
+		$rowdata += @(,("Mirroring Status",($htmlsilver -bor $htmlbold),$ConfigDBMirroringStatus,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness",($htmlsilver -bor $htmlbold),$ConfigDBMirroringWitness,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness Status",($htmlsilver -bor $htmlbold),$ConfigDBMirroringWitnessStatus,$htmlwhite))
+		$rowdata += @(,("Parent",($htmlsilver -bor $htmlbold),$ConfigDBParent,$htmlwhite))
+		$rowdata += @(,("Read-Committed Snapshot",($htmlsilver -bor $htmlbold),$ConfigDBReadCommittedSnapshot,$htmlwhite))
+		$rowdata += @(,("Recovery Model",($htmlsilver -bor $htmlbold),$ConfigDBRecoveryModel,$htmlwhite))
+		$rowdata += @(,("Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerPrincipalName,$htmlwhite))
+		$rowdata += @(,("SQL Server Version",($htmlsilver -bor $htmlbold),$ConfigDBSQLVersion,$htmlwhite))
 		$msg = ""
-		FormatHTMLTable $msg "auto" -rowArray $rowdata -columnArray $columnHeaders
+		$columnWidths = @("250","200")
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "450"
+		WriteHTMLLine 0 0 ""
 
-		If(($ConfigSQLServerMirrorName -ne "Not Configured" -and $ConfigDBSize -eq " MB") -or 
-		($LogSQLServerMirrorName -ne "Not Configured" -and $LogDBSize -eq " MB") -or 
-		($MonitorSQLServerMirrorName -ne "Not Configured" -and $MonitorDBSize -eq " MB"))
-		{
-			WriteHTMLLine 0 0 "One or more databases report a Null size which means the database has failed over to the Mirror Server"
-		}
+		$rowdata = @()
+		$columnHeaders = @("Datastore",($htmlsilver -bor $htmlbold),"Logging",$htmlwhite)
+		$rowdata += @(,("Database Name",($htmlsilver -bor $htmlbold),$LogDatabaseName,$htmlwhite))
+		$rowdata += @(,("Availability Database Synchronization State",($htmlsilver -bor $htmlbold),$LogDBAvailabilityDatabaseSynchronizationState,$htmlwhite))
+		$rowdata += @(,("Availability Group Name",($htmlsilver -bor $htmlbold),$LogDBAvailabilityGroupName,$htmlwhite))
+		$rowdata += @(,("Collation",($htmlsilver -bor $htmlbold),$LogDBCollation,$htmlwhite))
+		$rowdata += @(,("Compatibility Level",($htmlsilver -bor $htmlbold),$LogDBCompatibilityLevel,$htmlwhite))
+		$rowdata += @(,("Create Date",($htmlsilver -bor $htmlbold),$LogDBCreateDate,$htmlwhite))
+		$rowdata += @(,("Database Size",($htmlsilver -bor $htmlbold),$LogDBSize,$htmlwhite))
+		$rowdata += @(,("Last Backup Date",($htmlsilver -bor $htmlbold),$LogDBLastBackupDate,$htmlwhite))
+		$rowdata += @(,("Last Log Backup Date",($htmlsilver -bor $htmlbold),$LogDBLastLogBackupDate,$htmlwhite))
+		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner",($htmlsilver -bor $htmlbold),$LogDBMirroringPartner,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner Instance",($htmlsilver -bor $htmlbold),$LogDBMirroringPartnerInstance,$htmlwhite))
+		$rowdata += @(,("Mirroring Safety Level",($htmlsilver -bor $htmlbold),$LogDBMirroringSafetyLevel,$htmlwhite))
+		$rowdata += @(,("Mirroring Status",($htmlsilver -bor $htmlbold),$LogDBMirroringStatus,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness",($htmlsilver -bor $htmlbold),$LogDBMirroringWitness,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness Status",($htmlsilver -bor $htmlbold),$LogDBMirroringWitnessStatus,$htmlwhite))
+		$rowdata += @(,("Parent",($htmlsilver -bor $htmlbold),$LogDBParent,$htmlwhite))
+		$rowdata += @(,("Read-Committed Snapshot",($htmlsilver -bor $htmlbold),$LogDBReadCommittedSnapshot,$htmlwhite))
+		$rowdata += @(,("Recovery Model",($htmlsilver -bor $htmlbold),$LogDBRecoveryModel,$htmlwhite))
+		$rowdata += @(,("Server Address",($htmlsilver -bor $htmlbold),$LogSQLServerPrincipalName,$htmlwhite))
+		$rowdata += @(,("SQL Server Version",($htmlsilver -bor $htmlbold),$LogDBSQLVersion,$htmlwhite))
+		$msg = ""
+		$columnWidths = @("250","200")
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "450"
+		WriteHTMLLine 0 0 ""
+
+		$rowdata = @()
+		$columnHeaders = @("Datastore",($htmlsilver -bor $htmlbold),"Monitoring",$htmlwhite)
+		$rowdata += @(,("Database Name",($htmlsilver -bor $htmlbold),$MonitorDatabaseName,$htmlwhite))
+		$rowdata += @(,("Availability Database Synchronization State",($htmlsilver -bor $htmlbold),$MonitorDBAvailabilityDatabaseSynchronizationState,$htmlwhite))
+		$rowdata += @(,("Availability Group Name",($htmlsilver -bor $htmlbold),$MonitorDBAvailabilityGroupName,$htmlwhite))
+		$rowdata += @(,("Collation",($htmlsilver -bor $htmlbold),$MonitorDBCollation,$htmlwhite))
+		$rowdata += @(,("Compatibility Level",($htmlsilver -bor $htmlbold),$MonitorDBCompatibilityLevel,$htmlwhite))
+		$rowdata += @(,("Create Date",($htmlsilver -bor $htmlbold),$MonitorDBCreateDate,$htmlwhite))
+		$rowdata += @(,("Database Size",($htmlsilver -bor $htmlbold),$MonitorDBSize,$htmlwhite))
+		$rowdata += @(,("Last Backup Date",($htmlsilver -bor $htmlbold),$MonitorDBLastBackupDate,$htmlwhite))
+		$rowdata += @(,("Last Log Backup Date",($htmlsilver -bor $htmlbold),$MonitorDBLastLogBackupDate,$htmlwhite))
+		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner",($htmlsilver -bor $htmlbold),$MonitorDBMirroringPartner,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner Instance",($htmlsilver -bor $htmlbold),$MonitorDBMirroringPartnerInstance,$htmlwhite))
+		$rowdata += @(,("Mirroring Safety Level",($htmlsilver -bor $htmlbold),$MonitorDBMirroringSafetyLevel,$htmlwhite))
+		$rowdata += @(,("Mirroring Status",($htmlsilver -bor $htmlbold),$MonitorDBMirroringStatus,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness",($htmlsilver -bor $htmlbold),$MonitorDBMirroringWitness,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness Status",($htmlsilver -bor $htmlbold),$MonitorDBMirroringWitnessStatus,$htmlwhite))
+		$rowdata += @(,("Parent",($htmlsilver -bor $htmlbold),$MonitorDBParent,$htmlwhite))
+		$rowdata += @(,("Read-Committed Snapshot",($htmlsilver -bor $htmlbold),$MonitorDBReadCommittedSnapshot,$htmlwhite))
+		$rowdata += @(,("Recovery Model",($htmlsilver -bor $htmlbold),$MonitorDBRecoveryModel,$htmlwhite))
+		$rowdata += @(,("Server Address",($htmlsilver -bor $htmlbold),$MonitorSQLServerPrincipalName,$htmlwhite))
+		$rowdata += @(,("SQL Server Version",($htmlsilver -bor $htmlbold),$MonitorDBSQLVersion,$htmlwhite))
+		$msg = ""
+		$columnWidths = @("250","200")
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "450"
 		WriteHTMLLine 0 0 " "
 
 		WriteHTMLLine 3 0 "Monitoring Database Details"
@@ -23326,29 +23920,106 @@ Function OutputDatastores
 		$columnHeaders = @("Collect Hotfix Data",($htmlsilver -bor $htmlbold),$MonitorCollectHotfix,$htmlwhite)
 		$rowdata += @(,('Data Collection',($htmlsilver -bor $htmlbold),$MonitorDataCollection,$htmlwhite))
 		$rowdata += @(,('Detail SQL Output',($htmlsilver -bor $htmlbold),$MonitorDetailedSQL,$htmlwhite))
+		If($MonitorConfig.ContainsKey("EnableDayLevelGranularityProcessUtilization"))
+		{
+			$rowdata += @(,('Enable Day Level Granularity',($htmlsilver -bor $htmlbold),$MonitorConfig.FullPollStartHour,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("EnableHourLevelGranularityProcessUtilization"))
+		{
+			$rowdata += @(,('Enable Hour Level Granularity',($htmlsilver -bor $htmlbold),$MonitorConfig.FullPollStartHour,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("EnableMinLevelGranularityProcessUtilization"))
+		{
+			$rowdata += @(,('Enable Minute Level Granularity',($htmlsilver -bor $htmlbold),$MonitorConfig.FullPollStartHour,$htmlwhite))
+		}
 		$rowdata += @(,('Full Poll Start Hour',($htmlsilver -bor $htmlbold),$MonitorConfig.FullPollStartHour,$htmlwhite))
+		If($MonitorConfig.ContainsKey("MonitorQueryTimeoutSeconds"))
+		{
+			$rowdata += @(,('Monitor Query Timeout Seconds',($htmlsilver -bor $htmlbold),$MonitorConfig.FullPollStartHour,$htmlwhite))
+		}
 		$rowdata += @(,('Resolution Poll Time Hours',($htmlsilver -bor $htmlbold),$MonitorConfig.FullPollStartHour,$htmlwhite))
 		$rowdata += @(,('Sync Poll Time Hours',($htmlsilver -bor $htmlbold),$MonitorConfig.SyncPollTimeHours,$htmlwhite))
 
 		$msg = ""
 		$columnWidths = @("200","50")
-		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "350"
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "250"
 		WriteHTMLLine 0 0 " "
 		
 		WriteHTMLLine 3 0 "Groom Retention Settings in Days"
 		$rowdata = @()
-		$columnHeaders = @("Application Instance",($htmlsilver -bor $htmlbold),$MonitorConfig.GroomApplicationInstanceRetentionDays,$htmlwhite)
+		$columnHeaders = @("",($htmlsilver -bor $htmlbold),"",$htmlwhite)
+		If($MonitorConfig.ContainsKey("GroomApplicationErrorsRetentionDays"))
+		{
+			$rowdata += @(,('Application Errors',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomApplicationErrorsRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomApplicationFaultsRetentionDays"))
+		{
+			$rowdata += @(,('Application Faults',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomApplicationFaultsRetentionDays,$htmlwhite))
+		}
+		$rowdata += @(,('Application Instance',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomApplicationInstanceRetentionDays,$htmlwhite))
 		$rowdata += @(,('Deleted',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomDeletedRetentionDays,$htmlwhite))
 		$rowdata += @(,('Failures',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomFailuresRetentionDays,$htmlwhite))
+		If($MonitorConfig.ContainsKey("GroomHourlyRetentionDays"))
+		{
+			$rowdata += @(,('Hourly Retention',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomHourlyRetentionDays,$htmlwhite))
+		}
 		$rowdata += @(,('Load Indexes',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomLoadIndexesRetentionDays,$htmlwhite))
 		$rowdata += @(,('Machine Hotfix Log',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomMachineHotfixLogRetentionDays,$htmlwhite))
+		If($MonitorConfig.ContainsKey("GroomMachineMetricDataRetentionDays"))
+		{
+			$rowdata += @(,('Machine Metric Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomMachineMetricDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomMachineMetricDaySummaryDataRetentionDays"))
+		{
+			$rowdata += @(,('Machine Metric Day Summary',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomMachineMetricDaySummaryDataRetentionDays,$htmlwhite))
+		}
 		$rowdata += @(,('Minute',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomMinuteRetentionDays,$htmlwhite))
+		If($MonitorConfig.ContainsKey("GroomNotificationLogRetentionDays"))
+		{
+			$rowdata += @(,('Notification',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomNotificationLogRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageDayDataRetentionDays"))
+		{
+			$rowdata += @(,('Process Usage Day Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomProcessUsageDayDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageHourDataRetentionDays"))
+		{
+			$rowdata += @(,('Process Usage Hour Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomProcessUsageHourDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageMinuteDataRetentionDays"))
+		{
+			$rowdata += @(,('Process Usage Minute Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomProcessUsageMinuteDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomProcessUsageRawDataRetentionDays"))
+		{
+			$rowdata += @(,('Process Usage Raw Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomProcessUsageRawDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageDayDataRetentionDays"))
+		{
+			$rowdata += @(,('Resource Usage Day Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomResourceUsageDayDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageHourDataRetentionDays"))
+		{
+			$rowdata += @(,('Resource Usage Hour Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomResourceUsageHourDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageMinuteDataRetentionDays"))
+		{
+			$rowdata += @(,('Resource Usage Minute Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomResourceUsageMinuteDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomResourceUsageRawDataRetentionDays"))
+		{
+			$rowdata += @(,('Resource Usage Raw Data',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomResourceUsageRawDataRetentionDays,$htmlwhite))
+		}
+		If($MonitorConfig.ContainsKey("GroomSessionMetricsDataRetentionDays"))
+		{
+			$rowdata += @(,('Session Metrics',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomSessionMetricsDataRetentionDays,$htmlwhite))
+		}
 		$rowdata += @(,('Sessions',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomSessionsRetentionDays,$htmlwhite))
 		$rowdata += @(,('Summaries',($htmlsilver -bor $htmlbold),$MonitorConfig.GroomSummariesRetentionDays,$htmlwhite))
 
 		$msg = ""
 		$columnWidths = @("200","50")
-		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "350"
+		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "250"
 		WriteHTMLLine 0 0 " "
 	}
 }
@@ -27281,6 +27952,7 @@ Function ProcessScriptEnd
 		Out-File -FilePath $SIFile -Append -InputObject "From            : $($From)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "Hosting         : $($Hosting)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "HW Inventory    : $($Hardware)" 4>$Null
+		Out-File -FilePath $SIFile -Append -InputObject "Log             : $($Log)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "Logging         : $($Logging)" 4>$Null
 		If($Logging)
 		{
@@ -27325,6 +27997,23 @@ Function ProcessScriptEnd
 		Out-File -FilePath $SIFile -Append -InputObject "Elapsed time : $($Str)" 4>$Null
 	}
 
+	#V1.40 added
+	#stop transcript logging
+	If($Log -eq $True) 
+	{
+		If($Script:StartLog -eq $true) 
+		{
+			try 
+			{
+				Stop-Transcript | Out-Null
+				Write-Verbose "$(Get-Date): $Script:LogPath is ready for use"
+			} 
+			catch 
+			{
+				Write-Verbose "$(Get-Date): Transcript/log stop failed"
+			}
+		}
+	}
 	$runtime = $Null
 	$Str = $Null
 	$ErrorActionPreference = $SaveEAPreference
