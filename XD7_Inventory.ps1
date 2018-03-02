@@ -893,7 +893,7 @@
 	NAME: XD7_Inventory.ps1
 	VERSION: 1.40
 	AUTHOR: Carl Webster
-	LASTEDIT: February 26, 2018
+	LASTEDIT: March 2, 2018
 #>
 
 #endregion
@@ -1322,11 +1322,14 @@ Param(
 #		Citrix.GroupPolicy.Commands and New-PSDrive break transcript logging so restart logging after each New-PSDrive call
 #		Removed the Log Alias from the Logging parameter
 #	Added new function GetDBCompatibilityLevel
+#	Move section headings for Machine Catalogs, Delivery Groups, and Applications to their respective "Process" functions.
+#		This allows the "There are no Machine Catalogs/Delivery Groups/Applications" messages to appear in their own sections, 
+#		and for Word/PDF output, not directly under the Table of Contents
 #	Updated function GetSQLVersion to add support for SQL Server 2017
 #	Updated function OutputDatastores for the additional SQL Server and Database information
 #		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
-#	Updated help text
 #	Updated the "Default" message in function GetSQLVersion
+#	When there are no Machine Catalogs, change the message from "There are no Machines" to "There are no Machine Catalogs"
 #
 #endregion
 
@@ -5674,35 +5677,6 @@ Function ProcessMachineCatalogs
 {
 	Write-Verbose "$(Get-Date): Retrieving Machine Catalogs"
 
-	$Global:TotalServerOSCatalogs = 0
-	$Global:TotalDesktopOSCatalogs = 0
-	$Global:TotalRemotePCCatalogs = 0
-
-	$AllMachineCatalogs = Get-BrokerCatalog @XDParams2 -SortBy Name 
-
-	If($? -and $Null -ne $AllMachineCatalogs)
-	{
-		OutputMachines $AllMachineCatalogs
-	}
-	ElseIf($? -and ($Null -eq $AllMachineCatalogs))
-	{
-		$txt = "There are no Machines"
-		OutputWarning $txt
-	}
-	Else
-	{
-		$txt = "Unable to retrieve Machines"
-		OutputWarning $txt
-	}
-	Write-Verbose "$(Get-Date): "
-}
-
-Function OutputMachines
-{
-	Param([object]$Catalogs)
-	
-	Write-Verbose "$(Get-Date): `tProcessing Machine Catalogs"
-
 	$txt = "Machine Catalogs"
 	If($MSWord -or $PDF)
 	{
@@ -5718,6 +5692,35 @@ Function OutputMachines
 	{
 		WriteHTMLLine 1 0 $txt
 	}
+
+	$Global:TotalServerOSCatalogs = 0
+	$Global:TotalDesktopOSCatalogs = 0
+	$Global:TotalRemotePCCatalogs = 0
+
+	$AllMachineCatalogs = Get-BrokerCatalog @XDParams2 -SortBy Name 
+
+	If($? -and $Null -ne $AllMachineCatalogs)
+	{
+		OutputMachines $AllMachineCatalogs
+	}
+	ElseIf($? -and ($Null -eq $AllMachineCatalogs))
+	{
+		$txt = "There are no Machine Catalogs"
+		OutputWarning $txt
+	}
+	Else
+	{
+		$txt = "Unable to retrieve Machine Catalogs"
+		OutputWarning $txt
+	}
+	Write-Verbose "$(Get-Date): "
+}
+
+Function OutputMachines
+{
+	Param([object]$Catalogs)
+	
+	Write-Verbose "$(Get-Date): `tProcessing Machine Catalogs"
 
 	#add 16-jun-2015, summary table of catalogs to match what is shown in Studio
 	If($MSWord -or $PDF)
@@ -8236,6 +8239,21 @@ Function ProcessDeliveryGroups
 {
 	Write-Verbose "$(Get-Date): Retrieving Delivery Groups"
 
+	If($MSWord -or $PDF)
+	{
+		$Selection.InsertNewPage()
+		WriteWordLine 1 0 "Delivery Groups"
+	}
+	ElseIf($Text)
+	{
+		Line 0 "Delivery Groups"
+		Line 0 ""
+	}
+	ElseIf($HTML)
+	{
+		WriteHTMLLine 1 0 "Delivery Groups"
+	}
+
 	$Global:TotalApplicationGroups = 0
 	$Global:TotalDesktopGroups = 0
 	$Global:TotalAppsAndDesktopGroups = 0
@@ -8271,21 +8289,6 @@ Function OutputDeliveryGroupTable
 {
 	Param([object] $AllDeliveryGroups)
 	
-	If($MSWord -or $PDF)
-	{
-		$Selection.InsertNewPage()
-		WriteWordLine 1 0 "Delivery Groups"
-	}
-	ElseIf($Text)
-	{
-		Line 0 "Delivery Groups"
-		Line 0 ""
-	}
-	ElseIf($HTML)
-	{
-		WriteHTMLLine 1 0 "Delivery Groups"
-	}
-
 	If($MSWord -or $PDF)
 	{
 		[System.Collections.Hashtable[]] $WordTable = @();
@@ -10487,6 +10490,22 @@ Function ProcessApplications
 {
 	Write-Verbose "$(Get-Date): Retrieving Applications"
 	
+	$txt = "Applications"
+	If($MSWord -or $PDF)
+	{
+		$Selection.InsertNewPage()
+		WriteWordLine 1 0 $txt
+	}
+	ElseIf($Text)
+	{
+		Line 0 $txt
+		Line 0 ""
+	}
+	ElseIf($HTML)
+	{
+		WriteHTMLLine 1 0 $txt
+	}
+
 	$Global:TotalPublishedApplications = 0
 	$Global:TotalAppvApplications = 0
 	
@@ -10521,22 +10540,6 @@ Function OutputApplications
 	Param([object]$AllApplications)
 	
 	Write-Verbose "$(Get-Date): `tProcessing Applications"
-
-	$txt = "Applications"
-	If($MSWord -or $PDF)
-	{
-		$Selection.InsertNewPage()
-		WriteWordLine 1 0 $txt
-	}
-	ElseIf($Text)
-	{
-		Line 0 $txt
-		Line 0 ""
-	}
-	ElseIf($HTML)
-	{
-		WriteHTMLLine 1 0 $txt
-	}
 
 	If($MSWord -or $PDF)
 	{
@@ -23044,7 +23047,7 @@ Function OutputDatastores
 {
 	#2-Mar-2017 Fix bug reported by P. Ewing
 	
-	#V1.40 add additional database details and change from a horizontal table to a vertical table
+	#V2.11 add additional database details and change from a horizontal table to a vertical table
 	
 	#line starts with server=SQLServerName;
 	#only need what is between the = and ;
@@ -23146,6 +23149,28 @@ Function OutputDatastores
 				$ConfigDBMirroringStatus			= "-"
 				$ConfigDBMirroringWitness			= "-"
 				$ConfigDBMirroringWitnessStatus		= "-"
+			}
+			
+			#check for log backup status
+			If($ConfigDBRecoveryModel -eq "Simple")
+			{
+				If($ConfigDBLastLogBackupDate -eq "1/1/0001 12:00:00 AM")
+				{
+					$ConfigDBLastLogBackupDate = "Log backup not needed for Simple Recovery Model"
+				}
+			}
+			ElseIf($ConfigDBRecoveryModel -eq "Full")
+			{
+				If($ConfigDBLastLogBackupDate -eq "1/1/0001 12:00:00 AM")
+				{
+					$ConfigDBLastLogBackupDate = "Log backup not detected for Full Recovery Model"
+				}
+			}
+			
+			#check for database backup
+			If($ConfigDBLastBackupDate -eq "1/1/0001 12:00:00 AM")
+			{
+				$ConfigDBLastBackupDate = "Database backup not detected"
 			}
 		}
 	}
@@ -23254,6 +23279,28 @@ Function OutputDatastores
 				$LogDBMirroringStatus			= "-"
 				$LogDBMirroringWitness			= "-"
 				$LogDBMirroringWitnessStatus	= "-"
+			}
+
+			#check for log backup status
+			If($LogDBRecoveryModel -eq "Simple")
+			{
+				If($LogDBLastLogBackupDate -eq "1/1/0001 12:00:00 AM")
+				{
+					$LogDBLastLogBackupDate = "Log backup not needed for Simple Recovery Model"
+				}
+			}
+			ElseIf($LogDBRecoveryModel -eq "Full")
+			{
+				If($LogDBLastLogBackupDate -eq "1/1/0001 12:00:00 AM")
+				{
+					$LogDBLastLogBackupDate = "Log backup not detected for Full Recovery Model"
+				}
+			}
+			
+			#check for database backup
+			If($LogDBLastBackupDate -eq "1/1/0001 12:00:00 AM")
+			{
+				$LogDBLastBackupDate = "Database backup not detected"
 			}
 		}
 	}
@@ -23366,6 +23413,28 @@ Function OutputDatastores
 				$MonitorDBMirroringStatus			= "-"
 				$MonitorDBMirroringWitness			= "-"
 				$MonitorDBMirroringWitnessStatus	= "-"
+			}
+
+			#check for log backup status
+			If($MonitorDBRecoveryModel -eq "Simple")
+			{
+				If($MonitorDBLastLogBackupDate -eq "1/1/0001 12:00:00 AM")
+				{
+					$MonitorDBLastLogBackupDate = "Log backup not needed for Simple Recovery Model"
+				}
+			}
+			ElseIf($MonitorDBRecoveryModel -eq "Full")
+			{
+				If($MonitorDBLastLogBackupDate -eq "1/1/0001 12:00:00 AM")
+				{
+					$MonitorDBLastLogBackupDate = "Log backup not detected for Full Recovery Model"
+				}
+			}
+			
+			#check for database backup
+			If($MonitorDBLastBackupDate -eq "1/1/0001 12:00:00 AM")
+			{
+				$MonitorDBLastBackupDate = "Database backup not detected"
 			}
 		}
 		
