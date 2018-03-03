@@ -3,7 +3,7 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
-#Version 1.40
+#Version 1.40 2-Mar-2018
 #	Added additional SQL database information to the Configuration section
 #	Added Log switch to create a transcript log
 #		Added function TranscriptLogging
@@ -13,6 +13,7 @@
 #	Move section headings for Machine Catalogs, Delivery Groups, and Applications to their respective "Process" functions.
 #		This allows the "There are no Machine Catalogs/Delivery Groups/Applications" messages to appear in their own sections, 
 #		and for Word/PDF output, not directly under the Table of Contents
+#	Update help text
 #	Updated function GetSQLVersion to add support for SQL Server 2017
 #	Updated function OutputDatastores for the additional SQL Server and Database information
 #		Changed Word/PDF and HTML output from a horizontal table to three vertical tables

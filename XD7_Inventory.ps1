@@ -321,8 +321,8 @@
 .PARAMETER AddDateTime
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2017 at 6PM is 2017-06-01_1800.
-	Output filename will be ReportName_2017-06-01_1800.docx (or .pdf).
+	June 1, 2018 at 6PM is 2018-06-01_1800.
+	Output filename will be ReportName_2018-06-01_1800.docx (or .pdf).
 	This parameter is disabled by default.
 	This parameter has an alias of ADT.
 .PARAMETER Folder
@@ -592,10 +592,10 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2017 -EndDate 01/31/2017
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2018 -EndDate 01/31/2018
 	
-	Creates a report with Configuration Logging details for the dates 01/01/2017 through 
-	01/31/2017.
+	Creates a report with Configuration Logging details for the dates 01/01/2018 through 
+	01/31/2018.
 	
 	Will use all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
@@ -607,11 +607,11 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2017 10:00:00" -EndDate 
-	"06/01/2017 14:00:00"
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2018 10:00:00" -EndDate 
+	"06/01/2018 14:00:00"
 	
 	Creates a report with Configuration Logging details for the time range 
-	06/01/2017 10:00:00AM through 06/01/2017 02:00:00PM.
+	06/01/2018 10:00:00AM through 06/01/2018 02:00:00PM.
 	
 	Narrowing the report down to seconds does not work. Seconds must be either 00 or 59.
 	
@@ -742,8 +742,8 @@
 
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2017 at 6PM is 2017-06-01_1800.
-	Output filename will be XD7SiteName_2017-06-01_1800.docx
+	June 1, 2018 at 6PM is 2018-06-01_1800.
+	Output filename will be XD7SiteName_2018-06-01_1800.docx
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF -AddDateTime
 	
@@ -759,8 +759,8 @@
 
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2017 at 6PM is 2017-06-01_1800.
-	Output filename will be XD7SiteName_2017-06-01_1800.pdf
+	June 1, 2018 at 6PM is 2018-06-01_1800.
+	Output filename will be XD7SiteName_2018-06-01_1800.pdf
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hardware
 	
@@ -1315,7 +1315,7 @@ Param(
 #Version 1.39 8-Dec-2017
 #	Updated Function WriteHTMLLine with fixes from the script template
 #
-#Version 1.40
+#Version 1.40 2-Mar-2018
 #	Added additional SQL database information to the Configuration section
 #	Added Log switch to create a transcript log
 #		Added function TranscriptLogging
@@ -1325,6 +1325,7 @@ Param(
 #	Move section headings for Machine Catalogs, Delivery Groups, and Applications to their respective "Process" functions.
 #		This allows the "There are no Machine Catalogs/Delivery Groups/Applications" messages to appear in their own sections, 
 #		and for Word/PDF output, not directly under the Table of Contents
+#	Update help text
 #	Updated function GetSQLVersion to add support for SQL Server 2017
 #	Updated function OutputDatastores for the additional SQL Server and Database information
 #		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
