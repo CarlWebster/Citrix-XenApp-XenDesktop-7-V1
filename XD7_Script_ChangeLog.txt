@@ -3,6 +3,9 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.40.1 10-Mar-2018
+#	Fix $SQLVersion for SQL 2008 R2. Minor version is 50, not 5.
+
 #Version 1.40 2-Mar-2018
 #	Added additional SQL database information to the Configuration section
 #	Added Log switch to create a transcript log

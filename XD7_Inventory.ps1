@@ -891,9 +891,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.40
+	VERSION: 1.40.1
 	AUTHOR: Carl Webster
-	LASTEDIT: March 2, 2018
+	LASTEDIT: March 10, 2018
 #>
 
 #endregion
@@ -1331,6 +1331,9 @@ Param(
 #		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
 #	Updated the "Default" message in function GetSQLVersion
 #	When there are no Machine Catalogs, change the message from "There are no Machines" to "There are no Machine Catalogs"
+#
+#Version 1.40.1 10-Mar-2018
+#	Fix $SQLVersion for SQL 2008 R2. Minor version is 50, not 5.
 #
 #endregion
 
@@ -22992,7 +22995,7 @@ Function GetSQLVersion
 		8                          {$SQLVer = "SQL Server 2000"; Break}
 		9                          {$SQLVer = "SQL Server 2005"; Break}
 		{10 -and $Minor -eq 0}     {$SQLVer = "SQL Server 2008"} #can't do break here
-		{10 -and $Minor -eq 5}     {$SQLVer = "SQL Server 2008 R2"} #can't do break here
+		{10 -and $Minor -eq 50}    {$SQLVer = "SQL Server 2008 R2"} #can't do break here #V1.40.1 fix from 5 to 50
 		11                         {$SQLVer = "SQL Server 2012"; Break}
 		12                         {$SQLVer = "SQL Server 2014"; Break}
 		13                         {$SQLVer = "SQL Server 2016"; Break}

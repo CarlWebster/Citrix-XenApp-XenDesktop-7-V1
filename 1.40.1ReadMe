@@ -1,0 +1,2 @@
+#Version 1.40.1 10-Mar-2018
+#	Fix $SQLVersion for SQL 2008 R2. Minor version is 50, not 5.
