@@ -1352,7 +1352,16 @@ Param(
 #		Code clean up also found a copy and paste error with Session Linger
 #			The "end session linger" value was still using the "end session prelaunch" variable
 #			OOPS, sorry about that. Fixed.
-
+#
+#Version 1.42 16-Apr-2018
+#	Added Function Get-IPAddress
+#	Added in Function OutputDatastores getting the IP address for each SQL server name
+#	Added in Function OutputLicensingOverview getting the IP address for the license server
+#	Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine
+#	When building the array of all Machine Catalogs that are used by a Delivery Group,
+#		Only the first item in the array was being returned. Adding -Property CatalogName 
+#		to Sort-Object was needed to get the full unique array returned.
+#		Sort-Object -Property CatalogName -Unique
 
 #endregion
 
@@ -5531,6 +5540,31 @@ Function TranscriptLogging
 		}
 	}
 }
+
+Function Get-IPAddress
+{
+	#V1.42 added new function
+	Param([string]$ComputerName)
+	
+	$IPAddress = "Unable to determine"
+	
+	Try
+	{
+		$IP = Test-Connection -ComputerName $ComputerName -Count 1 | Select-Object IPV4Address
+	}
+	
+	Catch
+	{
+		$IP = $Null
+	}
+
+	If($? -and $Null -ne $IP)
+	{
+		$IPAddress = $IP.IPV4Address.IPAddressToString
+	}
+	
+	Return $IPAddress
+}
 #endregion
 
 #region email function
@@ -9029,7 +9063,9 @@ Function OutputDeliveryGroupDetails
 	$PwrMgmt3 = $False
 	
 	#get a desktop in an associated delivery group to get the catalog
-	$Desktop = Get-BrokerDesktop @XDParams1 -DesktopGroupUid $Group.Uid -Property CatalogName
+	#V1.42 Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine
+	#$Desktop = Get-BrokerDesktop @XDParams1 -DesktopGroupUid $Group.Uid -Property CatalogName
+	$Desktop = Get-BrokerMachine @XDParams1 -DesktopGroupUid $Group.Uid -Property CatalogName
 	
 	If($? -and $Null -ne $Desktop)
 	{
@@ -10434,13 +10470,17 @@ Function OutputDeliveryGroupCatalogs
 {
 	Param([object] $Group)
 	
-	$MCs = Get-BrokerDesktop @XDParams1 -DesktopGroupUid $Group.Uid -Property CatalogName
+	#V1.42 Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine and add -SortBy CatalogName
+	#$MCs = Get-BrokerDesktop @XDParams1 -DesktopGroupUid $Group.Uid -Property CatalogName
+	$MCs = Get-BrokerMachine @XDParams1 -DesktopGroupUid $Group.Uid -Property CatalogName -SortBy CatalogName
 	
 	If($? -and $Null -ne $MCs)
 	{
 		If($MCs -is [Array])
 		{
-			[array]$MCs = $MCs | Sort-Object -Unique
+			#V1.42 fix the sort -unique. Only the first item in the array was being returned.
+			#Adding -Property CatalogName was needed to get the full unique array returned
+			[array]$MCs = $MCs | Sort-Object -Property CatalogName -Unique
 		}
 		
 		$txt = "Machine Catalogs"
@@ -11238,7 +11278,9 @@ Function OutputApplicationSessions
 		{
 			#get desktop by Session Uid
 			$xMachineName = ""
-			$Desktop = Get-BrokerDesktop -SessionUid $Session.Uid @XDParams1
+			#V1.42 Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine
+			#$Desktop = Get-BrokerDesktop -SessionUid $Session.Uid @XDParams1
+			$Desktop = Get-BrokerMachine -SessionUid $Session.Uid @XDParams1
 			
 			If($? -and $Null -ne $Desktop)
 			{
@@ -11579,7 +11621,8 @@ Function ProcessPolicies
 				Write-Verbose "$(Get-Date): `tThere are $($CtxGPOArray.Count) Citrix AD based policies to process"
 				Write-Verbose "$(Get-Date): "
 
-				[array]$CtxGPOArray = $CtxGPOArray | Sort-Object -unique
+				#V1.41 added -Property DisplayName
+				[array]$CtxGPOArray = $CtxGPOArray | Sort-Object -Property DisplayName -unique
 				
 				ForEach($CtxGPO in $CtxGPOArray)
 				{
@@ -11677,7 +11720,8 @@ Function ProcessPolicySummary
 		$CtxGPOArray = GetCtxGPOsInAD
 		If($CtxGPOArray -is [Array] -and $CtxGPOArray.Count -gt 0)
 		{
-			[array]$CtxGPOArray = $CtxGPOArray | Sort-Object -unique
+			#V1.42 added -Property DisplayName
+			[array]$CtxGPOArray = $CtxGPOArray | Sort-Object -Property DisplayName -unique
 			Write-Verbose "$(Get-Date): "
 			Write-Verbose "$(Get-Date): `tThere are $($CtxGPOArray.Count) Citrix AD based policies to process"
 			Write-Verbose "$(Get-Date): "
@@ -23109,21 +23153,26 @@ Function OutputDatastores
 {
 	#2-Mar-2017 Fix bug reported by P. Ewing
 	
-	#V2.11 add additional database details and change from a horizontal table to a vertical table
+	#V1.36 add additional database details and change from a horizontal table to a vertical table
 	
 	#line starts with server=SQLServerName;
 	#only need what is between the = and ;
 	
 	#24-Jun-2017 add Database Size to the output
 	#25-Jun-2017 add checking if the SQL Server assembly loaded before calculating the database size
+	
+	#V1.42 added get IP address for each SQL Server name
 	Write-Verbose "$(Get-Date): `tRetrieving database connection data"
 	Write-Verbose "$(Get-Date): `t`tConfiguration database"
-	$ConfigSQLServerPrincipalName = ""
-	$ConfigSQLServerMirrorName = "Not Configured"
-	$ConfigDatabaseName = ""
+	[string]$ConfigSQLServerPrincipalName = ""
+	[string]$ConfigSQLServerMirrorName = "Not Configured"
+	[string]$ConfigDatabaseName = ""
 	[string]$ConfigDBSize = "Unable to determine"
 	[string]$ConfigDBReadCommittedSnapshot = "Unable to determine"
 	[string]$ConfigDBSQLVersion = "Unable to determine"
+	[string]$ConfigSQLServerPrincipalNameIPAddress = ""
+	[string]$ConfigSQLServerMirrorNameIPAddress = ""
+	
 	$ConfigDBs = Get-ConfigDBConnection @XDParams1
 
 	If($? -and ($Null -ne $ConfigDBs))
@@ -23143,6 +23192,16 @@ Function OutputDatastores
 			}
 		}
 
+		$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName
+		If($ConfigSQLServerMirrorName -ne "Not Configured")
+		{
+			$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName
+		}
+		Else
+		{
+			$ConfigSQLServerMirrorNameIPAddress = "-"
+		}
+		
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($ConfigSQLServerPrincipalName)")
@@ -23197,19 +23256,23 @@ Function OutputDatastores
 			If($Configdb.IsMirroringEnabled)
 			{
 				$ConfigDBMirroringPartner			= $Configdb.MirroringPartner
+				$ConfigDBMirroringPartnerIPAddress	= Get-IPAddress $Configdb.MirroringPartner
 				$ConfigDBMirroringPartnerInstance	= $Configdb.MirroringPartnerInstance
 				$ConfigDBMirroringSafetyLevel		= $Configdb.MirroringSafetyLevel
 				$ConfigDBMirroringStatus			= $Configdb.MirroringStatus
 				$ConfigDBMirroringWitness			= $Configdb.MirroringWitness
+				$ConfigDBMirroringWitnessIPAddress	= Get-IPAddress $Configdb.MirroringWitness
 				$ConfigDBMirroringWitnessStatus		= $Configdb.MirroringWitnessStatus
 			}
 			Else
 			{
 				$ConfigDBMirroringPartner			= "-"
+				$ConfigDBMirroringPartnerIPAddress	= "-"
 				$ConfigDBMirroringPartnerInstance	= "-"
 				$ConfigDBMirroringSafetyLevel		= "-"
 				$ConfigDBMirroringStatus			= "-"
 				$ConfigDBMirroringWitness			= "-"
+				$ConfigDBMirroringWitnessIPAddress	= "-"
 				$ConfigDBMirroringWitnessStatus		= "-"
 			}
 			
@@ -23242,12 +23305,14 @@ Function OutputDatastores
 	}
 
 	Write-Verbose "$(Get-Date): `t`tConfiguration Logging database"
-	$LogSQLServerPrincipalName = ""
-	$LogSQLServerMirrorName = "Not Configured"
-	$LogDatabaseName = ""
+	[string]$LogSQLServerPrincipalName = ""
+	[string]$LogSQLServerMirrorName = "Not Configured"
+	[string]$LogDatabaseName = ""
 	[string]$LogDBSize = "Unable to determine"
 	[string]$LogDBReadCommittedSnapshot = "Unable to determine"
 	[string]$LogDBSQLVersion = "Unable to determine"
+	[string]$LogSQLServerPrincipalNameIPAddress = ""
+	[string]$LogSQLServerMirrorNameIPAddress = ""
 	$LogDBs = Get-LogDataStore @XDParams1
 
 	If($? -and ($Null -ne $LogDBs))
@@ -23273,6 +23338,16 @@ Function OutputDatastores
 			}
 		}
 
+		$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName
+		If($LogSQLServerMirrorName -ne "Not Configured")
+		{
+			$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName
+		}
+		Else
+		{
+			$LogSQLServerMirrorNameIPAddress = "-"
+		}
+		
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($LogSQLServerPrincipalName)")
@@ -23327,19 +23402,23 @@ Function OutputDatastores
 			If($LogDB.IsMirroringEnabled)
 			{
 				$LogDBMirroringPartner			= $LogDB.MirroringPartner
+				$LogDBMirroringPartnerIPAddress	= Get-IPAddress $Logdb.MirroringPartner
 				$LogDBMirroringPartnerInstance	= $LogDB.MirroringPartnerInstance
 				$LogDBMirroringSafetyLevel		= $LogDB.MirroringSafetyLevel
 				$LogDBMirroringStatus			= $LogDB.MirroringStatus
 				$LogDBMirroringWitness			= $LogDB.MirroringWitness
+				$LogDBMirroringWitnessIPAddress	= Get-IPAddress $Logdb.MirroringWitness
 				$LogDBMirroringWitnessStatus	= $LogDB.MirroringWitnessStatus
 			}
 			Else
 			{
 				$LogDBMirroringPartner			= "-"
+				$LogDBMirroringPartnerIPAddress	= "-"
 				$LogDBMirroringPartnerInstance	= "-"
 				$LogDBMirroringSafetyLevel		= "-"
 				$LogDBMirroringStatus			= "-"
 				$LogDBMirroringWitness			= "-"
+				$LogDBMirroringWitnessIPAddress	= "-"
 				$LogDBMirroringWitnessStatus	= "-"
 			}
 
@@ -23372,15 +23451,17 @@ Function OutputDatastores
 	}
 
 	Write-Verbose "$(Get-Date): `t`tMonitoring database"
-	$MonitorSQLServerPrincipalName = ""
-	$MonitorSQLServerMirrorName = "Not Configured"
-	$MonitorDatabaseName = ""
+	[string]$MonitorSQLServerPrincipalName = ""
+	[string]$MonitorSQLServerMirrorName = "Not Configured"
+	[string]$MonitorDatabaseName = ""
 	[string]$MonitorDBSize = "Unable to determine"
 	[string]$MonitorDBReadCommittedSnapshot = "Unable to determine"
 	[string]$MonitorDBSQLVersion = "Unable to determine"
-	$MonitorCollectHotfix = "Disabled"
-	$MonitorDataCollection = "Disabled"
-	$MonitorDetailedSQL = "Disabled"
+	[string]$MonitorCollectHotfix = "Disabled"
+	[string]$MonitorDataCollection = "Disabled"
+	[string]$MonitorDetailedSQL = "Disabled"
+	[string]$MonitorSQLServerPrincipalNameIPAddress = ""
+	[string]$MonitorSQLServerMirrorNameIPAddress = ""
 	
 	$MonitorDBs = Get-MonitorDataStore @XDParams1
 
@@ -23407,6 +23488,16 @@ Function OutputDatastores
 			}
 		}
 
+		$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName
+		If($MonitorSQLServerMirrorName -ne "Not Configured")
+		{
+			$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName
+		}
+		Else
+		{
+			$MonitorSQLServerMirrorNameIPAddress = "-"
+		}
+		
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($MonitorSQLServerPrincipalName)")
@@ -23461,19 +23552,23 @@ Function OutputDatastores
 			If($MonitorDB.IsMirroringEnabled)
 			{
 				$MonitorDBMirroringPartner			= $MonitorDB.MirroringPartner
+				$MonitorDBMirroringPartnerIPAddress	= Get-IPAddress $Monitordb.MirroringPartner
 				$MonitorDBMirroringPartnerInstance	= $MonitorDB.MirroringPartnerInstance
 				$MonitorDBMirroringSafetyLevel		= $MonitorDB.MirroringSafetyLevel
 				$MonitorDBMirroringStatus			= $MonitorDB.MirroringStatus
 				$MonitorDBMirroringWitness			= $MonitorDB.MirroringWitness
+				$MonitorDBMirroringWitnessIPAddress	= Get-IPAddress $Monitordb.MirroringWitness
 				$MonitorDBMirroringWitnessStatus	= $MonitorDB.MirroringWitnessStatus
 			}
 			Else
 			{
 				$MonitorDBMirroringPartner			= "-"
+				$MonitorDBMirroringPartnerIPAddress	= "-"
 				$MonitorDBMirroringPartnerInstance	= "-"
 				$MonitorDBMirroringSafetyLevel		= "-"
 				$MonitorDBMirroringStatus			= "-"
 				$MonitorDBMirroringWitness			= "-"
+				$MonitorDBMirroringWitnessIPAddress	= "-"
 				$MonitorDBMirroringWitnessStatus	= "-"
 			}
 
@@ -23554,16 +23649,20 @@ Function OutputDatastores
 		$ScriptInformation += @{Data = "Last Backup Date"; Value = $ConfigDBLastBackupDate; }
 		$ScriptInformation += @{Data = "Last Log Backup Date"; Value = $ConfigDBLastLogBackupDate; }
 		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $ConfigSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirror Server IP Address"; Value = $ConfigSQLServerMirrorNameIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Partner"; Value = $ConfigDBMirroringPartner; }
+		$ScriptInformation += @{Data = "Mirroring Partner IP Address"; Value = $ConfigDBMirroringPartnerIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Partner Instance"; Value = $ConfigDBMirroringPartnerInstance; }
 		$ScriptInformation += @{Data = "Mirroring Safety Level"; Value = $ConfigDBMirroringSafetyLevel; }
 		$ScriptInformation += @{Data = "Mirroring Status"; Value = $ConfigDBMirroringStatus; }
 		$ScriptInformation += @{Data = "Mirroring Witness"; Value = $ConfigDBMirroringWitness; }
+		$ScriptInformation += @{Data = "Mirroring Witness IP Address"; Value = $ConfigDBMirroringWitnessIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Witness Status"; Value = $ConfigDBMirroringWitnessStatus; }
 		$ScriptInformation += @{Data = "Parent"; Value = $ConfigDBParent; }
 		$ScriptInformation += @{Data = "Read-Committed Snapshot"; Value = $ConfigDBReadCommittedSnapshot; }
 		$ScriptInformation += @{Data = "Recovery Model"; Value = $ConfigDBRecoveryModel; }
 		$ScriptInformation += @{Data = "Server Address"; Value = $ConfigSQLServerPrincipalName; }
+		$ScriptInformation += @{Data = "Server IP Address"; Value = $ConfigSQLServerPrincipalNameIPAddress; }
 		$ScriptInformation += @{Data = "SQL Server Version"; Value = $ConfigDBSQLVersion; }
 		$Table = AddWordTable -Hashtable $ScriptInformation `
 		-Columns Data,Value `
@@ -23593,17 +23692,21 @@ Function OutputDatastores
 		$ScriptInformation += @{Data = "Database Size"; Value = $LogDBSize; }
 		$ScriptInformation += @{Data = "Last Backup Date"; Value = $LogDBLastBackupDate; }
 		$ScriptInformation += @{Data = "Last Log Backup Date"; Value = $LogDBLastLogBackupDate; }
-		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $ConfigSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $LogSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirror Server IP Address"; Value = $LogSQLServerMirrorNameIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Partner"; Value = $LogDBMirroringPartner; }
+		$ScriptInformation += @{Data = "Mirroring Partner IP Address"; Value = $LogDBMirroringPartnerIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Partner Instance"; Value = $LogDBMirroringPartnerInstance; }
 		$ScriptInformation += @{Data = "Mirroring Safety Level"; Value = $LogDBMirroringSafetyLevel; }
 		$ScriptInformation += @{Data = "Mirroring Status"; Value = $LogDBMirroringStatus; }
 		$ScriptInformation += @{Data = "Mirroring Witness"; Value = $LogDBMirroringWitness; }
+		$ScriptInformation += @{Data = "Mirroring Witness IP Address"; Value = $LogDBMirroringWitnessIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Witness Status"; Value = $LogDBMirroringWitnessStatus; }
 		$ScriptInformation += @{Data = "Parent"; Value = $LogDBParent; }
 		$ScriptInformation += @{Data = "Read-Committed Snapshot"; Value = $LogDBReadCommittedSnapshot; }
 		$ScriptInformation += @{Data = "Recovery Model"; Value = $LogDBRecoveryModel; }
 		$ScriptInformation += @{Data = "Server Address"; Value = $LogSQLServerPrincipalName; }
+		$ScriptInformation += @{Data = "Server IP Address"; Value = $LogSQLServerPrincipalNameIPAddress; }
 		$ScriptInformation += @{Data = "SQL Server Version"; Value = $LogDBSQLVersion; }
 		$Table = AddWordTable -Hashtable $ScriptInformation `
 		-Columns Data,Value `
@@ -23633,17 +23736,21 @@ Function OutputDatastores
 		$ScriptInformation += @{Data = "Database Size"; Value = $MonitorDBSize; }
 		$ScriptInformation += @{Data = "Last Backup Date"; Value = $MonitorDBLastBackupDate; }
 		$ScriptInformation += @{Data = "Last Log Backup Date"; Value = $MonitorDBLastLogBackupDate; }
-		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $ConfigSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirror Server Address"; Value = $MonitorSQLServerMirrorName; }
+		$ScriptInformation += @{Data = "Mirror Server IP Address"; Value = $MonitorSQLServerMirrorNameIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Partner"; Value = $MonitorDBMirroringPartner; }
+		$ScriptInformation += @{Data = "Mirroring Partner IP Address"; Value = $MonitorDBMirroringPartnerIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Partner Instance"; Value = $MonitorDBMirroringPartnerInstance; }
 		$ScriptInformation += @{Data = "Mirroring Safety Level"; Value = $MonitorDBMirroringSafetyLevel; }
 		$ScriptInformation += @{Data = "Mirroring Status"; Value = $MonitorDBMirroringStatus; }
 		$ScriptInformation += @{Data = "Mirroring Witness"; Value = $MonitorDBMirroringWitness; }
+		$ScriptInformation += @{Data = "Mirroring Witness IP Address"; Value = $MonitorDBMirroringWitnessIPAddress; }
 		$ScriptInformation += @{Data = "Mirroring Witness Status"; Value = $MonitorDBMirroringWitnessStatus; }
 		$ScriptInformation += @{Data = "Parent"; Value = $MonitorDBParent; }
 		$ScriptInformation += @{Data = "Read-Committed Snapshot"; Value = $MonitorDBReadCommittedSnapshot; }
 		$ScriptInformation += @{Data = "Recovery Model"; Value = $MonitorDBRecoveryModel; }
 		$ScriptInformation += @{Data = "Server Address"; Value = $MonitorSQLServerPrincipalName; }
+		$ScriptInformation += @{Data = "Server IP Address"; Value = $MonitorSQLServerPrincipalNameIPAddress; }
 		$ScriptInformation += @{Data = "SQL Server Version"; Value = $MonitorDBSQLVersion; }
 		$Table = AddWordTable -Hashtable $ScriptInformation `
 		-Columns Data,Value `
@@ -23804,16 +23911,20 @@ Function OutputDatastores
 		Line 2 "Last Backup Date`t`t`t`t: " $ConfigDBLastBackupDate
 		Line 2 "Last Log Backup Date`t`t`t`t: " $ConfigDBLastLogBackupDate
 		Line 2 "Mirror Server Address`t`t`t`t: " $ConfigSQLServerMirrorName
+		Line 2 "Mirror Server IP Address`t`t`t: " $ConfigSQLServerMirrorNameIPAddress
 		Line 2 "Mirroring Partner`t`t`t`t: " $ConfigDBMirroringPartner
+		Line 2 "Mirroring Partner IP Address`t`t`t: " $ConfigDBMirroringPartnerIPAddress
 		Line 2 "Mirroring Partner Instance`t`t`t: " $ConfigDBMirroringPartnerInstance
 		Line 2 "Mirroring Safety Level`t`t`t`t: " $ConfigDBMirroringSafetyLevel
 		Line 2 "Mirroring Status`t`t`t`t: " $ConfigDBMirroringStatus
 		Line 2 "Mirroring Witness`t`t`t`t: " $ConfigDBMirroringWitness
+		Line 2 "Mirroring Witness IP Address`t`t`t: " $ConfigDBMirroringWitnessIPAddress
 		Line 2 "Mirroring Witness Status`t`t`t: " $ConfigDBMirroringWitnessStatus
 		Line 2 "Parent`t`t`t`t`t`t: " $ConfigDBParent
 		Line 2 "Read-Committed Snapshot`t`t`t`t: " $ConfigDBReadCommittedSnapshot
 		Line 2 "Recovery Model`t`t`t`t`t: " $ConfigDBRecoveryModel
 		Line 2 "Server Address`t`t`t`t`t: " $ConfigSQLServerPrincipalName
+		Line 2 "Server IP Address`t`t`t`t: " $ConfigSQLServerPrincipalNameIPAddress
 		Line 2 "SQL Server Version`t`t`t`t: " $ConfigDBSQLVersion
 		Line 0 ""
 		Line 1 "Datastore: Logging"
@@ -23827,16 +23938,20 @@ Function OutputDatastores
 		Line 2 "Last Backup Date`t`t`t`t: " $LogDBLastBackupDate
 		Line 2 "Last Log Backup Date`t`t`t`t: " $LogDBLastLogBackupDate
 		Line 2 "Mirror Server Address`t`t`t`t: " $LogSQLServerMirrorName
+		Line 2 "Mirror Server IP Address`t`t`t: " $LogSQLServerMirrorNameIPAddress
 		Line 2 "Mirroring Partner`t`t`t`t: " $LogDBMirroringPartner
+		Line 2 "Mirroring Partner IP Address`t`t`t: " $LogDBMirroringPartnerIPAddress
 		Line 2 "Mirroring Partner Instance`t`t`t: " $LogDBMirroringPartnerInstance
 		Line 2 "Mirroring Safety Level`t`t`t`t: " $LogDBMirroringSafetyLevel
 		Line 2 "Mirroring Status`t`t`t`t: " $LogDBMirroringStatus
 		Line 2 "Mirroring Witness`t`t`t`t: " $LogDBMirroringWitness
+		Line 2 "Mirroring Witness IP Address`t`t`t: " $LogDBMirroringWitnessIPAddress
 		Line 2 "Mirroring Witness Status`t`t`t: " $LogDBMirroringWitnessStatus
 		Line 2 "Parent`t`t`t`t`t`t: " $LogDBParent
 		Line 2 "Read-Committed Snapshot`t`t`t`t: " $LogDBReadCommittedSnapshot
 		Line 2 "Recovery Model`t`t`t`t`t: " $LogDBRecoveryModel
 		Line 2 "Server Address`t`t`t`t`t: " $LogSQLServerPrincipalName
+		Line 2 "Server IP Address`t`t`t`t: " $LogSQLServerPrincipalNameIPAddress
 		Line 2 "SQL Server Version`t`t`t`t: " $LogDBSQLVersion
 		Line 0 ""
 		Line 1 "Datastore: Monitoring"
@@ -23850,16 +23965,20 @@ Function OutputDatastores
 		Line 2 "Last Backup Date`t`t`t`t: " $MonitorDBLastBackupDate
 		Line 2 "Last Log Backup Date`t`t`t`t: " $MonitorDBLastLogBackupDate
 		Line 2 "Mirror Server Address`t`t`t`t: " $MonitorSQLServerMirrorName
+		Line 2 "Mirror Server IP Address`t`t`t: " $MonitorSQLServerMirrorNameIPAddress
 		Line 2 "Mirroring Partner`t`t`t`t: " $MonitorDBMirroringPartner
+		Line 2 "Mirroring Partner IP Address`t`t`t: " $MonitorDBMirroringPartnerIPAddress
 		Line 2 "Mirroring Partner Instance`t`t`t: " $MonitorDBMirroringPartnerInstance
 		Line 2 "Mirroring Safety Level`t`t`t`t: " $MonitorDBMirroringSafetyLevel
 		Line 2 "Mirroring Status`t`t`t`t: " $MonitorDBMirroringStatus
 		Line 2 "Mirroring Witness`t`t`t`t: " $MonitorDBMirroringWitness
+		Line 2 "Mirroring Witness IP Address`t`t`t: " $MonitorDBMirroringWitnessIPAddress
 		Line 2 "Mirroring Witness Status`t`t`t: " $MonitorDBMirroringWitnessStatus
 		Line 2 "Parent`t`t`t`t`t`t: " $MonitorDBParent
 		Line 2 "Read-Committed Snapshot`t`t`t`t: " $MonitorDBReadCommittedSnapshot
 		Line 2 "Recovery Model`t`t`t`t`t: " $MonitorDBRecoveryModel
 		Line 2 "Server Address`t`t`t`t`t: " $MonitorSQLServerPrincipalName
+		Line 2 "Server IP Address`t`t`t`t: " $MonitorSQLServerPrincipalNameIPAddress
 		Line 2 "SQL Server Version`t`t`t`t: " $MonitorDBSQLVersion
 		Line 0 ""
 
@@ -23974,16 +24093,20 @@ Function OutputDatastores
 		$rowdata += @(,("Last Backup Date",($htmlsilver -bor $htmlbold),$ConfigDBLastBackupDate,$htmlwhite))
 		$rowdata += @(,("Last Log Backup Date",($htmlsilver -bor $htmlbold),$ConfigDBLastLogBackupDate,$htmlwhite))
 		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirror Server IP Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorNameIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Partner",($htmlsilver -bor $htmlbold),$ConfigDBMirroringPartner,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner IP Address",($htmlsilver -bor $htmlbold),$ConfigDBMirroringPartnerIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Partner Instance",($htmlsilver -bor $htmlbold),$ConfigDBMirroringPartnerInstance,$htmlwhite))
 		$rowdata += @(,("Mirroring Safety Level",($htmlsilver -bor $htmlbold),$ConfigDBMirroringSafetyLevel,$htmlwhite))
 		$rowdata += @(,("Mirroring Status",($htmlsilver -bor $htmlbold),$ConfigDBMirroringStatus,$htmlwhite))
 		$rowdata += @(,("Mirroring Witness",($htmlsilver -bor $htmlbold),$ConfigDBMirroringWitness,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness IP Address",($htmlsilver -bor $htmlbold),$ConfigDBMirroringWitnessIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Witness Status",($htmlsilver -bor $htmlbold),$ConfigDBMirroringWitnessStatus,$htmlwhite))
 		$rowdata += @(,("Parent",($htmlsilver -bor $htmlbold),$ConfigDBParent,$htmlwhite))
 		$rowdata += @(,("Read-Committed Snapshot",($htmlsilver -bor $htmlbold),$ConfigDBReadCommittedSnapshot,$htmlwhite))
 		$rowdata += @(,("Recovery Model",($htmlsilver -bor $htmlbold),$ConfigDBRecoveryModel,$htmlwhite))
 		$rowdata += @(,("Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerPrincipalName,$htmlwhite))
+		$rowdata += @(,("Server IP Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerPrincipalNameIPAddress,$htmlwhite))
 		$rowdata += @(,("SQL Server Version",($htmlsilver -bor $htmlbold),$ConfigDBSQLVersion,$htmlwhite))
 		$msg = ""
 		$columnWidths = @("250","200")
@@ -24001,17 +24124,21 @@ Function OutputDatastores
 		$rowdata += @(,("Database Size",($htmlsilver -bor $htmlbold),$LogDBSize,$htmlwhite))
 		$rowdata += @(,("Last Backup Date",($htmlsilver -bor $htmlbold),$LogDBLastBackupDate,$htmlwhite))
 		$rowdata += @(,("Last Log Backup Date",($htmlsilver -bor $htmlbold),$LogDBLastLogBackupDate,$htmlwhite))
-		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$LogSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirror Server IP Address",($htmlsilver -bor $htmlbold),$LogSQLServerMirrorNameIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Partner",($htmlsilver -bor $htmlbold),$LogDBMirroringPartner,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner IP Address",($htmlsilver -bor $htmlbold),$LogDBMirroringPartnerIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Partner Instance",($htmlsilver -bor $htmlbold),$LogDBMirroringPartnerInstance,$htmlwhite))
 		$rowdata += @(,("Mirroring Safety Level",($htmlsilver -bor $htmlbold),$LogDBMirroringSafetyLevel,$htmlwhite))
 		$rowdata += @(,("Mirroring Status",($htmlsilver -bor $htmlbold),$LogDBMirroringStatus,$htmlwhite))
 		$rowdata += @(,("Mirroring Witness",($htmlsilver -bor $htmlbold),$LogDBMirroringWitness,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness IP Address",($htmlsilver -bor $htmlbold),$LogDBMirroringWitnessIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Witness Status",($htmlsilver -bor $htmlbold),$LogDBMirroringWitnessStatus,$htmlwhite))
 		$rowdata += @(,("Parent",($htmlsilver -bor $htmlbold),$LogDBParent,$htmlwhite))
 		$rowdata += @(,("Read-Committed Snapshot",($htmlsilver -bor $htmlbold),$LogDBReadCommittedSnapshot,$htmlwhite))
 		$rowdata += @(,("Recovery Model",($htmlsilver -bor $htmlbold),$LogDBRecoveryModel,$htmlwhite))
 		$rowdata += @(,("Server Address",($htmlsilver -bor $htmlbold),$LogSQLServerPrincipalName,$htmlwhite))
+		$rowdata += @(,("Server IP Address",($htmlsilver -bor $htmlbold),$LogSQLServerPrincipalNameIPAddress,$htmlwhite))
 		$rowdata += @(,("SQL Server Version",($htmlsilver -bor $htmlbold),$LogDBSQLVersion,$htmlwhite))
 		$msg = ""
 		$columnWidths = @("250","200")
@@ -24029,17 +24156,21 @@ Function OutputDatastores
 		$rowdata += @(,("Database Size",($htmlsilver -bor $htmlbold),$MonitorDBSize,$htmlwhite))
 		$rowdata += @(,("Last Backup Date",($htmlsilver -bor $htmlbold),$MonitorDBLastBackupDate,$htmlwhite))
 		$rowdata += @(,("Last Log Backup Date",($htmlsilver -bor $htmlbold),$MonitorDBLastLogBackupDate,$htmlwhite))
-		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$ConfigSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirror Server Address",($htmlsilver -bor $htmlbold),$MonitorSQLServerMirrorName,$htmlwhite))
+		$rowdata += @(,("Mirror Server IP Address",($htmlsilver -bor $htmlbold),$MonitorSQLServerMirrorNameIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Partner",($htmlsilver -bor $htmlbold),$MonitorDBMirroringPartner,$htmlwhite))
+		$rowdata += @(,("Mirroring Partner IP Address",($htmlsilver -bor $htmlbold),$MonitorDBMirroringPartnerIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Partner Instance",($htmlsilver -bor $htmlbold),$MonitorDBMirroringPartnerInstance,$htmlwhite))
 		$rowdata += @(,("Mirroring Safety Level",($htmlsilver -bor $htmlbold),$MonitorDBMirroringSafetyLevel,$htmlwhite))
 		$rowdata += @(,("Mirroring Status",($htmlsilver -bor $htmlbold),$MonitorDBMirroringStatus,$htmlwhite))
 		$rowdata += @(,("Mirroring Witness",($htmlsilver -bor $htmlbold),$MonitorDBMirroringWitness,$htmlwhite))
+		$rowdata += @(,("Mirroring Witness IP Address",($htmlsilver -bor $htmlbold),$MonitorDBMirroringWitnessIPAddress,$htmlwhite))
 		$rowdata += @(,("Mirroring Witness Status",($htmlsilver -bor $htmlbold),$MonitorDBMirroringWitnessStatus,$htmlwhite))
 		$rowdata += @(,("Parent",($htmlsilver -bor $htmlbold),$MonitorDBParent,$htmlwhite))
 		$rowdata += @(,("Read-Committed Snapshot",($htmlsilver -bor $htmlbold),$MonitorDBReadCommittedSnapshot,$htmlwhite))
 		$rowdata += @(,("Recovery Model",($htmlsilver -bor $htmlbold),$MonitorDBRecoveryModel,$htmlwhite))
 		$rowdata += @(,("Server Address",($htmlsilver -bor $htmlbold),$MonitorSQLServerPrincipalName,$htmlwhite))
+		$rowdata += @(,("Server IP Address",($htmlsilver -bor $htmlbold),$MonitorSQLServerPrincipalNameIPAddress,$htmlwhite))
 		$rowdata += @(,("SQL Server Version",($htmlsilver -bor $htmlbold),$MonitorDBSQLVersion,$htmlwhite))
 		$msg = ""
 		$columnWidths = @("250","200")
@@ -26454,7 +26585,9 @@ Function OutputHostingSessions
 		#get the private desktop
 		#get desktop by Session Uid
 		$xMachineName = ""
-		$Desktop = Get-BrokerDesktop -SessionUid $Session.Uid @XDParams1
+		#V1.42 Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine
+		#$Desktop = Get-BrokerDesktop -SessionUid $Session.Uid @XDParams1
+		$Desktop = Get-BrokerMachine -SessionUid $Session.Uid @XDParams1
 		
 		If($? -and $Null -ne $Desktop)
 		{
@@ -26591,6 +26724,10 @@ Function ProcessLicensing
 Function OutputLicensingOverview
 {
 	Write-Verbose "$(Get-Date): `tOutput Licensing Overview"
+
+	#V1.42 added getting the IP address for the license server
+	$LicenseServerIPAddress = Get-IPAddress $Script:XDSite1.LicenseServerName
+	
 	$LicenseEditionType = ""
 	$LicenseModelType = ""
 
@@ -26633,13 +26770,14 @@ Function OutputLicensingOverview
 		WriteWordLine 2 0 "Licensing Overview"
 
 		[System.Collections.Hashtable[]] $ScriptInformation = @()
-		$ScriptInformation += @{ Data = "Site"; Value = $Script:XDSite1.Name; }
-		$ScriptInformation += @{ Data = "Server"; Value = $Script:XDSite1.LicenseServerName; }
-		$ScriptInformation += @{ Data = "Port"; Value = $Script:XDSite1.LicenseServerPort; }
-		$ScriptInformation += @{ Data = "Edition"; Value = $LicenseEditionType; }
-		$ScriptInformation += @{ Data = "License model"; Value = $LicenseModelType; }
-		$ScriptInformation += @{ Data = "Required SA date"; Value = $tmpdate; }
-		$ScriptInformation += @{ Data = "XenDesktop license use"; Value = $Script:XDSite1.LicensedSessionsActive; }
+		$ScriptInformation += @{Data = "Site"; Value = $Script:XDSite1.Name; }
+		$ScriptInformation += @{Data = "Server"; Value = $Script:XDSite1.LicenseServerName; }
+		$ScriptInformation += @{Data = "IP Address"; Value = $LicenseServerIPAddress; }
+		$ScriptInformation += @{Data = "Port"; Value = $Script:XDSite1.LicenseServerPort; }
+		$ScriptInformation += @{Data = "Edition"; Value = $LicenseEditionType; }
+		$ScriptInformation += @{Data = "License model"; Value = $LicenseModelType; }
+		$ScriptInformation += @{Data = "Required SA date"; Value = $tmpdate; }
+		$ScriptInformation += @{Data = "XenDesktop license use"; Value = $Script:XDSite1.LicensedSessionsActive; }
 		$Table = AddWordTable -Hashtable $ScriptInformation `
 		-Columns Data,Value `
 		-List `
@@ -26663,6 +26801,7 @@ Function OutputLicensingOverview
 		Line 0 ""
 		Line 0 "Site`t`t`t: " $Script:XDSite1.Name
 		Line 0 "Server`t`t`t: " $Script:XDSite1.LicenseServerName
+		Line 0 "IP Address`t`t: " $LicenseServerIPAddress
 		Line 0 "Port`t`t`t: " $Script:XDSite1.LicenseServerPort
 		Line 0 "Edition`t`t`t: " $LicenseEditionType
 		Line 0 "License model`t`t: " $LicenseModelType
@@ -26677,6 +26816,7 @@ Function OutputLicensingOverview
 		$rowdata = @()
 		$columnHeaders = @("Site",($htmlsilver -bor $htmlbold),$Script:XDSite1.Name,$htmlwhite)
 		$rowdata += @(,('Server',($htmlsilver -bor $htmlbold),$Script:XDSite1.LicenseServerName,$htmlwhite))
+		$rowdata += @(,("IP Address",($htmlsilver -bor $htmlbold),$LicenseServerIPAddress,$htmlwhite))
 		$rowdata += @(,('Port',($htmlsilver -bor $htmlbold),$Script:XDSite1.LicenseServerPort,$htmlwhite))
 		$rowdata += @(,('Edition',($htmlsilver -bor $htmlbold),$LicenseEditionType,$htmlwhite))
 		$rowdata += @(,('License model',($htmlsilver -bor $htmlbold),$LicenseModelType,$htmlwhite))
