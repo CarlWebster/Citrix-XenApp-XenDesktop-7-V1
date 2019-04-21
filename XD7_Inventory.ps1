@@ -286,6 +286,11 @@
 .PARAMETER Policies
 	Give detailed information for both Site and Citrix AD based Policies.
 	
+	Note: The Citrix Group Policy PowerShell module will not load from an elevated 
+	PowerShell session. 
+	If the module is manually imported, the module is not detected from an elevated 
+	PowerShell session.
+
 	Using the Policies parameter can cause the report to take a very long time 
 	to complete and can generate an extremely long report.
 	
@@ -891,9 +896,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.40.1
+	VERSION: 1.43
 	AUTHOR: Carl Webster
-	LASTEDIT: March 10, 2018
+	LASTEDIT: April 21, 2019
 #>
 
 #endregion
@@ -1078,6 +1083,263 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#V1.43 21-Apr-2019
+#	If Policies parameter is used, check to see if PowerShell session is elevated. If it is,
+#		abort the script. This is the #2 support email.
+#		Added a Note to the Help Text and ReadMe file about the Citrix.GroupPolicy.Commands module:
+#		Note: The Citrix Group Policy PowerShell module will not load from an elevated PowerShell session. 
+#		If the module is manually imported, the module is not detected from an elevated PowerShell session.
+#
+#Version 1.42 16-Apr-2018
+#	Added Function Get-IPAddress
+#	Added in Function OutputDatastores getting the IP address for each SQL server name
+#	Added in Function OutputLicensingOverview getting the IP address for the license server
+#	Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine
+#	When building the array of all Machine Catalogs that are used by a Delivery Group,
+#		Only the first item in the array was being returned. Adding -Property CatalogName 
+#		to Sort-Object was needed to get the full unique array returned.
+#		Sort-Object -Property CatalogName -Unique
+#
+#Version 1.41 7-Apr-2018
+#	Added Operating System information to Functions GetComputerWMIInfo and OutputComputerItem
+#	Code clean-up for most recommendations made by Visual Studio Code
+#	During the code clean up, I came across some "unused" variables. I had just
+#		forgotten to add them to the output. OOPS! They are now added.
+#			Off Peak Buffer Size Percent
+#			Off Peak Disconnect Timeout (Minutes)
+#			Off Peak Extended Disconnect Timeout (Minutes)
+#			Off Peak LogOff Timeout (Minutes)
+#			Peak Buffer Size Percent
+#			Peak Disconnect Timeout (Minutes)
+#			Peak Extended Disconnect Timeout (Minutes)
+#			Peak LogOff Timeout (Minutes)
+#			Settlement Period Before Auto Shutdown (HH:MM:SS)
+#		Code clean up also found a copy and paste error with Session Linger
+#			The "end session linger" value was still using the "end session prelaunch" variable
+#			OOPS, sorry about that. Fixed.
+#
+#Version 1.40.1 10-Mar-2018
+#	Fix $SQLVersion for SQL 2008 R2. Minor version is 50, not 5.
+#
+#Version 1.40 2-Mar-2018
+#	Added additional SQL database information to the Configuration section
+#	Added Log switch to create a transcript log
+#		Added function TranscriptLogging
+#		Citrix.GroupPolicy.Commands and New-PSDrive break transcript logging so restart logging after each New-PSDrive call
+#		Removed the Log Alias from the Logging parameter
+#	Added new function GetDBCompatibilityLevel
+#	Move section headings for Machine Catalogs, Delivery Groups, and Applications to their respective "Process" functions.
+#		This allows the "There are no Machine Catalogs/Delivery Groups/Applications" messages to appear in their own sections, 
+#		and for Word/PDF output, not directly under the Table of Contents
+#	Update help text
+#	Updated function GetSQLVersion to add support for SQL Server 2017
+#	Updated function OutputDatastores for the additional SQL Server and Database information
+#		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
+#	Updated the "Default" message in function GetSQLVersion
+#	When there are no Machine Catalogs, change the message from "There are no Machines" to "There are no Machine Catalogs"
+#
+#Version 1.39 8-Dec-2017
+#	Updated Function WriteHTMLLine with fixes from the script template
+#
+#Version 1.38 9-Oct-2017
+#	From version 1.33:
+#		Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
+#		This is only valid for XenApp/XenDesktop version 7.6 and later
+#		Use (Get-BrokerServiceAddedCapability) -contains "ApplicationFolders" to determine version info
+#		For XA/XD versions before 7.6, sort applications by Name property only
+#		For versions 7.0 thru 7.5, use the Name property for output, 7.6+ use ApplicationName
+#	
+#Version 1.37 30-Jun-2017
+#	Added Function GetSQLVersion
+#	Added Read-Committed Snapshot and SQL Server version data to Datastore table
+#	If any of the databases are configured for mirroring and the database size is null,
+#		use the mirror server's name to calculate the size
+#		if the size is still null, report "Unable to determine"
+#	If SQL Server mirroring is not configured, in the Datastore table use "Not Configured" for the Mirror Server Address
+#
+#Version 1.36 26-Jun-2017
+#	Added additional error checking for Site version information
+#		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
+#		is not found on the computer running the script, then look on the computer specified for -AdminAddress
+#		If still not found on that computer, abort the script
+#	Added "Database Size" to the Datastores output
+#	Added loading the SQL Server assembly so the database size calculations work consistently (thanks to Michael B. Smith)
+#	Added showing the XenApp/XenDesktop version at the beginning of the script
+#	Cleaned up many Switch () Statements
+#	Fixed the "CPU Usage", "Disk Usage", and "Memory Usage" policy settings
+#		When those settings are Disabled, they are stored as Enabled with a Value of -1
+#	Updated Function OutputDatastores to:
+#		Add database size
+#		Fix output for mirrored databases
+#		Check if SQL Server assembly is loaded before calculating database size
+#	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
+#	
+#Version 1.35 21-Jun-2017
+#	Added new parameter MaxDetails:
+#		This is the same as using the following parameters:
+#			Administrators
+#			Applications
+#			DeliveryGroups
+#			HardWare
+#			Hosting
+#			Logging
+#			MachineCatalogs
+#			Policies
+#			StoreFront
+#	Updated help text
+#
+#Version 1.34 17-Jun-2017
+#	Fixed function OutputPolicySetting
+#	Fixed numerous issues in the Policies section
+#	Removed the Summary parameter as it was not used
+#	Reordered the parameters in the help text and parameter list so they match and are grouped better
+#	Updated help text
+#
+#Version 1.33 15-Jun-2017
+#	Added back the WorkerGroup policy filter for XenApp 6.x
+#	Added folder name to Function OutputApplication (Thanks to Brandon Mitchell)
+#	Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
+#	Fix bug when retrieving Filters for a Policy that "applies to all objects in the Site"
+#	Fix functions ProcessAppV and OutputAppv to handle multiple AppV servers (Thanks to Brandon Mitchell)
+#	Fix two calls to Get-BrokerApplication that were retrieving the default of 250 records (Thanks to Brandon Mitchell)
+#
+#Version 1.32 11-Jun-2017
+#	Add four new Cover Page properties
+#		Company Address
+#		Company Email
+#		Company Fax
+#		Company Phone
+#	Fix Function Check-LoadedModule
+#	Fix Summary Page not checking for Zone support
+#	Remove code (140 lines) that made sure all Parameters were set to default values if for some reason they did exist or values were $Null
+#	Replace _SetDocumentProperty function with Jim Moyle's Set-DocumentProperty function
+#	Update Function ProcessScriptEnd for the new Cover Page properties
+#	Update Function ShowScriptOptions for the new Cover Page properties
+#	Update Function UpdateDocumentProperties for the new Cover Page properties
+#	Update help text
+#
+#Version 1.31 13-Feb-2017
+#	Fixed French wording for Table of Contents 2 (Thanks to David Rouquier)
+#
+#Version 1.30 7-Feb-2017
+#	Fix numerous typos
+#	Removed snapin citrix.common.commands as it is no longer used and no cmdlets are used from that snapin
+#	Update help text
+#
+#Version 1.29 2-Jan-2017
+#	Added Description to Machine Catalog details
+#	Added RemotePC OU and Subfolder properties to RemotePC Machine Catalog details
+#
+#Version 1.28 21-Dec-2016
+#	Added Summary report page
+#	Updated version checking
+#	Updated version checking registry access to allow 32-bit PowerShell access to 64-bit registry
+#
+#Version 1.27 6-Dec-2016
+#	For Machine Catalog details, for PVS provisioned catalogs, add the PVS Server address
+#
+#Version 1.26 29-Nov-2016
+#	Fix bug when Delivery Type for a delivery group could not be determined
+#	Fix bug in HTML output for delivery group details
+#
+#Version 1.25 7-Nov-2016
+#	Added Chinese language support
+#
+#Version 1.24 22-Oct-2016
+#	More refinement of HTML output
+#
+#Version 1.23 19-Oct-2016
+#	Fixed formatting issues with HTML headings output
+#
+#Version 1.22 26-Sep-2016
+#	Add Configuration Logging Preferences
+#	Add to machine catalog information for RemotePC, "No. of Machines" and "Allocated Machines"
+#	Fix calculation for "No. of Machines" in Machine Catalogs summary and details
+#
+#Version 1.21 17-Aug-2016
+#	Added policy setting ICA\Launching of non-published programs during client connection 
+#	Renamed Virtual Desktop Agent Settings to Virtual Delivery Agent Settings
+#	Fixed a few issues with Text and HTML output in the Hardware region
+#
+#Version 1.20 4-May-2016
+#	Added -Dev parameter to create a text file of script errors
+#	Added -ScriptInfo (SI) parameter to create a text file of script information
+#	Added more script information to the console output when script starts
+#	Changed from using arrays to populating data in tables to strings
+#	Cleaned up some issues in the help text
+#	Color variables needed to be [long] and not [int] except for $wdColorBlack which is 0
+#	Fixed numerous issues discovered with the latest update to PowerShell V5
+#	Fixed saving the HTML file when using AddDateTime, now only one file is created not two
+#	Fixed several incorrect variable names that kept PDFs from saving in Windows 10 and Office 2013
+#	Removed the 10 second pauses waiting for Word to save and close
+#
+#Version 1.17 19-Apr-2016
+#	Add check to make sure script is not run on Version 7.8 or later
+#	Add server machine details
+#	Fixed, for desktop machine details text and HTML output, Session User Name was incorrect.
+#
+#Version 1.16 17-Mar-2016
+#	Fixed Zone information showing in the Hosting section for all XA/XD versions
+#	For the Monitoring Database, show details and Grooming Retention Settings (for Jeremy Saunders)
+#
+#Version 1.15 29-Feb-2016
+#	Fixed the remaining $Null comparison issues
+#	Fixed a typo keeping the AlwaysCache policy setting from working
+#	Fixed an issue where Manual Provisioning and Not RemotePC Machine Catalogs were missing from Word and Text output (thanks to Michael Foster)
+#
+#Version 1.14 9-Feb-2016
+#	Added specifying an optional output folder
+#	Added the option to email the output file
+#	Fixed several spacing and typo errors
+#	Fixed output to HTML with -AddDateTime parameter
+#	Add Section parameter
+#		Valid Section options are:
+#			Admins (Administrators)
+#			Apps (Applications)
+#			AppV
+#			Catalogs (Machine Catalogs)
+#			Config (Configuration)
+#			Controllers
+#			Groups (Delivery Groups)
+#			Hosting
+#			Licensing
+#			Logging
+#			Policies
+#			StoreFront
+#			Zones
+#			All
+#
+#Version 1.13 28-Dec-2015
+#	Tested with version 7.7 and 7.6 FP3
+#	Fixed several typos
+#	Added "Hosting Server Name" to machine/desktop details
+#	Added support for VDA version 7.7
+#	Added policy setting ICA\Desktop launches [overlooked from initial script creation]
+#	Added policy setting ICA\Adobe Flash Delivery\Flash Redirection\Flash video fallback prevention [new with 7.6 FP3]
+#	Added policy setting ICA\Adobe Flash Delivery\Flash Redirection\Flash video fallback prevention error *.swf [new with 7.6 FP3]
+#	Added policy setting ICA\File Redirection\Allow file transfer between desktop and client [new with 7.6 FP3]
+#	Added policy setting ICA\File Redirection\Download file from desktop [new with 7.6 FP3]
+#	Added policy setting ICA\File Redirection\Upload file to desktop [new with 7.6 FP3]
+#	Added policy setting ICA\Graphics\Use video codec for compression [new with 7.6 FP3]
+#	Added policy setting ICA\Graphics\Framehawk\Framehawk display channel [new with 7.6 FP3]
+#	Added policy setting ICA\Graphics\Framehawk\Framehawk display channel port range [new with 7.6 FP3]
+#	Added policy setting ICA\Multimedia\Windows media fallback prevention [new with 7.6 FP3] 
+#	Added policy setting ICA\USB devices\Client USB device optimization rules [new with 7.6 FP3]
+#	Added policy setting ICA\Visual Display\Preferred color depth for simple graphics [new with 7.6 FP3]
+#	Renamed policy setting ICA\Multimedia\Optimization for Windows Media multimedia redirection to ICA\Multimedia\Optimization for Windows Media multimedia redirection over WAN
+#	Renamed policy setting ICA\Multimedia\Use GPU for optimizing Windows Media multimedia redirection to ICA\Multimedia\Use GPU for optimizing Windows Media multimedia redirection over WAN
+#	Added Zone section
+#	Added Zones to Machine Catalog details
+#	Added Zones to Hosting Connection details
+#	Fixed the way Scopes are reported for Machine Catalogs
+#
+#Version 1.12 5-Oct-2015
+#	Added support for Word 2016
+#
+#Version 1.11
+#	Add in updated hardware inventory code
+#	Updated help text
+#
 # Version 1.1 release June 29, 2015
 #	For Policies, change Filter(s) to "Assigned to" to match what is shown in Studio.
 #	For Policies, change the text "HDX Policy" to Policies to match what is shown in Studio,
@@ -1113,255 +1375,6 @@ Param(
 #	Fix numerous typos
 #	Removed all 449 references to the unused variable $CurrentServiceIndex
 #
-#Version 1.11
-#	Add in updated hardware inventory code
-#	Updated help text
-#
-#Version 1.12 5-Oct-2015
-#	Added support for Word 2016
-#
-#Version 1.13 28-Dec-2015
-#	Tested with version 7.7 and 7.6 FP3
-#	Fixed several typos
-#	Added "Hosting Server Name" to machine/desktop details
-#	Added support for VDA version 7.7
-#	Added policy setting ICA\Desktop launches [overlooked from initial script creation]
-#	Added policy setting ICA\Adobe Flash Delivery\Flash Redirection\Flash video fallback prevention [new with 7.6 FP3]
-#	Added policy setting ICA\Adobe Flash Delivery\Flash Redirection\Flash video fallback prevention error *.swf [new with 7.6 FP3]
-#	Added policy setting ICA\File Redirection\Allow file transfer between desktop and client [new with 7.6 FP3]
-#	Added policy setting ICA\File Redirection\Download file from desktop [new with 7.6 FP3]
-#	Added policy setting ICA\File Redirection\Upload file to desktop [new with 7.6 FP3]
-#	Added policy setting ICA\Graphics\Use video codec for compression [new with 7.6 FP3]
-#	Added policy setting ICA\Graphics\Framehawk\Framehawk display channel [new with 7.6 FP3]
-#	Added policy setting ICA\Graphics\Framehawk\Framehawk display channel port range [new with 7.6 FP3]
-#	Added policy setting ICA\Multimedia\Windows media fallback prevention [new with 7.6 FP3] 
-#	Added policy setting ICA\USB devices\Client USB device optimization rules [new with 7.6 FP3]
-#	Added policy setting ICA\Visual Display\Preferred color depth for simple graphics [new with 7.6 FP3]
-#	Renamed policy setting ICA\Multimedia\Optimization for Windows Media multimedia redirection to ICA\Multimedia\Optimization for Windows Media multimedia redirection over WAN
-#	Renamed policy setting ICA\Multimedia\Use GPU for optimizing Windows Media multimedia redirection to ICA\Multimedia\Use GPU for optimizing Windows Media multimedia redirection over WAN
-#	Added Zone section
-#	Added Zones to Machine Catalog details
-#	Added Zones to Hosting Connection details
-#	Fixed the way Scopes are reported for Machine Catalogs
-#
-#Version 1.14 9-Feb-2016
-#	Added specifying an optional output folder
-#	Added the option to email the output file
-#	Fixed several spacing and typo errors
-#	Fixed output to HTML with -AddDateTime parameter
-#	Add Section parameter
-#		Valid Section options are:
-#			Admins (Administrators)
-#			Apps (Applications)
-#			AppV
-#			Catalogs (Machine Catalogs)
-#			Config (Configuration)
-#			Controllers
-#			Groups (Delivery Groups)
-#			Hosting
-#			Licensing
-#			Logging
-#			Policies
-#			StoreFront
-#			Zones
-#			All
-#
-#Version 1.15 29-Feb-2016
-#	Fixed the remaining $Null comparison issues
-#	Fixed a typo keeping the AlwaysCache policy setting from working
-#	Fixed an issue where Manual Provisioning and Not RemotePC Machine Catalogs were missing from Word and Text output (thanks to Michael Foster)
-#
-#Version 1.16 17-Mar-2016
-#	Fixed Zone information showing in the Hosting section for all XA/XD versions
-#	For the Monitoring Database, show details and Grooming Retention Settings (for Jeremy Saunders)
-#
-#Version 1.17 19-Apr-2016
-#	Add check to make sure script is not run on Version 7.8 or later
-#	Add server machine details
-#	Fixed, for desktop machine details text and HTML output, Session User Name was incorrect.
-#
-#Version 1.20 4-May-2016
-#	Added -Dev parameter to create a text file of script errors
-#	Added -ScriptInfo (SI) parameter to create a text file of script information
-#	Added more script information to the console output when script starts
-#	Changed from using arrays to populating data in tables to strings
-#	Cleaned up some issues in the help text
-#	Color variables needed to be [long] and not [int] except for $wdColorBlack which is 0
-#	Fixed numerous issues discovered with the latest update to PowerShell V5
-#	Fixed saving the HTML file when using AddDateTime, now only one file is created not two
-#	Fixed several incorrect variable names that kept PDFs from saving in Windows 10 and Office 2013
-#	Removed the 10 second pauses waiting for Word to save and close
-#
-#Version 1.21 17-Aug-2016
-#	Added policy setting ICA\Launching of non-published programs during client connection 
-#	Renamed Virtual Desktop Agent Settings to Virtual Delivery Agent Settings
-#	Fixed a few issues with Text and HTML output in the Hardware region
-#
-#Version 1.22 26-Sep-2016
-#	Add Configuration Logging Preferences
-#	Add to machine catalog information for RemotePC, "No. of Machines" and "Allocated Machines"
-#	Fix calculation for "No. of Machines" in Machine Catalogs summary and details
-#
-#Version 1.23 19-Oct-2016
-#	Fixed formatting issues with HTML headings output
-#
-#Version 1.24 22-Oct-2016
-#	More refinement of HTML output
-#
-#Version 1.25 7-Nov-2016
-#	Added Chinese language support
-#
-#Version 1.26 29-Nov-2016
-#	Fix bug when Delivery Type for a delivery group could not be determined
-#	Fix bug in HTML output for delivery group details
-#
-#Version 1.27 6-Dec-2016
-#	For Machine Catalog details, for PVS provisioned catalogs, add the PVS Server address
-#
-#Version 1.28 21-Dec-2016
-#	Added Summary report page
-#	Updated version checking
-#	Updated version checking registry access to allow 32-bit PowerShell access to 64-bit registry
-#
-#Version 1.29 2-Jan-2017
-#	Added Description to Machine Catalog details
-#	Added RemotePC OU and Subfolder properties to RemotePC Machine Catalog details
-#
-#Version 1.30 7-Feb-2017
-#	Fix numerous typos
-#	Removed snapin citrix.common.commands as it is no longer used and no cmdlets are used from that snapin
-#	Update help text
-#
-#Version 1.31 13-Feb-2017
-#	Fixed French wording for Table of Contents 2 (Thanks to David Rouquier)
-#
-#Version 1.32 11-Jun-2017
-#	Add four new Cover Page properties
-#		Company Address
-#		Company Email
-#		Company Fax
-#		Company Phone
-#	Fix Function Check-LoadedModule
-#	Fix Summary Page not checking for Zone support
-#	Remove code (140 lines) that made sure all Parameters were set to default values if for some reason they did exist or values were $Null
-#	Replace _SetDocumentProperty function with Jim Moyle's Set-DocumentProperty function
-#	Update Function ProcessScriptEnd for the new Cover Page properties
-#	Update Function ShowScriptOptions for the new Cover Page properties
-#	Update Function UpdateDocumentProperties for the new Cover Page properties
-#	Update help text
-#
-#Version 1.33 15-Jun-2017
-#	Added back the WorkerGroup policy filter for XenApp 6.x
-#	Added folder name to Function OutputApplication (Thanks to Brandon Mitchell)
-#	Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
-#	Fix bug when retrieving Filters for a Policy that "applies to all objects in the Site"
-#	Fix functions ProcessAppV and OutputAppv to handle multiple AppV servers (Thanks to Brandon Mitchell)
-#	Fix two calls to Get-BrokerApplication that were retrieving the default of 250 records (Thanks to Brandon Mitchell)
-#
-#Version 1.34 17-Jun-2017
-#	Fixed function OutputPolicySetting
-#	Fixed numerous issues in the Policies section
-#	Removed the Summary parameter as it was not used
-#	Reordered the parameters in the help text and parameter list so they match and are grouped better
-#	Updated help text
-#
-#Version 1.35 21-Jun-2017
-#	Added new parameter MaxDetails:
-#		This is the same as using the following parameters:
-#			Administrators
-#			Applications
-#			DeliveryGroups
-#			HardWare
-#			Hosting
-#			Logging
-#			MachineCatalogs
-#			Policies
-#			StoreFront
-#	Updated help text
-#
-#Version 1.36 26-Jun-2017
-#	Added additional error checking for Site version information
-#		If "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" 
-#		is not found on the computer running the script, then look on the computer specified for -AdminAddress
-#		If still not found on that computer, abort the script
-#	Added "Database Size" to the Datastores output
-#	Added loading the SQL Server assembly so the database size calculations work consistently (thanks to Michael B. Smith)
-#	Added showing the XenApp/XenDesktop version at the beginning of the script
-#	Cleaned up many Switch () Statements
-#	Fixed the "CPU Usage", "Disk Usage", and "Memory Usage" policy settings
-#		When those settings are Disabled, they are stored as Enabled with a Value of -1
-#	Updated Function OutputDatastores to:
-#		Add database size
-#		Fix output for mirrored databases
-#		Check if SQL Server assembly is loaded before calculating database size
-#	When -NoPolicies is specified, the Citrix.GroupPolicy.Commands module is no longer searched for
-#	
-#Version 1.37 30-Jun-2017
-#	Added Function GetSQLVersion
-#	Added Read-Committed Snapshot and SQL Server version data to Datastore table
-#	If any of the databases are configured for mirroring and the database size is null,
-#		use the mirror server's name to calculate the size
-#		if the size is still null, report "Unable to determine"
-#	If SQL Server mirroring is not configured, in the Datastore table use "Not Configured" for the Mirror Server Address
-#
-#Version 1.38 9-Oct-2017
-#	From version 1.33:
-#		Added sort applications by AdminFolderName and ApplicationName to Function ProcessApplications (Thanks to Brandon Mitchell)
-#		This is only valid for XenApp/XenDesktop version 7.6 and later
-#		Use (Get-BrokerServiceAddedCapability) -contains "ApplicationFolders" to determine version info
-#		For XA/XD versions before 7.6, sort applications by Name property only
-#		For versions 7.0 thru 7.5, use the Name property for output, 7.6+ use ApplicationName
-#	
-#Version 1.39 8-Dec-2017
-#	Updated Function WriteHTMLLine with fixes from the script template
-#
-#Version 1.40 2-Mar-2018
-#	Added additional SQL database information to the Configuration section
-#	Added Log switch to create a transcript log
-#		Added function TranscriptLogging
-#		Citrix.GroupPolicy.Commands and New-PSDrive break transcript logging so restart logging after each New-PSDrive call
-#		Removed the Log Alias from the Logging parameter
-#	Added new function GetDBCompatibilityLevel
-#	Move section headings for Machine Catalogs, Delivery Groups, and Applications to their respective "Process" functions.
-#		This allows the "There are no Machine Catalogs/Delivery Groups/Applications" messages to appear in their own sections, 
-#		and for Word/PDF output, not directly under the Table of Contents
-#	Update help text
-#	Updated function GetSQLVersion to add support for SQL Server 2017
-#	Updated function OutputDatastores for the additional SQL Server and Database information
-#		Changed Word/PDF and HTML output from a horizontal table to three vertical tables
-#	Updated the "Default" message in function GetSQLVersion
-#	When there are no Machine Catalogs, change the message from "There are no Machines" to "There are no Machine Catalogs"
-#
-#Version 1.40.1 10-Mar-2018
-#	Fix $SQLVersion for SQL 2008 R2. Minor version is 50, not 5.
-#
-#Version 1.41 7-Apr-2018
-#	Added Operating System information to Functions GetComputerWMIInfo and OutputComputerItem
-#	Code clean-up for most recommendations made by Visual Studio Code
-#	During the code clean up, I came across some "unused" variables. I had just
-#		forgotten to add them to the output. OOPS! They are now added.
-#			Off Peak Buffer Size Percent
-#			Off Peak Disconnect Timeout (Minutes)
-#			Off Peak Extended Disconnect Timeout (Minutes)
-#			Off Peak LogOff Timeout (Minutes)
-#			Peak Buffer Size Percent
-#			Peak Disconnect Timeout (Minutes)
-#			Peak Extended Disconnect Timeout (Minutes)
-#			Peak LogOff Timeout (Minutes)
-#			Settlement Period Before Auto Shutdown (HH:MM:SS)
-#		Code clean up also found a copy and paste error with Session Linger
-#			The "end session linger" value was still using the "end session prelaunch" variable
-#			OOPS, sorry about that. Fixed.
-#
-#Version 1.42 16-Apr-2018
-#	Added Function Get-IPAddress
-#	Added in Function OutputDatastores getting the IP address for each SQL server name
-#	Added in Function OutputLicensingOverview getting the IP address for the license server
-#	Changed from the deprecated Get-BrokerDesktop to Get-BrokerMachine
-#	When building the array of all Machine Catalogs that are used by a Delivery Group,
-#		Only the first item in the array was being returned. Adding -Property CatalogName 
-#		to Sort-Object was needed to get the full unique array returned.
-#		Sort-Object -Property CatalogName -Unique
 
 #endregion
 
@@ -1562,6 +1575,51 @@ If($Folder -ne "")
 	{
 		#does not exist
 		Write-Error "Folder $Folder does not exist.  Script cannot continue"
+		Exit
+	}
+}
+
+#V1.43  Add check if $Policies -eq $True, see if PowerShell session is elevated
+#		If session is elevated, abort the script
+Function ElevatedSession
+{
+	#added in V1.43
+	$currentPrincipal = New-Object Security.Principal.WindowsPrincipal( [Security.Principal.WindowsIdentity]::GetCurrent() )
+
+	If($currentPrincipal.IsInRole( [Security.Principal.WindowsBuiltInRole]::Administrator ))
+	{
+		Write-Verbose "$(Get-Date): This is an elevated PowerShell session"
+		Return $True
+	}
+	Else
+	{
+		Write-Verbose "$(Get-Date): This is NOT an elevated PowerShell session" -Foreground White
+		Return $False
+	}
+}
+
+If($Policies -eq $True)
+{
+	Write-Verbose "$(Get-Date): Testing for elevated PowerShell session."
+	#see if session is elevated
+	$Elevated = ElevatedSession
+	
+	If($Elevated -eq $True)
+	{
+		#abort script
+		Write-Error "
+		`n
+		`n
+		`tThe Citrix Group Policy module cannot be loaded or found in an elevated PowerShell session.
+		`n
+		`n
+		`tThe Policies parameter was used and this is an elevated PowerShell session.
+		`n
+		`n
+		`tRerun the script from a non-elevated PowerShell session. The script will now close.
+		`n
+		`n"
+		Write-Verbose "$(Get-Date): "
 		Exit
 	}
 }
