@@ -3,6 +3,20 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.44
+#	Add a NoSessions parameter to exclude Machine Catalog, Application and Hosting session data from the report
+#	Added missing "Will shutdown after use" to the Hosting section in Function OutputMachineDetails
+#	Updated Function CheckExcelPrereq to match the V2 script
+#	Updated Function CheckWordPrereq to match the V2 script
+#	Updated Function OutputDeliveryGroupDetails  by removing unused variable $xDeliveryGroupType
+#	Updated Function OutputDeliveryGroupUtilization to match the V2 script
+#	Updated Function OutputHosting to match the V2 script
+#	Updated Function OutputHostingSessions by removing all desktop code as it is not used
+#	Updated Function OutputNicItem with a $ComputerName parameter
+#		Updated Function GetComputerWMIInfo to pass the computer name parameter to the OutputNicItem function
+#	Updated Function ProcessCitrixPolicies to match the V2 script
+#	Updated Function ProcessHosting to match the V2 script
+
 #V1.43 21-Apr-2019
 #	If Policies parameter is used, check to see if PowerShell session is elevated. If it is,
 #		abort the script. This is the #2 support email.
