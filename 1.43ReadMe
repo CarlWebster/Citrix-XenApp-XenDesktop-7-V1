@@ -1,6 +1,0 @@
-#V1.43 21-Apr-2019
-#	If Policies parameter is used, check to see if PowerShell session is elevated. If it is,
-#		abort the script. This is the #2 support email.
-#		Added a Note to the Help Text and ReadMe file about the Citrix.GroupPolicy.Commands module:
-#		Note: The Citrix Group Policy PowerShell module will not load from an elevated PowerShell session. 
-#		If the module is manually imported, the module is not detected from an elevated PowerShell session.
