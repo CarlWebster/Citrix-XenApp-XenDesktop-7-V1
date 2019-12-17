@@ -1,9 +1,14 @@
-#Version 1.44
+#Version 1.44 17-Dec-2019
 #	Add a NoSessions parameter to exclude Machine Catalog, Application and Hosting session data from the report
 #	Added missing "Will shutdown after use" to the Hosting section in Function OutputMachineDetails
+#	Fix Swedish Table of Contents (Thanks to Johan Kallio)
+#		From 
+#			'sv-'	{ 'Automatisk innehållsförteckning2'; Break }
+#		To
+#			'sv-'	{ 'Automatisk innehållsförteckn2'; Break }
 #	Updated Function CheckExcelPrereq to match the V2 script
 #	Updated Function CheckWordPrereq to match the V2 script
-#	Updated Function OutputDeliveryGroupDetails  by removing unused variable $xDeliveryGroupType
+#	Updated Function OutputDeliveryGroupDetails by removing unused variable $xDeliveryGroupType
 #	Updated Function OutputDeliveryGroupUtilization to match the V2 script
 #	Updated Function OutputHosting to match the V2 script
 #	Updated Function OutputHostingSessions by removing all desktop code as it is not used
@@ -11,3 +16,4 @@
 #		Updated Function GetComputerWMIInfo to pass the computer name parameter to the OutputNicItem function
 #	Updated Function ProcessCitrixPolicies to match the V2 script
 #	Updated Function ProcessHosting to match the V2 script
+#	Updated help text

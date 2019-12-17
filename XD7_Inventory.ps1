@@ -334,8 +334,8 @@
 .PARAMETER AddDateTime
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2018 at 6PM is 2018-06-01_1800.
-	Output filename will be ReportName_2018-06-01_1800.docx (or .pdf).
+	June 1, 2020 at 6PM is 2020-06-01_1800.
+	Output filename will be ReportName_2020-06-01_1800.docx (or .pdf).
 	This parameter is disabled by default.
 	This parameter has an alias of ADT.
 .PARAMETER Folder
@@ -605,10 +605,10 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2018 -EndDate 01/31/2018
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2020 -EndDate 01/31/2020
 	
-	Creates a report with Configuration Logging details for the dates 01/01/2018 through 
-	01/31/2018.
+	Creates a report with Configuration Logging details for the dates 01/01/2020 through 
+	01/31/2020.
 	
 	Will use all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
@@ -620,11 +620,11 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2018 10:00:00" -EndDate 
-	"06/01/2018 14:00:00"
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2020 10:00:00" -EndDate 
+	"06/01/2020 14:00:00"
 	
 	Creates a report with Configuration Logging details for the time range 
-	06/01/2018 10:00:00AM through 06/01/2018 02:00:00PM.
+	06/01/2020 10:00:00AM through 06/01/2020 02:00:00PM.
 	
 	Narrowing the report down to seconds does not work. Seconds must be either 00 or 59.
 	
@@ -755,8 +755,8 @@
 
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2018 at 6PM is 2018-06-01_1800.
-	Output filename will be XD7SiteName_2018-06-01_1800.docx
+	June 1, 2020 at 6PM is 2020-06-01_1800.
+	Output filename will be XD7SiteName_2020-06-01_1800.docx
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF -AddDateTime
 	
@@ -772,8 +772,8 @@
 
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2018 at 6PM is 2018-06-01_1800.
-	Output filename will be XD7SiteName_2018-06-01_1800.pdf
+	June 1, 2020 at 6PM is 2020-06-01_1800.
+	Output filename will be XD7SiteName_2020-06-01_1800.pdf
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hardware
 	
@@ -906,7 +906,7 @@
 	NAME: XD7_Inventory.ps1
 	VERSION: 1.44
 	AUTHOR: Carl Webster
-	LASTEDIT: October 3, 2019
+	LASTEDIT: December 17, 2019
 #>
 
 #endregion
@@ -1095,12 +1095,17 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
-#Version 1.44
+#Version 1.44 17-Dec-2019
 #	Add a NoSessions parameter to exclude Machine Catalog, Application and Hosting session data from the report
 #	Added missing "Will shutdown after use" to the Hosting section in Function OutputMachineDetails
+#	Fix Swedish Table of Contents (Thanks to Johan Kallio)
+#		From 
+#			'sv-'	{ 'Automatisk innehållsförteckning2'; Break }
+#		To
+#			'sv-'	{ 'Automatisk innehållsförteckn2'; Break }
 #	Updated Function CheckExcelPrereq to match the V2 script
 #	Updated Function CheckWordPrereq to match the V2 script
-#	Updated Function OutputDeliveryGroupDetails  by removing unused variable $xDeliveryGroupType
+#	Updated Function OutputDeliveryGroupDetails by removing unused variable $xDeliveryGroupType
 #	Updated Function OutputDeliveryGroupUtilization to match the V2 script
 #	Updated Function OutputHosting to match the V2 script
 #	Updated Function OutputHostingSessions by removing all desktop code as it is not used
@@ -1108,6 +1113,7 @@ Param(
 #		Updated Function GetComputerWMIInfo to pass the computer name parameter to the OutputNicItem function
 #	Updated Function ProcessCitrixPolicies to match the V2 script
 #	Updated Function ProcessHosting to match the V2 script
+#	Updated help text
 #
 #Version1.43 21-Apr-2019
 #	If Policies parameter is used, check to see if PowerShell session is elevated. If it is,
@@ -2992,7 +2998,8 @@ Function SetWordHashTable
 			'nb-'	{ 'Automatisk tabell 2'; Break }
 			'nl-'	{ 'Automatische inhoudsopgave 2'; Break }
 			'pt-'	{ 'Sumário Automático 2'; Break }
-			'sv-'	{ 'Automatisk innehållsförteckning2'; Break }
+			# fix in 1.44 thanks to Johan Kallio 'sv-'	{ 'Automatisk innehållsförteckning2'; Break }
+			'sv-'	{ 'Automatisk innehållsförteckn2'; Break }
 			'zh-'	{ '自动目录 2'; Break }
 		}
 	)
@@ -31210,6 +31217,12 @@ Function ProcessScriptEnd
 	$Str = $Null
 	$ErrorActionPreference = $SaveEAPreference
 	$Script:DoPolicies = $Null
+			
+	Write-Host "                                                                                    " -BackgroundColor Black -ForegroundColor White
+	Write-Host "               This FREE script was brought to you by Conversant Group              " -BackgroundColor Black -ForegroundColor White
+	Write-Host "We design, build, and manage infrastructure for a secure, dependable user experience" -BackgroundColor Black -ForegroundColor White
+	Write-Host "                       Visit our website conversantgroup.com                        " -BackgroundColor Black -ForegroundColor White
+	Write-Host "                                                                                    " -BackgroundColor Black -ForegroundColor White
 }
 #endregion
 
