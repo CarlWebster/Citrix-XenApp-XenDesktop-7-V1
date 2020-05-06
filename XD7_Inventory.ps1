@@ -68,6 +68,28 @@
 		Spanish
 		Swedish
 		
+.PARAMETER HTML
+	Creates an HTML file with an .html extension.
+	This parameter is disabled by default.
+.PARAMETER MSWord
+	SaveAs DOCX file
+	This parameter is set True if no other output format is selected.
+.PARAMETER PDF
+	SaveAs PDF file instead of DOCX file.
+	This parameter is disabled by default.
+	The PDF file is roughly 5X to 10X larger than the DOCX file.
+	This parameter requires Microsoft Word to be installed.
+	This parameter uses the Word SaveAs PDF capability.
+.PARAMETER Text
+	Creates a formatted text file with a .txt extension.
+	This parameter is disabled by default.
+.PARAMETER AddDateTime
+	Adds a date time stamp to the end of the file name.
+	Time stamp is in the format of yyyy-MM-dd_HHmm.
+	June 1, 2020 at 6PM is 2020-06-01_1800.
+	Output filename will be ReportName_2020-06-01_1800.docx (or .pdf).
+	This parameter is disabled by default.
+	This parameter has an alias of ADT.
 .PARAMETER AdminAddress
 	Specifies the address of a XenDesktop controller the PowerShell snapins will connect 
 	to. 
@@ -171,26 +193,6 @@
 	The default value is Sideline.
 	This parameter has an alias of CP.
 	This parameter is only valid with the MSWORD and PDF output parameters.
-.PARAMETER UserName
-	User name to use for the Cover Page and Footer.
-	The default value is contained in $env:username
-	This parameter has an alias of UN.
-	This parameter is only valid with the MSWORD and PDF output parameters.
-.PARAMETER HTML
-	Creates an HTML file with an .html extension.
-	This parameter is disabled by default.
-.PARAMETER MSWord
-	SaveAs DOCX file
-	This parameter is set True if no other output format is selected.
-.PARAMETER PDF
-	SaveAs PDF file instead of DOCX file.
-	This parameter is disabled by default.
-	The PDF file is roughly 5X to 10X larger than the DOCX file.
-	This parameter requires Microsoft Word to be installed.
-	This parameter uses the Word SaveAs PDF capability.
-.PARAMETER Text
-	Creates a formatted text file with a .txt extension.
-	This parameter is disabled by default.
 .PARAMETER Administrators
 	Give detailed information for Administrator Scopes and Roles.
 	This parameter is disabled by default.
@@ -223,24 +225,14 @@
 	
 	This parameter is disabled by default.
 	This parameter has an alias of DGU.
-.PARAMETER Hosting
-	Give detailed information for Hosts, Host Connections and Resources.
+.PARAMETER Dev
+	Clears errors at the beginning of the script.
+	Outputs all errors to a text file at the end of the script.
+	
+	This is used when the script developer requests more troubleshooting data.
+	Text file is placed in the same folder from where the script is run.
+	
 	This parameter is disabled by default.
-	This parameter has an alias of Host.
-.PARAMETER Logging
-	Give the Configuration Logging report with, by default, details for the previous 
-	seven days.
-	This parameter is disabled by default.
-.PARAMETER StartDate
-	Start date for the Configuration Logging report.
-	
-	Format for date only is MM/DD/YYYY.
-	
-	Format to include a specific time range is "MM/DD/YYYY HH:MM:SS" in 24 hour format.
-	The double quotes are needed.
-	
-	The default is today's date minus seven days.
-	This parameter has an alias of SD.
 .PARAMETER EndDate
 	End date for the Configuration Logging report.
 	
@@ -251,6 +243,31 @@
 	
 	The default is today's date.
 	This parameter has an alias of ED.
+.PARAMETER Folder
+	Specifies the optional output folder to save the output report. 
+.PARAMETER Hardware
+	Use WMI to gather hardware information on: Computer System, Disks, Processor and 
+	Network Interface Cards
+
+	This parameter may require the script be run from an elevated PowerShell session 
+	using an account with permission to retrieve hardware information (i.e. Domain Admin 
+	or Local Administrator).
+
+	Selecting this parameter will add to both the time it takes to run the script and 
+	size of the report.
+
+	This parameter is disabled by default.
+	This parameter has an alias of HW.
+.PARAMETER Hosting
+	Give detailed information for Hosts, Host Connections and Resources.
+	This parameter is disabled by default.
+	This parameter has an alias of Host.
+.PARAMETER Log
+	Generates a log file for troubleshooting.
+.PARAMETER Logging
+	Give the Configuration Logging report with, by default, details for the previous 
+	seven days.
+	This parameter is disabled by default.
 .PARAMETER MachineCatalogs
 	Gives detailed information for all machines in all Machine Catalogs.
 	
@@ -284,6 +301,22 @@
 	can take a very long time to run.
 
 	This parameter has an alias of MAX.
+.PARAMETER NoADPolicies
+	Excludes all Citrix AD based policy information from the output document.
+	Includes only Site policies created in Studio.
+	
+	This switch is useful in large AD environments, where there may be thousands
+	of policies, to keep SYSVOL from being searched.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of NoAD.
+.PARAMETER NoPolicies
+	Excludes all Site and Citrix AD based policy information from the output document.
+	
+	Using the NoPolicies parameter will cause the Policies parameter to be set to False.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of NP.
 .PARAMETER NoSessions
 	Excludes Machine Catalog, Application and Hosting session data from the report.
 	
@@ -311,48 +344,12 @@
 	
 	This parameter is disabled by default.
 	This parameter has an alias of Pol.
-.PARAMETER NoPolicies
-	Excludes all Site and Citrix AD based policy information from the output document.
-	
-	Using the NoPolicies parameter will cause the Policies parameter to be set to False.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of NP.
-.PARAMETER NoADPolicies
-	Excludes all Citrix AD based policy information from the output document.
-	Includes only Site policies created in Studio.
-	
-	This switch is useful in large AD environments, where there may be thousands
-	of policies, to keep SYSVOL from being searched.
+.PARAMETER ScriptInfo
+	Outputs information about the script to a text file.
+	Text file is placed in the same folder from where the script is run.
 	
 	This parameter is disabled by default.
-	This parameter has an alias of NoAD.
-.PARAMETER StoreFront
-	Give detailed information for StoreFront.
-	This parameter is disabled by default.
-	This parameter has an alias of SF.
-.PARAMETER AddDateTime
-	Adds a date time stamp to the end of the file name.
-	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2020 at 6PM is 2020-06-01_1800.
-	Output filename will be ReportName_2020-06-01_1800.docx (or .pdf).
-	This parameter is disabled by default.
-	This parameter has an alias of ADT.
-.PARAMETER Folder
-	Specifies the optional output folder to save the output report. 
-.PARAMETER Hardware
-	Use WMI to gather hardware information on: Computer System, Disks, Processor and 
-	Network Interface Cards
-
-	This parameter may require the script be run from an elevated PowerShell session 
-	using an account with permission to retrieve hardware information (i.e. Domain Admin 
-	or Local Administrator).
-
-	Selecting this parameter will add to both the time it takes to run the script and 
-	size of the report.
-
-	This parameter is disabled by default.
-	This parameter has an alias of HW.
+	This parameter has an alias of SI.
 .PARAMETER Section
 	Processes a specific section of the report.
 	Valid options are:
@@ -376,7 +373,25 @@
 	Using Logging will force the Logging switch to True.
 	Using Policies will force the Policies switch to True.
 	If Policies is selected and the NoPolicies switch is used, the script will terminate.
+.PARAMETER StartDate
+	Start date for the Configuration Logging report.
 	
+	Format for date only is MM/DD/YYYY.
+	
+	Format to include a specific time range is "MM/DD/YYYY HH:MM:SS" in 24 hour format.
+	The double quotes are needed.
+	
+	The default is today's date minus seven days.
+	This parameter has an alias of SD.
+.PARAMETER StoreFront
+	Give detailed information for StoreFront.
+	This parameter is disabled by default.
+	This parameter has an alias of SF.
+.PARAMETER UserName
+	User name to use for the Cover Page and Footer.
+	The default value is contained in $env:username
+	This parameter has an alias of UN.
+	This parameter is only valid with the MSWORD and PDF output parameters.
 .PARAMETER SmtpServer
 	Specifies the optional email server to send the output report. 
 .PARAMETER SmtpPort
@@ -391,22 +406,6 @@
 .PARAMETER To
 	Specifies the username for the To email address.
 	If SmtpServer is used, this is a required parameter.
-.PARAMETER Dev
-	Clears errors at the beginning of the script.
-	Outputs all errors to a text file at the end of the script.
-	
-	This is used when the script developer requests more troubleshooting data.
-	Text file is placed in the same folder from where the script is run.
-	
-	This parameter is disabled by default.
-.PARAMETER ScriptInfo
-	Outputs information about the script to a text file.
-	Text file is placed in the same folder from where the script is run.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of SI.
-.PARAMETER Log
-	Generates a log file for troubleshooting.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1
 	
@@ -801,43 +800,6 @@
 	
 	Output file will be saved in the path \\FileServer\ShareName
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer mail.domain.tld -From 
-	XDAdmin@domain.tld -To ITGroup@domain.tld
-	
-	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
-	Webster" or
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
-	$env:username = Administrator
-
-	Carl Webster for the Company Name.
-	Sideline for the Cover Page format.
-	Administrator for the User Name.
-	
-	Script will use the email server mail.domain.tld, sending from XDAdmin@domain.tld, 
-	sending to ITGroup@domain.tld.
-	Script will use the default SMPTP port 25 and will not use SSL.
-	If the current user's credentials are not valid to send email, the user will be prompted 
-	to enter valid credentials.
-.EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer smtp.office365.com -SmtpPort 587 
-	-UseSSL -From Webster@CarlWebster.com -To ITGroup@CarlWebster.com
-	
-	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
-	Webster" or
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
-	$env:username = Administrator
-
-	Carl Webster for the Company Name.
-	Sideline for the Cover Page format.
-	Administrator for the User Name.
-	
-	Script will use the email server smtp.office365.com on port 587 using SSL, sending from 
-	webster@carlwebster.com, sending to ITGroup@carlwebster.com.
-	If the current user's credentials are not valid to send email, the user will be prompted 
-	to enter valid credentials.
-.EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Section Policies
 	
 	Will use all Default values.
@@ -897,16 +859,105 @@
 	
 	Creates a text file for transcript logging named 
 	XDV1DocScriptTranscript_yyyy-MM-dd_HHmm.txt.
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 
+	-SmtpServer mail.domain.tld
+	-From XDAdmin@domain.tld 
+	-To ITGroup@domain.tld	
+
+	The script will use the email server mail.domain.tld, sending from XDAdmin@domain.tld, 
+	sending to ITGroup@domain.tld.
+
+	The script will use the default SMTP port 25 and will not use SSL.
+
+	If the current user's credentials are not valid to send email, 
+	the user will be prompted to enter valid credentials.
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 
+	-SmtpServer mailrelay.domain.tld
+	-From Anonymous@domain.tld 
+	-To ITGroup@domain.tld	
+
+	***SENDING UNAUTHENTICATED EMAIL***
+
+	The script will use the email server mailrelay.domain.tld, sending from 
+	anonymous@domain.tld, sending to ITGroup@domain.tld.
+
+	To send unauthenticated email using an email relay server requires the From email account 
+	to use the name Anonymous.
+
+	The script will use the default SMTP port 25 and will not use SSL.
+	
+	***GMAIL/G SUITE SMTP RELAY***
+	https://support.google.com/a/answer/2956491?hl=en
+	https://support.google.com/a/answer/176600?hl=en
+
+	To send email using a Gmail or g-suite account, you may have to turn ON
+	the "Less secure app access" option on your account.
+	***GMAIL/G SUITE SMTP RELAY***
+
+	The script will generate an anonymous secure password for the anonymous@domain.tld 
+	account.
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 
+	-SmtpServer labaddomain-com.mail.protection.outlook.com
+	-UseSSL
+	-From SomeEmailAddress@labaddomain.com 
+	-To ITGroupDL@labaddomain.com	
+
+	***OFFICE 365 Example***
+
+	https://docs.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-office-3
+	
+	This uses Option 2 from the above link.
+	
+	***OFFICE 365 Example***
+
+	The script will use the email server labaddomain-com.mail.protection.outlook.com, 
+	sending from SomeEmailAddress@labaddomain.com, sending to ITGroupDL@labaddomain.com.
+
+	The script will use the default SMTP port 25 and will use SSL.
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 
+	-SmtpServer smtp.office365.com 
+	-SmtpPort 587
+	-UseSSL 
+	-From Webster@CarlWebster.com 
+	-To ITGroup@CarlWebster.com	
+
+	The script will use the email server smtp.office365.com on port 587 using SSL, 
+	sending from webster@carlwebster.com, sending to ITGroup@carlwebster.com.
+
+	If the current user's credentials are not valid to send email, 
+	the user will be prompted to enter valid credentials.
+.EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 
+	-SmtpServer smtp.gmail.com 
+	-SmtpPort 587
+	-UseSSL 
+	-From Webster@CarlWebster.com 
+	-To ITGroup@CarlWebster.com	
+
+	*** NOTE ***
+	To send email using a Gmail or g-suite account, you may have to turn ON
+	the "Less secure app access" option on your account.
+	*** NOTE ***
+	
+	The script will use the email server smtp.gmail.com on port 587 using SSL, 
+	sending from webster@gmail.com, sending to ITGroup@carlwebster.com.
+
+	If the current user's credentials are not valid to send email, 
+	the user will be prompted to enter valid credentials.
 .INPUTS
 	None.  You cannot pipe objects to this script.
 .OUTPUTS
 	No objects are output from this script.  This script creates a Word, PDF
 	plain text or HTML document.
 .NOTES
-	NAME: XD7_Inventory.ps1
+	NAME: XD7_Inv5ntory.ps1
 	VERSION: 1.44
 	AUTHOR: Carl Webster
-	LASTEDIT: December 17, 2019
+	LASTEDIT: May 6, 2020
 #>
 
 #endregion
@@ -916,75 +967,26 @@
 [CmdletBinding(SupportsShouldProcess = $False, ConfirmImpact = "None", DefaultParameterSetName = "Word") ]
 
 Param(
+	[parameter(ParameterSetName="HTML",Mandatory=$False)] 
+	[Switch]$HTML=$False,
+
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[Switch]$MSWord=$False,
+
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Switch]$PDF=$False,
+
+	[parameter(ParameterSetName="Text",Mandatory=$False)] 
+	[Switch]$Text=$False,
+
+	[parameter(Mandatory=$False)] 
+	[Alias("ADT")]
+	[Switch]$AddDateTime=$False,
+	
 	[parameter(Mandatory=$False)] 
 	[ValidateNotNullOrEmpty()]
 	[Alias("AA")]
 	[string]$AdminAddress="LocalHost",
-
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("CA")]
-	[ValidateNotNullOrEmpty()]
-	[string]$CompanyAddress="",
-    
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("CE")]
-	[ValidateNotNullOrEmpty()]
-	[string]$CompanyEmail="",
-    
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("CF")]
-	[ValidateNotNullOrEmpty()]
-	[string]$CompanyFax="",
-    
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("CN")]
-	[ValidateNotNullOrEmpty()]
-	[string]$CompanyName="",
-    
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("CPh")]
-	[ValidateNotNullOrEmpty()]
-	[string]$CompanyPhone="",
-    
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("CP")]
-	[ValidateNotNullOrEmpty()]
-	[string]$CoverPage="Sideline", 
-
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Alias("UN")]
-	[ValidateNotNullOrEmpty()]
-	[string]$UserName=$env:username,
-
-	[parameter(ParameterSetName="HTML",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Switch]$HTML=$False,
-
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Switch]$MSWord=$False,
-
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Switch]$PDF=$False,
-
-	[parameter(ParameterSetName="Text",Mandatory=$False)] 
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[Switch]$Text=$False,
 
 	[parameter(Mandatory=$False)] 
 	[Alias("Admins")]
@@ -994,6 +996,42 @@ Param(
 	[Alias("Apps")]
 	[Switch]$Applications=$False,	
 	
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("CA")]
+	[ValidateNotNullOrEmpty()]
+	[string]$CompanyAddress="",
+    
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("CE")]
+	[ValidateNotNullOrEmpty()]
+	[string]$CompanyEmail="",
+    
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("CF")]
+	[ValidateNotNullOrEmpty()]
+	[string]$CompanyFax="",
+    
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("CN")]
+	[ValidateNotNullOrEmpty()]
+	[string]$CompanyName="",
+    
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("CPh")]
+	[ValidateNotNullOrEmpty()]
+	[string]$CompanyPhone="",
+    
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("CP")]
+	[ValidateNotNullOrEmpty()]
+	[string]$CoverPage="Sideline", 
+
 	[parameter(Mandatory=$False)] 
 	[Alias("DG")]
 	[Switch]$DeliveryGroups=$False,	
@@ -1003,19 +1041,28 @@ Param(
 	[Switch]$DeliveryGroupsUtilization=$False,	
 	
 	[parameter(Mandatory=$False)] 
+	[Switch]$Dev=$False,
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("ED")]
+	[Datetime]$EndDate = (Get-Date -displayhint date),
+	
+	[parameter(Mandatory=$False)] 
+	[string]$Folder="",
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("HW")]
+	[Switch]$Hardware=$False,
+
+	[parameter(Mandatory=$False)] 
 	[Alias("Host")]
 	[Switch]$Hosting=$False,	
 	
 	[parameter(Mandatory=$False)] 
-	[Switch]$Logging=$False,	
+	[Switch]$Log=$False,
 	
 	[parameter(Mandatory=$False)] 
-	[Alias("SD")]
-	[Datetime]$StartDate = ((Get-Date -displayhint date).AddDays(-7)),
-
-	[parameter(Mandatory=$False)] 
-	[Alias("ED")]
-	[Datetime]$EndDate = (Get-Date -displayhint date),
+	[Switch]$Logging=$False,	
 	
 	[parameter(Mandatory=$False)] 
 	[Alias("MC")]
@@ -1026,6 +1073,14 @@ Param(
 	[Switch]$MaxDetails=$False,
 
 	[parameter(Mandatory=$False)] 
+	[Alias("NoAD")]
+	[Switch]$NoADPolicies=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("NP")]
+	[Switch]$NoPolicies=$False,	
+	
+	[parameter(Mandatory=$False)] 
 	[Alias("NS")]
 	[Switch]$NoSessions=$False,	
 	
@@ -1034,56 +1089,41 @@ Param(
 	[Switch]$Policies=$False,	
 	
 	[parameter(Mandatory=$False)] 
-	[Alias("NP")]
-	[Switch]$NoPolicies=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("NoAD")]
-	[Switch]$NoADPolicies=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("SF")]
-	[Switch]$StoreFront=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("ADT")]
-	[Switch]$AddDateTime=$False,
-	
-	[parameter(Mandatory=$False)] 
-	[string]$Folder="",
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("HW")]
-	[Switch]$Hardware=$False,
-
-	[parameter(Mandatory=$False)] 
-	[string]$Section="All",
-	
-	[parameter(ParameterSetName="SMTP",Mandatory=$True)] 
-	[string]$SmtpServer="",
-
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[int]$SmtpPort=25,
-
-	[parameter(ParameterSetName="SMTP",Mandatory=$False)] 
-	[switch]$UseSSL=$False,
-
-	[parameter(ParameterSetName="SMTP",Mandatory=$True)] 
-	[string]$From="",
-
-	[parameter(ParameterSetName="SMTP",Mandatory=$True)] 
-	[string]$To="",
-
-	[parameter(Mandatory=$False)] 
-	[Switch]$Dev=$False,
-	
-	[parameter(Mandatory=$False)] 
 	[Alias("SI")]
 	[Switch]$ScriptInfo=$False,
 	
 	[parameter(Mandatory=$False)] 
-	[Switch]$Log=$False
+	[string]$Section="All",
 	
+	[parameter(Mandatory=$False)] 
+	[Alias("SD")]
+	[Datetime]$StartDate = ((Get-Date -displayhint date).AddDays(-7)),
+
+	[parameter(Mandatory=$False)] 
+	[Alias("SF")]
+	[Switch]$StoreFront=$False,	
+	
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Alias("UN")]
+	[ValidateNotNullOrEmpty()]
+	[string]$UserName=$env:username,
+
+	[parameter(Mandatory=$False)] 
+	[string]$SmtpServer="",
+
+	[parameter(Mandatory=$False)] 
+	[int]$SmtpPort=25,
+
+	[parameter(Mandatory=$False)] 
+	[switch]$UseSSL=$False,
+
+	[parameter(Mandatory=$False)] 
+	[string]$From="",
+
+	[parameter(Mandatory=$False)] 
+	[string]$To=""
+
 	)
 #endregion
 
@@ -1095,6 +1135,19 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.45 6-May-2020
+#	Add checking for a Word version of 0, which indicates the Office installation needs repairing
+#	Add Receive Side Scaling setting to Function OutputNICItem
+#	Change location of the -Dev, -Log, and -ScriptInfo output files from the script folder to the -Folder location (Thanks to Guy Leech for the "suggestion")
+#	Change Text output to use [System.Text.StringBuilder]
+#		Updated Functions Line and SaveAndCloseTextDocument
+#	Reformatted the terminating Write-Error messages to make them more visible and readable in the console
+#	Remove the SMTP parameterset and manually verify the parameters
+#	Reorder parameters
+#	Update Function SendEmail to handle anonymous unauthenticated email
+#	Update Functions GetComputerWMIInfo and OutputNicInfo to fix two bugs in NIC Power Management settings
+#	Update Help Text
+#
 #Version 1.44 17-Dec-2019
 #	Add a NoSessions parameter to exclude Machine Catalog, Application and Hosting session data from the report
 #	Added missing "Will shutdown after use" to the Hosting section in Function OutputMachineDetails
@@ -1418,32 +1471,6 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 $SaveEAPreference = $ErrorActionPreference
 $ErrorActionPreference = 'SilentlyContinue'
 
-#V1.40 added
-If($Log) 
-{
-	#start transcript logging
-	$Script:ThisScriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
-	$Script:LogPath = "$Script:ThisScriptPath\XDV1DocScriptTranscript_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
-	
-	try 
-	{
-		Start-Transcript -Path $Script:LogPath -Force -Verbose:$false | Out-Null
-		Write-Verbose "$(Get-Date): Transcript/log started at $Script:LogPath"
-		$Script:StartLog = $true
-	} 
-	catch 
-	{
-		Write-Verbose "$(Get-Date): Transcript/log failed at $Script:LogPath"
-		$Script:StartLog = $false
-	}
-}
-
-If($Dev)
-{
-	$Error.Clear()
-	$Script:DevErrorFile = "$($pwd.Path)\XAXD7V1InventoryScriptErrors_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
-}
-
 If($Null -eq $MSWord)
 {
 	If($Text -or $HTML -or $PDF)
@@ -1506,7 +1533,88 @@ Else
 		Write-Verbose "$(Get-Date): Text is $($Text)"
 		Write-Verbose "$(Get-Date): HTML is $($HTML)"
 	}
-	Write-Error "Unable to determine output parameter.  Script cannot continue"
+	Write-Error "
+	`n`n
+	`t`t
+	Unable to determine output parameter.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n
+	"
+	Exit
+}
+
+If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($From) -and [String]::IsNullOrEmpty($To))
+{
+	Write-Error "
+	`n`n
+	`t`t
+	You specified an SmtpServer but did not include a From or To email address.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n"
+	Exit
+}
+If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($From) -and ![String]::IsNullOrEmpty($To))
+{
+	Write-Error "
+	`n`n
+	`t`t
+	You specified an SmtpServer and a To email address but did not include a From email address.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n"
+	Exit
+}
+If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($To) -and ![String]::IsNullOrEmpty($From))
+{
+	Write-Error "
+	`n`n
+	`t`t
+	You specified an SmtpServer and a From email address but did not include a To email address.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n"
+	Exit
+}
+If(![String]::IsNullOrEmpty($From) -and ![String]::IsNullOrEmpty($To) -and [String]::IsNullOrEmpty($SmtpServer))
+{
+	Write-Error "
+	`n`n
+	`t`t
+	You specified From and To email addresses but did not include the SmtpServer.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n"
+	Exit
+}
+If(![String]::IsNullOrEmpty($From) -and [String]::IsNullOrEmpty($SmtpServer))
+{
+	Write-Error "
+	`n`n
+	`t`t
+	You specified a From email address but did not include the SmtpServer.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n"
+	Exit
+}
+If(![String]::IsNullOrEmpty($To) -and [String]::IsNullOrEmpty($SmtpServer))
+{
+	Write-Error "
+	`n`n
+	`t`t
+	You specified a To email address but did not include the SmtpServer.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n"
 	Exit
 }
 
@@ -1536,8 +1644,21 @@ If($NoPolicies -and $Section -eq "Policies")
 {
 	#conflict
 	$ErrorActionPreference = $SaveEAPreference
-	Write-Error -Message "`n`tYou specified conflicting parameters.`n`n`tYou specified the $($Section) section but also selected NoPolicies.`n`n`tPlease change one of these options and rerun the script.`n`n
-	Script cannot continue."
+	Write-Error -Message "
+	`n`n
+	`t`t
+	You specified conflicting parameters.
+	`n`n
+	`t`t
+	You specified the $($Section) section but also selected NoPolicies.
+	`n`n
+	`t`t
+	Please change one of these options and rerun the script.
+	`n`n
+	`t`t
+	Script cannot continue.
+	`n`n
+	"
 	Exit
 }
 
@@ -1563,7 +1684,14 @@ Switch ($Section)
 If($ValidSection -eq $False)
 {
 	$ErrorActionPreference = $SaveEAPreference
-	Write-Error -Message "`n`tThe Section parameter specified, $($Section), is an invalid Section option.`n`tValid options are:
+	Write-Error -Message "
+	`n`n
+	`t`t
+	The Section parameter specified, $($Section), is an invalid Section option.
+	
+	`n`n
+	`t`t
+	Valid options are:
 	
 	`t`tAdmins
 	`t`tApps
@@ -1580,7 +1708,9 @@ If($ValidSection -eq $False)
 	`t`tZones
 	`t`tAll
 	
-	`tScript cannot continue."
+	`t`tScript cannot continue.
+	`n`n
+	"
 	Exit
 }
 
@@ -1599,16 +1729,72 @@ If($Folder -ne "")
 		Else
 		{
 			#it exists but it is a file not a folder
-			Write-Error "Folder $Folder is a file, not a folder.  Script cannot continue"
+			Write-Error "
+			`n`n
+			`t`t
+			Folder $Folder is a file, not a folder.
+			`n`n
+			`t`t
+			Script cannot continue.
+			`n`n
+			"
 			Exit
 		}
 	}
 	Else
 	{
 		#does not exist
-		Write-Error "Folder $Folder does not exist.  Script cannot continue"
+		Write-Error "
+		`n`n
+		`t`t
+		Folder $Folder does not exist.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
 		Exit
 	}
+}
+
+If($Folder -eq "")
+{
+	$Script:pwdpath = $pwd.Path
+}
+Else
+{
+	$Script:pwdpath = $Folder
+}
+
+If($Script:pwdpath.EndsWith("\"))
+{
+	#remove the trailing \
+	$Script:pwdpath = $Script:pwdpath.SubString(0, ($Script:pwdpath.Length - 1))
+}
+
+#V1.40 added
+If($Log) 
+{
+	#start transcript logging
+	$Script:LogPath = "$Script:pwdpath\XDV1DocScriptTranscript_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
+	
+	try 
+	{
+		Start-Transcript -Path $Script:LogPath -Force -Verbose:$false | Out-Null
+		Write-Verbose "$(Get-Date): Transcript/log started at $Script:LogPath"
+		$Script:StartLog = $true
+	} 
+	catch 
+	{
+		Write-Verbose "$(Get-Date): Transcript/log failed at $Script:LogPath"
+		$Script:StartLog = $false
+	}
+}
+
+If($Dev)
+{
+	$Error.Clear()
+	$Script:DevErrorFile = "$Script:pwdpath\XAXD7V1InventoryScriptErrors_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
 }
 
 #V1.43  Add check if $Policies -eq $True, see if PowerShell session is elevated
@@ -1640,17 +1826,17 @@ If($Policies -eq $True)
 	{
 		#abort script
 		Write-Error "
-		`n
-		`n
-		`tThe Citrix Group Policy module cannot be loaded or found in an elevated PowerShell session.
-		`n
-		`n
-		`tThe Policies parameter was used and this is an elevated PowerShell session.
-		`n
-		`n
-		`tRerun the script from a non-elevated PowerShell session. The script will now close.
-		`n
-		`n"
+		`n`n
+		`t`t
+		The Citrix Group Policy module cannot be loaded or found in an elevated PowerShell session.
+		`n`n
+		`t`t
+		The Policies parameter was used and this is an elevated PowerShell session.
+		`n`n
+		`t`t
+		Rerun the script from a non-elevated PowerShell session. The script will now close.
+		`n`n
+		"
 		Write-Verbose "$(Get-Date): "
 		Exit
 	}
@@ -1771,7 +1957,7 @@ If($HTML)
 
 If($TEXT)
 {
-	$Script:output = ""
+	[System.Text.StringBuilder] $global:Output = New-Object System.Text.StringBuilder( 16384 )
 }
 #endregion
 
@@ -2524,60 +2710,69 @@ Function OutputProcessorItem
 
 Function OutputNicItem
 {
-	Param([object]$Nic, [object]$ThisNic, [string] $ComputerName)
+	Param([object]$Nic, [object]$ThisNic, [string]$RemoteComputerName)
 	
-	#V2.23 change how $powerMgmt is retrieved
-	If(validObject $ThisNic PowerManagementSupported)
-	{
-		$powerMgmt = $ThisNic.PowerManagementSupported
-	}
-	
-	If($powerMgmt)
-	{
-		$powerMgmt = Get-WmiObject -ComputerName MSPower_DeviceEnable -Namespace root\wmi | Where-Object {$_.InstanceName -match [regex]::Escape($ThisNic.PNPDeviceID)}
+	$powerMgmt = Get-WmiObject -computername $RemoteComputerName MSPower_DeviceEnable -Namespace root\wmi | Where-Object{$_.InstanceName -match [regex]::Escape($ThisNic.PNPDeviceID)}
 
-		If($? -and $Null -ne $powerMgmt)
+	If($? -and $Null -ne $powerMgmt)
+	{
+		If($powerMgmt.Enable -eq $True)
 		{
-			If($powerMgmt.Enable -eq $True)
-			{
-				$PowerSaving = "Enabled"
-			}
-			Else
-			{
-				$PowerSaving = "Disabled"
-			}
+			$PowerSaving = "Enabled"
 		}
 		Else
 		{
-			$PowerSaving = "N/A"
+			$PowerSaving = "Disabled"
 		}
 	}
 	Else
 	{
-		$PowerSaving = "Not Supported"
+        $PowerSaving = "N/A"
 	}
 	
 	$xAvailability = ""
-	Switch ($processor.availability)
+	Switch ($ThisNic.availability)
 	{
-		1	{$xAvailability = "Other"; Break}
-		2	{$xAvailability = "Unknown"; Break}
-		3	{$xAvailability = "Running or Full Power"; Break}
-		4	{$xAvailability = "Warning"; Break}
-		5	{$xAvailability = "In Test"; Break}
-		6	{$xAvailability = "Not Applicable"; Break}
-		7	{$xAvailability = "Power Off"; Break}
-		8	{$xAvailability = "Off Line"; Break}
-		9	{$xAvailability = "Off Duty"; Break}
-		10	{$xAvailability = "Degraded"; Break}
-		11	{$xAvailability = "Not Installed"; Break}
-		12	{$xAvailability = "Install Error"; Break}
-		13	{$xAvailability = "Power Save - Unknown"; Break}
-		14	{$xAvailability = "Power Save - Low Power Mode"; Break}
-		15	{$xAvailability = "Power Save - Standby"; Break}
-		16	{$xAvailability = "Power Cycle"; Break}
-		17	{$xAvailability = "Power Save - Warning"; Break}
+		1		{$xAvailability = "Other"; Break}
+		2		{$xAvailability = "Unknown"; Break}
+		3		{$xAvailability = "Running or Full Power"; Break}
+		4		{$xAvailability = "Warning"; Break}
+		5		{$xAvailability = "In Test"; Break}
+		6		{$xAvailability = "Not Applicable"; Break}
+		7		{$xAvailability = "Power Off"; Break}
+		8		{$xAvailability = "Off Line"; Break}
+		9		{$xAvailability = "Off Duty"; Break}
+		10		{$xAvailability = "Degraded"; Break}
+		11		{$xAvailability = "Not Installed"; Break}
+		12		{$xAvailability = "Install Error"; Break}
+		13		{$xAvailability = "Power Save - Unknown"; Break}
+		14		{$xAvailability = "Power Save - Low Power Mode"; Break}
+		15		{$xAvailability = "Power Save - Standby"; Break}
+		16		{$xAvailability = "Power Cycle"; Break}
+		17		{$xAvailability = "Power Save - Warning"; Break}
 		Default	{$xAvailability = "Unknown"; Break}
+	}
+
+	#attempt to get Receive Side Scaling setting
+	$RSSEnabled = "N/A"
+	Try
+	{
+		#https://ios.developreference.com/article/10085450/How+do+I+enable+VRSS+(Virtual+Receive+Side+Scaling)+for+a+Windows+VM+without+relying+on+Enable-NetAdapterRSS%3F
+		$RSSEnabled = (Get-WmiObject -ComputerName $RemoteComputerName MSFT_NetAdapterRssSettingData -Namespace "root\StandardCimV2" -ea 0).Enabled
+
+		If($RSSEnabled)
+		{
+			$RSSEnabled = "Enabled"
+		}
+		ELse
+		{
+			$RSSEnabled = "Disabled"
+		}
+	}
+	
+	Catch
+	{
+		$RSSEnabled = "Not available on $Script:RunningOS"
 	}
 
 	$xIPAddress = @()
@@ -2656,6 +2851,7 @@ Function OutputNicItem
 		}
 		$NicInformation.Add(@{ Data = "Availability"; Value = $xAvailability; }) > $Null
 		$NicInformation.Add(@{ Data = "Allow the computer to turn off this device to save power"; Value = $PowerSaving; }) > $Null
+		$NicInformation.Add(@{ Data = "Receive Side Scaling"; Value = $RSSEnabled; }) > $Null
 		$NicInformation.Add(@{ Data = "Physical Address"; Value = $Nic.macaddress; }) > $Null
 		If($xIPAddress.Count -gt 1)
 		{
@@ -2767,6 +2963,7 @@ Function OutputNicItem
 		Line 2 "Availability`t`t: " $xAvailability
 		Line 2 "Allow computer to turn "
 		Line 2 "off device to save power: " $PowerSaving
+		Line 2 "Receive Side Scaling`t: " $RSSEnabled
 		Line 2 "Physical Address`t: " $nic.macaddress
 		Line 2 "IP Address`t`t: " $xIPAddress[0]
 		$cnt = -1
@@ -2867,6 +3064,7 @@ Function OutputNicItem
 		}
 		$rowdata += @(,('Availability',($htmlsilver -bor $htmlbold),$xAvailability,$htmlwhite))
 		$rowdata += @(,('Allow the computer to turn off this device to save power',($htmlsilver -bor $htmlbold),$PowerSaving,$htmlwhite))
+		$rowdata += @(,('Receive Side Scaling',($htmlsilver -bor $htmlbold),$RSSEnabled,$htmlwhite))
 		$rowdata += @(,('Physical Address',($htmlsilver -bor $htmlbold),$Nic.macaddress,$htmlwhite))
 		$rowdata += @(,('IP Address',($htmlsilver -bor $htmlbold),$xIPAddress[0],$htmlwhite))
 		$cnt = -1
@@ -3442,7 +3640,15 @@ Function SetupWord
 	{
 		Write-Warning "The Word object could not be created.  You may need to repair your Word installation."
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`n`n`t`tThe Word object could not be created.  You may need to repair your Word installation.`n`n`t`tScript cannot continue.`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		The Word object could not be created. You may need to repair your Word installation.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
 		Exit
 	}
 
@@ -3459,7 +3665,15 @@ Function SetupWord
 	If(!($Script:WordLanguageValue -gt -1))
 	{
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`n`n`t`tUnable to determine the Word language value.`n`n`t`tScript cannot continue.`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		Unable to determine the Word language value.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
 		AbortScript
 	}
 	Write-Verbose "$(Get-Date): Word language value is $($Script:WordLanguageValue)"
@@ -3484,13 +3698,45 @@ Function SetupWord
 	ElseIf($Script:WordVersion -eq $wdWord2007)
 	{
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`n`n`t`tMicrosoft Word 2007 is no longer supported.`n`n`t`tScript will end.`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		Microsoft Word 2007 is no longer supported.
+		`n`n
+		`t`t
+		Script will end.
+		`n`n
+		"
 		AbortScript
+	}
+	ElseIf($Script:WordVersion -eq 0)
+	{
+		Write-Error "
+		`n`n
+		`t`t
+		The Word Version is 0. You should run a full online repair of your Office installation.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
+		Exit
 	}
 	Else
 	{
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`n`n`t`tYou are running an untested or unsupported version of Microsoft Word.`n`n`t`tScript will end.`n`n`t`tPlease send info on your version of Word to webster@carlwebster.com`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		You are running an untested or unsupported version of Microsoft Word.
+		`n`n
+		`t`t
+		Script will end.
+		`n`n
+		`t`t
+		Please send info on your version of Word to webster@carlwebster.com
+		`n`n
+		"
 		AbortScript
 	}
 
@@ -3632,7 +3878,15 @@ Function SetupWord
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Verbose "$(Get-Date): Word language value $($Script:WordLanguageValue)"
 		Write-Verbose "$(Get-Date): Culture code $($Script:WordCultureCode)"
-		Write-Error "`n`n`t`tFor $($Script:WordProduct), $($CoverPage) is not a valid Cover Page option.`n`n`t`tScript cannot continue.`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		For $($Script:WordProduct), $($CoverPage) is not a valid Cover Page option.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
 		AbortScript
 	}
 
@@ -3695,7 +3949,15 @@ Function SetupWord
 	{
 		Write-Verbose "$(Get-Date): "
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`n`n`t`tAn empty Word document could not be created.`n`n`t`tScript cannot continue.`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		An empty Word document could not be created.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
 		AbortScript
 	}
 
@@ -3704,7 +3966,15 @@ Function SetupWord
 	{
 		Write-Verbose "$(Get-Date): "
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`n`n`t`tAn unknown error happened selecting the entire Word document for default formatting options.`n`n`t`tScript cannot continue.`n`n"
+		Write-Error "
+		`n`n
+		`t`t
+		An unknown error happened selecting the entire Word document for default formatting options.
+		`n`n
+		`t`t
+		Script cannot continue.
+		`n`n
+		"
 		AbortScript
 	}
 
@@ -3878,21 +4148,35 @@ Function Get-RegistryValue($path, $name)
 #region Word, text and HTML line output functions
 Function line
 #function created by Michael B. Smith, Exchange MVP
-#@essentialexchange on Twitter
-#http://TheEssentialExchange.com
+#@essentialexch on Twitter
+#https://essential.exchange/blog
 #for creating the formatted text report
 #created March 2011
 #updated March 2014
+# updated March 2019 to use StringBuilder (about 100 times more efficient than simple strings)
 {
-	Param( [int]$tabs = 0, [string]$name = '', [string]$value = '', [string]$newline = "`r`n", [switch]$nonewline )
-	While( $tabs -gt 0 ) { $Script:Output += "`t"; $tabs--; }
+	Param
+	(
+		[Int]    $tabs = 0, 
+		[String] $name = '', 
+		[String] $value = '', 
+		[String] $newline = [System.Environment]::NewLine, 
+		[Switch] $nonewline
+	)
+
+	while( $tabs -gt 0 )
+	{
+		$null = $global:Output.Append( "`t" )
+		$tabs--
+	}
+
 	If( $nonewline )
 	{
-		$Script:Output += $name + $value
+		$null = $global:Output.Append( $name + $value )
 	}
 	Else
 	{
-		$Script:Output += $name + $value + $newline
+		$null = $global:Output.AppendLine( $name + $value )
 	}
 }
 	
@@ -4556,11 +4840,11 @@ Function SetupHTML
 	Write-Verbose "$(Get-Date): Setting up HTML"
 	If(!$AddDateTime)
 	{
-		[string]$Script:FileName1 = "$($pwdpath)\$($OutputFileName).html"
+		[string]$Script:FileName1 = "$($Script:pwdpath)\$($OutputFileName).html"
 	}
 	ElseIf($AddDateTime)
 	{
-		[string]$Script:FileName1 = "$($pwdpath)\$($OutputFileName)_$(Get-Date -f yyyy-MM-dd_HHmm).html"
+		[string]$Script:FileName1 = "$($Script:pwdpath)\$($OutputFileName)_$(Get-Date -f yyyy-MM-dd_HHmm).html"
 	}
 
 	$htmlhead = "<html><head><meta http-equiv='Content-Language' content='da'><title>" + $Script:Title + "</title></head><body>"
@@ -5275,7 +5559,7 @@ Function SaveandCloseTextDocument
 		$Script:FileName1 += "_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
 	}
 
-	Write-Output $Script:Output | Out-File $Script:Filename1 4>$Null
+	Write-Output $global:Output.ToString() | Out-File $Script:Filename1 4>$Null
 }
 
 Function SaveandCloseHTMLDocument
@@ -5287,28 +5571,13 @@ Function SetFileName1andFileName2
 {
 	Param([string]$OutputFileName)
 	
-	If($Folder -eq "")
-	{
-		$pwdpath = $pwd.Path
-	}
-	Else
-	{
-		$pwdpath = $Folder
-	}
-
-	If($pwdpath.EndsWith("\"))
-	{
-		#remove the trailing \
-		$pwdpath = $pwdpath.SubString(0, ($pwdpath.Length - 1))
-	}
-
 	#set $Script:Filename1 and $Script:Filename2 with no file extension
 	If($AddDateTime)
 	{
-		[string]$Script:FileName1 = "$($pwdpath)\$($OutputFileName)"
+		[string]$Script:FileName1 = "$($Script:pwdpath)\$($OutputFileName)"
 		If($PDF)
 		{
-			[string]$Script:FileName2 = "$($pwdpath)\$($OutputFileName)"
+			[string]$Script:FileName2 = "$($Script:pwdpath)\$($OutputFileName)"
 		}
 	}
 
@@ -5323,10 +5592,10 @@ Function SetFileName1andFileName2
 
 		If(!$AddDateTime)
 		{
-			[string]$Script:FileName1 = "$($pwdpath)\$($OutputFileName).docx"
+			[string]$Script:FileName1 = "$($Script:pwdpath)\$($OutputFileName).docx"
 			If($PDF)
 			{
-				[string]$Script:FileName2 = "$($pwdpath)\$($OutputFileName).pdf"
+				[string]$Script:FileName2 = "$($Script:pwdpath)\$($OutputFileName).pdf"
 			}
 		}
 
@@ -5336,7 +5605,7 @@ Function SetFileName1andFileName2
 	{
 		If(!$AddDateTime)
 		{
-			[string]$Script:FileName1 = "$($pwdpath)\$($OutputFileName).txt"
+			[string]$Script:FileName1 = "$($Script:pwdpath)\$($OutputFileName).txt"
 		}
 		ShowScriptOptions
 	}
@@ -5674,15 +5943,16 @@ Function Get-IPAddress
 #region email function
 Function SendEmail
 {
-	Param([string]$Attachments)
+	Param([array]$Attachments)
 	Write-Verbose "$(Get-Date): Prepare to email"
-	
+
 	$emailAttachment = $Attachments
 	$emailSubject = $Script:Title
 	$emailBody = @"
 Hello, <br />
 <br />
 $Script:Title is attached.
+
 "@ 
 
 	If($Dev)
@@ -5691,66 +5961,105 @@ $Script:Title is attached.
 	}
 
 	$error.Clear()
-
-	If($UseSSL)
+	
+	If($From -Like "anonymous@*")
 	{
-		Write-Verbose "$(Get-Date): Trying to send email using current user's credentials with SSL"
-		Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
-		-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
-		-UseSSL *>$Null
-	}
-	Else
-	{
-		Write-Verbose  "$(Get-Date): Trying to send email using current user's credentials without SSL"
-		Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
-		-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To *>$Null
-	}
-
-	$e = $error[0]
-
-	If($e.Exception.ToString().Contains("5.7.57"))
-	{
-		#The server response was: 5.7.57 SMTP; Client was not authenticated to send anonymous mail during MAIL FROM
-		Write-Verbose "$(Get-Date): Current user's credentials failed. Ask for usable credentials."
-
-		If($Dev)
-		{
-			Out-File -FilePath $Script:DevErrorFile -InputObject $error -Append 4>$Null
-		}
-
-		$error.Clear()
-
-		$emailCredentials = Get-Credential -Message "Enter the email account and password to send email"
+		#https://serverfault.com/questions/543052/sending-unauthenticated-mail-through-ms-exchange-with-powershell-windows-server
+		$anonUsername = "anonymous"
+		$anonPassword = ConvertTo-SecureString -String "anonymous" -AsPlainText -Force
+		$anonCredentials = New-Object System.Management.Automation.PSCredential($anonUsername,$anonPassword)
 
 		If($UseSSL)
 		{
 			Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
 			-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
-			-UseSSL -credential $emailCredentials *>$Null 
+			-UseSSL -credential $anonCredentials *>$Null 
 		}
 		Else
 		{
 			Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
 			-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
-			-credential $emailCredentials *>$Null 
+			-credential $anonCredentials *>$Null 
 		}
-
-		$e = $error[0]
-
-		If($? -and $Null -eq $e)
+		
+		If($?)
 		{
-			Write-Verbose "$(Get-Date): Email successfully sent using new credentials"
+			Write-Verbose "$(Get-Date): Email successfully sent using anonymous credentials"
 		}
-		Else
+		ElseIf(!$?)
 		{
+			$e = $error[0]
+
 			Write-Verbose "$(Get-Date): Email was not sent:"
 			Write-Warning "$(Get-Date): Exception: $e.Exception" 
 		}
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): Email was not sent:"
-		Write-Warning "$(Get-Date): Exception: $e.Exception" 
+		If($UseSSL)
+		{
+			Write-Verbose "$(Get-Date): Trying to send email using current user's credentials with SSL"
+			Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
+			-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
+			-UseSSL *>$Null
+		}
+		Else
+		{
+			Write-Verbose  "$(Get-Date): Trying to send email using current user's credentials without SSL"
+			Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
+			-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To *>$Null
+		}
+
+		If(!$?)
+		{
+			$e = $error[0]
+			
+			#error 5.7.57 is O365 and error 5.7.0 is gmail
+			If($null -ne $e.Exception -and $e.Exception.ToString().Contains("5.7"))
+			{
+				#The server response was: 5.7.xx SMTP; Client was not authenticated to send anonymous mail during MAIL FROM
+				Write-Verbose "$(Get-Date): Current user's credentials failed. Ask for usable credentials."
+
+				If($Dev)
+				{
+					Out-File -FilePath $Script:DevErrorFile -InputObject $error -Append 4>$Null
+				}
+
+				$error.Clear()
+
+				$emailCredentials = Get-Credential -UserName $From -Message "Enter the password to send email"
+
+				If($UseSSL)
+				{
+					Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
+					-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
+					-UseSSL -credential $emailCredentials *>$Null 
+				}
+				Else
+				{
+					Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
+					-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
+					-credential $emailCredentials *>$Null 
+				}
+
+				If($?)
+				{
+					Write-Verbose "$(Get-Date): Email successfully sent using new credentials"
+				}
+				ElseIf(!$?)
+				{
+					$e = $error[0]
+
+					Write-Verbose "$(Get-Date): Email was not sent:"
+					Write-Warning "$(Get-Date): Exception: $e.Exception" 
+				}
+			}
+			Else
+			{
+				Write-Verbose "$(Get-Date): Email was not sent:"
+				Write-Warning "$(Get-Date): Exception: $e.Exception" 
+			}
+		}
 	}
 }
 #endregion
@@ -30880,11 +31189,24 @@ Function ProcessScriptSetup
 	{
 		#We're missing Citrix Snapins that we need
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "`nMissing Citrix PowerShell Snap-ins Detected, check the console above for more information. 
-		`nAre you sure you are running this script against a XenDesktop 7.x Controller? 
-		`n`nIf you are running the script remotely, did you install Studio or the PowerShell snapins on $($env:computername)?
-		`n`nPlease see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf).
-		`n`nScript will now close."
+		Write-Error "
+		`n`n
+		`t`t
+		Missing Citrix PowerShell Snap-ins Detected, check the console above for more information. 
+		`n`n
+		`t`t
+		Are you sure you are running this script against a XenDesktop 7.x Controller? 
+		`n`n
+		`t`t
+		If you are running the script remotely, did you install Studio or the PowerShell snapins on $($env:computername)?
+		`n`n
+		`t`t
+		Please see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf).
+		`n`n
+		`t`t
+		Script will now close.
+		`n`n
+		"
 		Exit
 	}
 
@@ -30904,13 +31226,18 @@ Function ProcessScriptSetup
 	}
 	ElseIf(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $True)
 	{
-		Write-Error "The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded 
-		`nPlease see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf). 
-		`n
-		`n
-		`t`tBecause the Policies parameter was used the script will now close.
-		`n
-		`n"
+		Write-Error "
+		`n`n
+		`t`t
+		The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded 
+		`n`n
+		`t`t
+		Please see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf). 
+		`n`n
+		`t`t
+		Because the Policies parameter was used the script will now close.
+		`n`n
+		"
 		Write-Verbose "$(Get-Date): "
 		Exit
 	}
@@ -30954,7 +31281,12 @@ Function ProcessScriptSetup
 	{
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Warning "XenDesktop Site1 information could not be retrieved.  Script cannot continue"
-		Write-Error "cmdlet failed $($error[ 0 ].ToString())"
+		Write-Error "
+		`n`n
+		`t`t
+		cmdlet failed $($error[ 0 ].ToString())
+		`n`n
+		"
 		AbortScript
 	}
 
@@ -30964,7 +31296,12 @@ Function ProcessScriptSetup
 	{
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Warning "XenDesktop Site2 information could not be retrieved.  Script cannot continue"
-		Write-Error "cmdlet failed $($error[ 0 ].ToString())"
+		Write-Error "
+		`n`n
+		`t`t
+		cmdlet failed $($error[ 0 ].ToString())
+		`n`n
+		"
 		AbortScript
 	}
 	
@@ -31042,7 +31379,15 @@ Function ProcessScriptSetup
 		{
 			#We're missing Citrix Snapins that we need
 			$ErrorActionPreference = $SaveEAPreference
-			Write-Error "Missing Citrix PowerShell Analytics Snap-in Detected, check the console above for more information. `nCEIP will not be shown."
+			Write-Error "
+			`n`n
+			`t`t
+			Missing Citrix PowerShell Analytics Snap-in Detected, check the console above for more information.
+			`n`n
+			`t`t
+			CEIP will not be shown.
+			`n`n
+			"
 		}
 		Else
 		{
@@ -31120,7 +31465,7 @@ Function ProcessScriptEnd
 
 	If($ScriptInfo)
 	{
-		$SIFile = "$($pwd.Path)\XAXD7V1InventoryScriptInfo_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
+		$SIFile = "$Script:pwdpath\XAXD7V1InventoryScriptInfo_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
 		Out-File -FilePath $SIFile -InputObject "" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "AddDateTime     : $($AddDateTime)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "AdminAddress    : $($AdminAddress)" 4>$Null
