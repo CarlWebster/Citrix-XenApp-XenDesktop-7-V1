@@ -3,9 +3,10 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
-#Version 1.45 6-May-2020
+#Version 1.45 8-May-2020
 #	Add checking for a Word version of 0, which indicates the Office installation needs repairing
 #	Add Receive Side Scaling setting to Function OutputNICItem
+#	Change color variables $wdColorGray15 and $wdColorGray05 from [long] to [int]
 #	Change location of the -Dev, -Log, and -ScriptInfo output files from the script folder to the -Folder location (Thanks to Guy Leech for the "suggestion")
 #	Change Text output to use [System.Text.StringBuilder]
 #		Updated Functions Line and SaveAndCloseTextDocument
@@ -13,6 +14,7 @@
 #	Remove the SMTP parameterset and manually verify the parameters
 #	Reorder parameters
 #	Update Function SendEmail to handle anonymous unauthenticated email
+#	Update Function SetWordCellFormat to change parameter $BackgroundColor to [int]
 #	Update Functions GetComputerWMIInfo and OutputNicInfo to fix two bugs in NIC Power Management settings
 #	Update Help Text
 
