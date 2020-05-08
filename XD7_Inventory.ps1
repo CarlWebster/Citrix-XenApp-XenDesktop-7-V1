@@ -955,9 +955,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inv5ntory.ps1
-	VERSION: 1.44
+	VERSION: 1.45
 	AUTHOR: Carl Webster
-	LASTEDIT: May 6, 2020
+	LASTEDIT: May 8, 2020
 #>
 
 #endregion
@@ -1135,9 +1135,10 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
-#Version 1.45 6-May-2020
+#Version 1.45 8-May-2020
 #	Add checking for a Word version of 0, which indicates the Office installation needs repairing
 #	Add Receive Side Scaling setting to Function OutputNICItem
+#	Change color variables $wdColorGray15 and $wdColorGray05 from [long] to [int]
 #	Change location of the -Dev, -Log, and -ScriptInfo output files from the script folder to the -Folder location (Thanks to Guy Leech for the "suggestion")
 #	Change Text output to use [System.Text.StringBuilder]
 #		Updated Functions Line and SaveAndCloseTextDocument
@@ -1145,6 +1146,7 @@ Param(
 #	Remove the SMTP parameterset and manually verify the parameters
 #	Reorder parameters
 #	Update Function SendEmail to handle anonymous unauthenticated email
+#	Update Function SetWordCellFormat to change parameter $BackgroundColor to [int]
 #	Update Functions GetComputerWMIInfo and OutputNicInfo to fix two bugs in NIC Power Management settings
 #	Update Help Text
 #
@@ -1856,8 +1858,8 @@ If($MSWord -or $PDF)
 	#http://groovy.codehaus.org/modules/scriptom/1.6.0/scriptom-office-2K3-tlb/apidocs/
 	#http://msdn.microsoft.com/en-us/library/office/aa211923(v=office.11).aspx
 	[int]$wdAlignPageNumberRight = 2
-	[long]$wdColorGray15 = 14277081
-	[long]$wdColorGray05 = 15987699 
+	[int]$wdColorGray15 = 14277081
+	[int]$wdColorGray05 = 15987699 
 	[int]$wdMove = 0
 	[int]$wdSeekMainDocument = 0
 	[int]$wdSeekPrimaryFooter = 4
@@ -5180,7 +5182,7 @@ Function SetWordCellFormat
 		# Font size
 		[Parameter()] [ValidateNotNullOrEmpty()] [int] $Size = 0,
 		# Cell background color
-		[Parameter()] [AllowNull()] $BackgroundColor = $Null,
+		[Parameter()] [AllowNull()] [int]$BackgroundColor = $Null,
 		# Force solid background color
 		[Switch] $Solid,
 		[Switch] $Bold,
