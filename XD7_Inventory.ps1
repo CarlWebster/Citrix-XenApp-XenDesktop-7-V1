@@ -8,11 +8,11 @@
 	Creates an inventory of a Citrix XenDesktop 7.0 through 7.7 Site.
 .DESCRIPTION
 	Creates an inventory of a Citrix XenDesktop 7.0 through 7.7 Site using Microsoft 
-	PowerShell, Word, plain text or HTML.
+	PowerShell, Word, plain text, or HTML.
 	
 	This script requires at least PowerShell version 3 but runs best in version 5.
 
-	Word is NOT needed to run the script. This script will output in Text and HTML.
+	Word is NOT needed to run the script. This script outputs in Text and HTML.
 	
 	You do NOT have to run this script on a Controller. This script was developed and run 
 	from a Windows 8.1 VM.
@@ -20,7 +20,15 @@
 	You can run this script remotely using the -AdminAddress (AA) parameter.
 	
 	This script supports versions of XenApp/XenDesktop from 7.0 to 7.7. 
-	Version 7.8+ is a separate script.
+
+	If you are running XA/XD 7.8 through CVAD 2006, please use:
+	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+
+	If you are running CVAD 2006 and later, please use:
+	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+
+	If you are running Citrix Cloud, please use:
+	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
 	
 	By default, only gives summary information for:
 		Administrators
@@ -53,7 +61,7 @@
 
 	Creates an output file named after the XenDesktop 7.x Site.
 	
-	Word and PDF Document includes a Cover Page, Table of Contents and Footer.
+	Word and PDF Document includes a Cover Page, Table of Contents, and Footer.
 	Includes support for the following language versions of Microsoft Word:
 		Catalan
 		Chinese
@@ -68,9 +76,218 @@
 		Spanish
 		Swedish
 		
+.PARAMETER AdminAddress
+	Specifies the address of a XenDesktop controller the PowerShell snapins connects. 
+	This can be provided as a host name or an IP address. 
+	This parameter defaults to LocalHost.
+	This parameter has an alias of AA.
 .PARAMETER HTML
 	Creates an HTML file with an .html extension.
 	This parameter is disabled by default.
+.PARAMETER Text
+	Creates a formatted text file with a .txt extension.
+	This parameter is disabled by default.
+.PARAMETER Administrators
+	Give detailed information for Administrator Scopes and Roles.
+	This parameter is disabled by default.
+	This parameter has an alias of Admins.
+.PARAMETER Applications
+	Gives detailed information for all applications.
+	This parameter is disabled by default.
+	This parameter has an alias of Apps.
+.PARAMETER DeliveryGroups
+	Gives detailed information for all desktops in all Desktop (Delivery) Groups.
+	
+	Using the DeliveryGroups parameter can cause the report to take a very long 
+	time to complete and can generate an extremely long report.
+	
+	Using both the MachineCatalogs and DeliveryGroups parameters can cause the 
+	report to take an extremely long time to complete and generate an exceptionally 
+	long report.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of DG.
+.PARAMETER DeliveryGroupsUtilization
+	Gives a chart with the delivery group utilization for the last 7 days 
+	depending on the information in the database.
+	
+	This option is only available when the report is generated in Word and requires 
+	Micosoft Excel to be locally installed.
+	
+	Using the DeliveryGroupsUtilization parameter causes the report to take a longer 
+	time to complete and generates a longer report.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of DGU.
+.PARAMETER Hardware
+	Use WMI to gather hardware information on: Computer System, Disks, Processor and 
+	Network Interface Cards
+
+	This parameter may require the script be run from an elevated PowerShell session 
+	using an account with permission to retrieve hardware information (i.e. Domain Admin 
+	or Local Administrator).
+
+	Selecting this parameter will add to both the time it takes to run the script and 
+	size of the report.
+
+	This parameter is disabled by default.
+	This parameter has an alias of HW.
+.PARAMETER Hosting
+	Give detailed information for Hosts, Host Connections and Resources.
+	This parameter is disabled by default.
+	This parameter has an alias of Host.
+.PARAMETER Logging
+	Give the Configuration Logging report with, by default, details for the previous 
+	seven days.
+	This parameter is disabled by default.
+.PARAMETER StartDate
+	Start date for the Configuration Logging report.
+	
+	Format for date only is MM/DD/YYYY.
+	
+	Format to include a specific time range is "MM/DD/YYYY HH:MM:SS" in 24 hour format.
+	The double quotes are needed.
+	
+	The default is today's date minus seven days.
+	This parameter has an alias of SD.
+.PARAMETER EndDate
+	End date for the Configuration Logging report.
+	
+	Format for date only is MM/DD/YYYY.
+	
+	Format to include a specific time range is "MM/DD/YYYY HH:MM:SS" in 24 hour format.
+	The double quotes are needed.
+	
+	The default is today's date.
+	This parameter has an alias of ED.
+.PARAMETER MachineCatalogs
+	Gives detailed information for all machines in all Machine Catalogs.
+	
+	Using the MachineCatalogs parameter can cause the report to take a very long 
+	time to complete and can generate an extremely long report.
+	
+	Using both the MachineCatalogs and DeliveryGroups parameters can cause the 
+	report to take an extremely long time to complete and generate an exceptionally 
+	long report.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of MC.
+.PARAMETER NoADPolicies
+	Excludes all Citrix AD based policy information from the output document.
+	Includes only Site policies created in Studio.
+	
+	This switch is useful in large AD environments, where there may be thousands
+	of policies, to keep SYSVOL from being searched.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of NoAD.
+.PARAMETER NoPolicies
+	Excludes all Site and Citrix AD based policy information from the output document.
+	
+	Using the NoPolicies parameter will cause the Policies parameter to be set to False.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of NP.
+.PARAMETER NoSessions
+	Excludes Machine Catalog, Application and Hosting session data from the report.
+	
+	Using the MaxDetails parameter does not change this setting.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of NS.
+.PARAMETER Policies
+	Give detailed information for both Site and Citrix AD based Policies.
+	
+	Note: The Citrix Group Policy PowerShell module will not load from an elevated 
+	PowerShell session. 
+	If the module is manually imported, the module is not detected from an elevated 
+	PowerShell session.
+
+	Using the Policies parameter can cause the report to take a very long time 
+	to complete and can generate an extremely long report.
+	
+	There are three related parameters: Policies, NoPolicies and NoADPolicies.
+	
+	Policies and NoPolicies are mutually exclusive and priority is given to NoPolicies.
+	
+	Using both Policies and NoADPolicies results in only policies created in Studio
+	being in the output document.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of Pol.
+.PARAMETER StoreFront
+	Give detailed information for StoreFront.
+	This parameter is disabled by default.
+	This parameter has an alias of SF.
+.PARAMETER MaxDetails
+	Adds maximum detail to the report.
+	
+	This is the same as using the following parameters:
+		Administrators
+		Applications
+		DeliveryGroups
+		HardWare
+		Hosting
+		Logging
+		MachineCatalogs
+		Policies
+		StoreFront
+
+	Does not change the value of NoADPolicies.
+	Does not change the value of NoSessions.
+	
+	WARNING: Using this parameter can create an extremely large report and 
+	can take a very long time to run.
+
+	This parameter has an alias of MAX.
+.PARAMETER Section
+	Processes a specific section of the report.
+	Valid options are:
+		Admins (Administrators)
+		Apps (Applications)
+		AppV
+		Catalogs (Machine Catalogs)
+		Config (Configuration)
+		Controllers
+		Groups (Delivery Groups)
+		Hosting
+		Licensing
+		Logging
+		Policies
+		StoreFront
+		Zones
+		All
+	This parameter defaults to All sections.
+	
+	Notes:
+	Using Logging will force the Logging switch to True.
+	Using Policies will force the Policies switch to True.
+	If Policies is selected and the NoPolicies switch is used, the script will terminate.
+.PARAMETER AddDateTime
+	Adds a date time stamp to the end of the file name.
+	Time stamp is in the format of yyyy-MM-dd_HHmm.
+	June 1, 2021 at 6PM is 2021-06-01_1800.
+	Output filename will be ReportName_2021-06-01_1800.docx (or .pdf).
+	This parameter is disabled by default.
+	This parameter has an alias of ADT.
+.PARAMETER Dev
+	Clears errors at the beginning of the script.
+	Outputs all errors to a text file at the end of the script.
+	
+	This is used when the script developer requests more troubleshooting data.
+	Text file is placed in the same folder from where the script is run.
+	
+	This parameter is disabled by default.
+.PARAMETER Folder
+	Specifies the optional output folder to save the output report. 
+.PARAMETER Log
+	Generates a log file for troubleshooting.
+.PARAMETER ScriptInfo
+	Outputs information about the script to a text file.
+	Text file is placed in the same folder from where the script is run.
+	
+	This parameter is disabled by default.
+	This parameter has an alias of SI.
 .PARAMETER MSWord
 	SaveAs DOCX file
 	This parameter is set True if no other output format is selected.
@@ -80,22 +297,6 @@
 	The PDF file is roughly 5X to 10X larger than the DOCX file.
 	This parameter requires Microsoft Word to be installed.
 	This parameter uses the Word SaveAs PDF capability.
-.PARAMETER Text
-	Creates a formatted text file with a .txt extension.
-	This parameter is disabled by default.
-.PARAMETER AddDateTime
-	Adds a date time stamp to the end of the file name.
-	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2020 at 6PM is 2020-06-01_1800.
-	Output filename will be ReportName_2020-06-01_1800.docx (or .pdf).
-	This parameter is disabled by default.
-	This parameter has an alias of ADT.
-.PARAMETER AdminAddress
-	Specifies the address of a XenDesktop controller the PowerShell snapins will connect 
-	to. 
-	This can be provided as a host name or an IP address. 
-	This parameter defaults to LocalHost.
-	This parameter has an alias of AA.
 .PARAMETER CompanyAddress
 	Company Address to use for the Cover Page, if the Cover Page has the Address field.
 	
@@ -193,200 +394,6 @@
 	The default value is Sideline.
 	This parameter has an alias of CP.
 	This parameter is only valid with the MSWORD and PDF output parameters.
-.PARAMETER Administrators
-	Give detailed information for Administrator Scopes and Roles.
-	This parameter is disabled by default.
-	This parameter has an alias of Admins.
-.PARAMETER Applications
-	Gives detailed information for all applications.
-	This parameter is disabled by default.
-	This parameter has an alias of Apps.
-.PARAMETER DeliveryGroups
-	Gives detailed information for all desktops in all Desktop (Delivery) Groups.
-	
-	Using the DeliveryGroups parameter can cause the report to take a very long 
-	time to complete and can generate an extremely long report.
-	
-	Using both the MachineCatalogs and DeliveryGroups parameters can cause the 
-	report to take an extremely long time to complete and generate an exceptionally 
-	long report.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of DG.
-.PARAMETER DeliveryGroupsUtilization
-	Gives a chart with the delivery group utilization for the last 7 days 
-	depending on the information in the database.
-	
-	This option is only available when the report is generated in Word and requires 
-	Micosoft Excel to be locally installed.
-	
-	Using the DeliveryGroupsUtilization parameter causes the report to take a longer 
-	time to complete and generates a longer report.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of DGU.
-.PARAMETER Dev
-	Clears errors at the beginning of the script.
-	Outputs all errors to a text file at the end of the script.
-	
-	This is used when the script developer requests more troubleshooting data.
-	Text file is placed in the same folder from where the script is run.
-	
-	This parameter is disabled by default.
-.PARAMETER EndDate
-	End date for the Configuration Logging report.
-	
-	Format for date only is MM/DD/YYYY.
-	
-	Format to include a specific time range is "MM/DD/YYYY HH:MM:SS" in 24 hour format.
-	The double quotes are needed.
-	
-	The default is today's date.
-	This parameter has an alias of ED.
-.PARAMETER Folder
-	Specifies the optional output folder to save the output report. 
-.PARAMETER Hardware
-	Use WMI to gather hardware information on: Computer System, Disks, Processor and 
-	Network Interface Cards
-
-	This parameter may require the script be run from an elevated PowerShell session 
-	using an account with permission to retrieve hardware information (i.e. Domain Admin 
-	or Local Administrator).
-
-	Selecting this parameter will add to both the time it takes to run the script and 
-	size of the report.
-
-	This parameter is disabled by default.
-	This parameter has an alias of HW.
-.PARAMETER Hosting
-	Give detailed information for Hosts, Host Connections and Resources.
-	This parameter is disabled by default.
-	This parameter has an alias of Host.
-.PARAMETER Log
-	Generates a log file for troubleshooting.
-.PARAMETER Logging
-	Give the Configuration Logging report with, by default, details for the previous 
-	seven days.
-	This parameter is disabled by default.
-.PARAMETER MachineCatalogs
-	Gives detailed information for all machines in all Machine Catalogs.
-	
-	Using the MachineCatalogs parameter can cause the report to take a very long 
-	time to complete and can generate an extremely long report.
-	
-	Using both the MachineCatalogs and DeliveryGroups parameters can cause the 
-	report to take an extremely long time to complete and generate an exceptionally 
-	long report.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of MC.
-.PARAMETER MaxDetails
-	Adds maximum detail to the report.
-	
-	This is the same as using the following parameters:
-		Administrators
-		Applications
-		DeliveryGroups
-		HardWare
-		Hosting
-		Logging
-		MachineCatalogs
-		Policies
-		StoreFront
-
-	Does not change the value of NoADPolicies.
-	Does not change the value of NoSessions.
-	
-	WARNING: Using this parameter can create an extremely large report and 
-	can take a very long time to run.
-
-	This parameter has an alias of MAX.
-.PARAMETER NoADPolicies
-	Excludes all Citrix AD based policy information from the output document.
-	Includes only Site policies created in Studio.
-	
-	This switch is useful in large AD environments, where there may be thousands
-	of policies, to keep SYSVOL from being searched.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of NoAD.
-.PARAMETER NoPolicies
-	Excludes all Site and Citrix AD based policy information from the output document.
-	
-	Using the NoPolicies parameter will cause the Policies parameter to be set to False.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of NP.
-.PARAMETER NoSessions
-	Excludes Machine Catalog, Application and Hosting session data from the report.
-	
-	Using the MaxDetails parameter does not change this setting.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of NS.
-.PARAMETER Policies
-	Give detailed information for both Site and Citrix AD based Policies.
-	
-	Note: The Citrix Group Policy PowerShell module will not load from an elevated 
-	PowerShell session. 
-	If the module is manually imported, the module is not detected from an elevated 
-	PowerShell session.
-
-	Using the Policies parameter can cause the report to take a very long time 
-	to complete and can generate an extremely long report.
-	
-	There are three related parameters: Policies, NoPolicies and NoADPolicies.
-	
-	Policies and NoPolicies are mutually exclusive and priority is given to NoPolicies.
-	
-	Using both Policies and NoADPolicies results in only policies created in Studio
-	being in the output document.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of Pol.
-.PARAMETER ScriptInfo
-	Outputs information about the script to a text file.
-	Text file is placed in the same folder from where the script is run.
-	
-	This parameter is disabled by default.
-	This parameter has an alias of SI.
-.PARAMETER Section
-	Processes a specific section of the report.
-	Valid options are:
-		Admins (Administrators)
-		Apps (Applications)
-		AppV
-		Catalogs (Machine Catalogs)
-		Config (Configuration)
-		Controllers
-		Groups (Delivery Groups)
-		Hosting
-		Licensing
-		Logging
-		Policies
-		StoreFront
-		Zones
-		All
-	This parameter defaults to All sections.
-	
-	Notes:
-	Using Logging will force the Logging switch to True.
-	Using Policies will force the Policies switch to True.
-	If Policies is selected and the NoPolicies switch is used, the script will terminate.
-.PARAMETER StartDate
-	Start date for the Configuration Logging report.
-	
-	Format for date only is MM/DD/YYYY.
-	
-	Format to include a specific time range is "MM/DD/YYYY HH:MM:SS" in 24 hour format.
-	The double quotes are needed.
-	
-	The default is today's date minus seven days.
-	This parameter has an alias of SD.
-.PARAMETER StoreFront
-	Give detailed information for StoreFront.
-	This parameter is disabled by default.
-	This parameter has an alias of SF.
 .PARAMETER UserName
 	User name to use for the Cover Page and Footer.
 	The default value is contained in $env:username
@@ -397,19 +404,19 @@
 .PARAMETER SmtpPort
 	Specifies the SMTP port. 
 	The default is 25.
-.PARAMETER UseSSL
-	Specifies whether to use SSL for the SmtpServer.
-	The default is False.
 .PARAMETER From
 	Specifies the username for the From email address.
 	If SmtpServer is used, this is a required parameter.
 .PARAMETER To
 	Specifies the username for the To email address.
 	If SmtpServer is used, this is a required parameter.
+.PARAMETER UseSSL
+	Specifies whether to use SSL for the SmtpServer.
+	The default is False.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1
 	
-	Will use all default values.
+	Uses all default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -422,7 +429,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -AdminAddress DDC01
 	
-	Will use all default values.
+	Uses all default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -435,7 +442,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF
 	
-	Will use all default values and save the document as a PDF file.
+	Uses all default values and saves the document as a PDF file.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -448,7 +455,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -TEXT
 
-	Will use all default values and save the document as a formatted text file.
+	Uses all default values and saves the document as a formatted text file.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -460,7 +467,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -HTML
 
-	Will use all default values and save the document as an HTML file.
+	Uses all default values and saves the document as an HTML file.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -473,7 +480,7 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MachineCatalogs
 	
 	Creates a report with full details for all machines in all Machine Catalogs.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -486,7 +493,7 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -DeliveryGroups
 	
 	Creates a report with full details for all desktops in all Desktop (Delivery) Groups.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -499,7 +506,7 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -DeliveryGroupsUtilization
 	
 	Creates a report with utilization details for all Desktop (Delivery) Groups.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -513,7 +520,7 @@
 	
 	Creates a report with full details for all machines in all Machine Catalogs and 
 	all desktops in all Delivery Groups.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -526,7 +533,7 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Applications
 	
 	Creates a report with full details for all applications.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -539,7 +546,7 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Policies
 	
 	Creates a report with full details for Policies.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -552,7 +559,7 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -NoPolicies
 	
 	Creates a report with no Policy information.
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -564,8 +571,8 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -NoADPolicies
 	
-	Creates a report with no Citrix AD based Policy information.
-	Will use all Default values.
+	Creates a report with no Citrix AD-based Policy information.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -580,7 +587,7 @@
 	Creates a report with full details on Site policies created in Studio but 
 	no Citrix AD based Policy information.
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -594,7 +601,7 @@
 	
 	Creates a report with full details on Administrator Scopes and Roles.
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -604,12 +611,12 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2020 -EndDate 01/31/2020
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2021 -EndDate 01/31/2021
 	
-	Creates a report with Configuration Logging details for the dates 01/01/2020 through 
-	01/31/2020.
+	Creates a report with Configuration Logging details for the dates 01/01/2021 through 
+	01/31/2021.
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -619,15 +626,15 @@
 	Sideline for the Cover Page format.
 	Administrator for the User Name.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2020 10:00:00" -EndDate 
-	"06/01/2020 14:00:00"
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2021 10:00:00" -EndDate 
+	"06/01/2021 14:00:00"
 	
 	Creates a report with Configuration Logging details for the time range 
-	06/01/2020 10:00:00AM through 06/01/2020 02:00:00PM.
+	06/01/2021 10:00:00AM through 06/01/2021 02:00:00PM.
 	
 	Narrowing the report down to seconds does not work. Seconds must be either 00 or 59.
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -639,8 +646,8 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hosting
 	
-	Creates a report with full details for Hosts, Host Connections and Resources.
-	Will use all Default values.
+	Creates a report with full details for Hosts, Host Connections, and Resources.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -653,8 +660,9 @@
 	PS C:\PSScript > .\XD7_Inventory.ps1 -StoreFront
 	
 	Creates a report with full details for StoreFront.
-	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	Uses all Default values.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -670,10 +678,11 @@
 		Desktops in all Delivery Groups
 		Applications
 		Policies
-		Hosts, Host Connections and Resources
+		Hosts, Host Connections, and Resources
 		StoreFront
-	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+	Uses all Default values.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -688,9 +697,10 @@
 		Desktops in all Delivery Groups
 		Applications
 		Policies
-		Hosts, Host Connections and Resources
-	Will use all Default values.
-	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl Webster" or
+		Hosts, Host Connections, and Resources
+	Uses all Default values.
+	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
+	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
 	$env:username = Administrator
 
@@ -701,7 +711,7 @@
 	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Carl Webster Consulting" 
 	-CoverPage "Mod" -UserName "Carl Webster" -AdminAddress DDC01
 
-	Will use:
+	Uses:
 		Carl Webster Consulting for the Company Name.
 		Mod for the Cover Page format.
 		Carl Webster for the User Name.
@@ -710,39 +720,36 @@
 	PS C:\PSScript .\XD7_Inventory.ps1 -CN "Carl Webster Consulting" -CP "Mod" -UN 
 	"Carl Webster"
 
-	Will use:
+	Uses:
 		Carl Webster Consulting for the Company Name (alias CN).
 		Mod for the Cover Page format (alias CP).
 		Carl Webster for the User Name (alias UN).
 		The computer running the script for the AdminAddress.
 .EXAMPLE
-	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Sherlock Holmes Consulting" `
-	-CoverPage Exposure -UserName "Dr. Watson" `
-	-CompanyAddress "221B Baker Street, London, England" `
-	-CompanyFax "+44 1753 276600" `
-	-CompanyPhone "+44 1753 276200"
+	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Sherlock Holmes Consulting" 
+	-CoverPage Exposure -UserName "Dr. Watson" -CompanyAddress "221B Baker Street, London, 
+	England" -CompanyFax "+44 1753 276600" -CompanyPhone "+44 1753 276200"
 
-	Will use:
+	Uses:
 		Sherlock Holmes Consulting for the Company Name.
 		Exposure for the Cover Page format.
 		Dr. Watson for the User Name.
 		221B Baker Street, London, England for the Company Address.
 		+44 1753 276600 for the Company Fax.
-		+44 1753 276200 for the Compnay Phone.
+		+44 1753 276200 for the Company Phone.
 .EXAMPLE
-	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Sherlock Holmes Consulting" `
-	-CoverPage Facet -UserName "Dr. Watson" `
-	-CompanyEmail SuperSleuth@SherlockHolmes.com
+	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Sherlock Holmes Consulting" 
+	-CoverPage Facet -UserName "Dr. Watson" -CompanyEmail SuperSleuth@SherlockHolmes.com
 
-	Will use:
+	Uses:
 		Sherlock Holmes Consulting for the Company Name.
 		Facet for the Cover Page format.
 		Dr. Watson for the User Name.
-		SuperSleuth@SherlockHolmes.com for the Compnay Email.
+		SuperSleuth@SherlockHolmes.com for the Company Email.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -AddDateTime
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -754,12 +761,12 @@
 
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2020 at 6PM is 2020-06-01_1800.
-	Output filename will be XD7SiteName_2020-06-01_1800.docx
+	June 1, 2021 at 6PM is 2021-06-01_1800.
+	Output filename will be XD7SiteName_2021-06-01_1800.docx
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF -AddDateTime
 	
-	Will use all Default values and save the document as a PDF file.
+	Uses all Default values and save the document as a PDF file.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -771,12 +778,12 @@
 
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2020 at 6PM is 2020-06-01_1800.
-	Output filename will be XD7SiteName_2020-06-01_1800.pdf
+	June 1, 2021 at 6PM is 2021-06-01_1800.
+	Output filename will be XD7SiteName_2021-06-01_1800.pdf
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hardware
 	
-	Will use all default values.
+	Uses all default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -788,7 +795,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Folder \\FileServer\ShareName
 	
-	Will use all default values.
+	Uses all default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -802,7 +809,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Section Policies
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -815,7 +822,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MaxDetails
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or 
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -841,7 +848,7 @@
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Dev -ScriptInfo -Log
 	
-	Will use all Default values.
+	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
 	Webster" or 
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\Company="Carl Webster"
@@ -860,50 +867,44 @@
 	Creates a text file for transcript logging named 
 	XDV1DocScriptTranscript_yyyy-MM-dd_HHmm.txt.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 
-	-SmtpServer mail.domain.tld
-	-From XDAdmin@domain.tld 
-	-To ITGroup@domain.tld	
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer mail.domain.tld -From 
+	XDAdmin@domain.tld -To ITGroup@domain.tld	
 
-	The script will use the email server mail.domain.tld, sending from XDAdmin@domain.tld, 
-	sending to ITGroup@domain.tld.
+	The script uses the email server mail.domain.tld, sending from XDAdmin@domain.tld 
+	and sending to ITGroup@domain.tld.
 
-	The script will use the default SMTP port 25 and will not use SSL.
+	The script uses the default SMTP port 25 and does not use SSL.
 
-	If the current user's credentials are not valid to send email, 
-	the user will be prompted to enter valid credentials.
+	If the current user's credentials are not valid to send an email, the script prompts 
+    the user to enter valid credentials.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 
-	-SmtpServer mailrelay.domain.tld
-	-From Anonymous@domain.tld 
-	-To ITGroup@domain.tld	
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer mailrelay.domain.tld -From 
+	Anonymous@domain.tld -To ITGroup@domain.tld	
 
 	***SENDING UNAUTHENTICATED EMAIL***
 
-	The script will use the email server mailrelay.domain.tld, sending from 
-	anonymous@domain.tld, sending to ITGroup@domain.tld.
+	The script uses the email server mailrelay.domain.tld, sending from 
+	anonymous@domain.tld and sending to ITGroup@domain.tld.
 
-	To send unauthenticated email using an email relay server requires the From email account 
-	to use the name Anonymous.
+	To send an unauthenticated email using an email relay server requires the From email 
+	account to use the name Anonymous.
 
-	The script will use the default SMTP port 25 and will not use SSL.
+	The script uses the default SMTP port 25 and does not use SSL.
 	
 	***GMAIL/G SUITE SMTP RELAY***
 	https://support.google.com/a/answer/2956491?hl=en
 	https://support.google.com/a/answer/176600?hl=en
 
-	To send email using a Gmail or g-suite account, you may have to turn ON
-	the "Less secure app access" option on your account.
+	To send an email using a Gmail or g-suite account, you may have to turn ON the "Less 
+	secure app access" option on your account.
 	***GMAIL/G SUITE SMTP RELAY***
 
-	The script will generate an anonymous secure password for the anonymous@domain.tld 
+	The script generates an anonymous, secure password for the anonymous@domain.tld 
 	account.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 
-	-SmtpServer labaddomain-com.mail.protection.outlook.com
-	-UseSSL
-	-From SomeEmailAddress@labaddomain.com 
-	-To ITGroupDL@labaddomain.com	
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer 
+	labaddomain-com.mail.protection.outlook.com -UseSSL -From 
+	SomeEmailAddress@labaddomain.com -To ITGroupDL@labaddomain.com	
 
 	***OFFICE 365 Example***
 
@@ -913,41 +914,33 @@
 	
 	***OFFICE 365 Example***
 
-	The script will use the email server labaddomain-com.mail.protection.outlook.com, 
-	sending from SomeEmailAddress@labaddomain.com, sending to ITGroupDL@labaddomain.com.
+	The script uses the email server labaddomain-com.mail.protection.outlook.com, sending 
+	from SomeEmailAddress@labaddomain.com and sending to ITGroupDL@labaddomain.com.
 
-	The script will use the default SMTP port 25 and will use SSL.
+	The script uses the default SMTP port 25 and SSL.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 
-	-SmtpServer smtp.office365.com 
-	-SmtpPort 587
-	-UseSSL 
-	-From Webster@CarlWebster.com 
-	-To ITGroup@CarlWebster.com	
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer smtp.office365.com -SmtpPort 587
+	-UseSSL -From Webster@CarlWebster.com -To ITGroup@CarlWebster.com	
 
-	The script will use the email server smtp.office365.com on port 587 using SSL, 
-	sending from webster@carlwebster.com, sending to ITGroup@carlwebster.com.
+	The script uses the email server smtp.office365.com on port 587 using SSL, sending from 
+	webster@carlwebster.com and sending to ITGroup@carlwebster.com.
 
-	If the current user's credentials are not valid to send email, 
-	the user will be prompted to enter valid credentials.
+	If the current user's credentials are not valid to send an email, the script prompts 
+    the user to enter valid credentials.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 
-	-SmtpServer smtp.gmail.com 
-	-SmtpPort 587
-	-UseSSL 
-	-From Webster@CarlWebster.com 
-	-To ITGroup@CarlWebster.com	
+	PS C:\PSScript > .\XD7_Inventory.ps1 -SmtpServer smtp.gmail.com -SmtpPort 587 -UseSSL 
+	-From Webster@CarlWebster.com -To ITGroup@CarlWebster.com	
 
 	*** NOTE ***
-	To send email using a Gmail or g-suite account, you may have to turn ON
-	the "Less secure app access" option on your account.
+	To send an email using a Gmail or g-suite account, you may have to turn ON the "Less 
+	secure app access" option on your account.
 	*** NOTE ***
 	
-	The script will use the email server smtp.gmail.com on port 587 using SSL, 
-	sending from webster@gmail.com, sending to ITGroup@carlwebster.com.
+	The script uses the email server smtp.gmail.com on port 587 using SSL, sending from 
+	webster@gmail.com and sending to ITGroup@carlwebster.com.
 
-	If the current user's credentials are not valid to send email, 
-	the user will be prompted to enter valid credentials.
+	If the current user's credentials are not valid to send an email, the script prompts 
+    the user to enter valid credentials.
 .INPUTS
 	None.  You cannot pipe objects to this script.
 .OUTPUTS
@@ -955,9 +948,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inv5ntory.ps1
-	VERSION: 1.45
+	VERSION: 1.46
 	AUTHOR: Carl Webster
-	LASTEDIT: May 8, 2020
+	LASTEDIT: January 24, 2021
 #>
 
 #endregion
@@ -967,26 +960,16 @@
 [CmdletBinding(SupportsShouldProcess = $False, ConfirmImpact = "None", DefaultParameterSetName = "Word") ]
 
 Param(
-	[parameter(ParameterSetName="HTML",Mandatory=$False)] 
-	[Switch]$HTML=$False,
-
-	[parameter(ParameterSetName="Word",Mandatory=$False)] 
-	[Switch]$MSWord=$False,
-
-	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
-	[Switch]$PDF=$False,
-
-	[parameter(ParameterSetName="Text",Mandatory=$False)] 
-	[Switch]$Text=$False,
-
-	[parameter(Mandatory=$False)] 
-	[Alias("ADT")]
-	[Switch]$AddDateTime=$False,
-	
 	[parameter(Mandatory=$False)] 
 	[ValidateNotNullOrEmpty()]
 	[Alias("AA")]
 	[string]$AdminAddress="LocalHost",
+
+	[parameter(ParameterSetName="HTML",Mandatory=$False)] 
+	[Switch]$HTML=$False,
+
+	[parameter(ParameterSetName="Text",Mandatory=$False)] 
+	[Switch]$Text=$False,
 
 	[parameter(Mandatory=$False)] 
 	[Alias("Admins")]
@@ -996,6 +979,89 @@ Param(
 	[Alias("Apps")]
 	[Switch]$Applications=$False,	
 	
+	[parameter(Mandatory=$False)] 
+	[Alias("DG")]
+	[Switch]$DeliveryGroups=$False,	
+
+	[parameter(Mandatory=$False)] 
+	[Alias("DGU")]
+	[Switch]$DeliveryGroupsUtilization=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("HW")]
+	[Switch]$Hardware=$False,
+
+	[parameter(Mandatory=$False)] 
+	[Alias("Host")]
+	[Switch]$Hosting=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Switch]$Logging=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("SD")]
+	[Datetime]$StartDate = ((Get-Date -displayhint date).AddDays(-7)),
+
+	[parameter(Mandatory=$False)] 
+	[Alias("ED")]
+	[Datetime]$EndDate = (Get-Date -displayhint date),
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("MC")]
+	[Switch]$MachineCatalogs=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("NoAD")]
+	[Switch]$NoADPolicies=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("NP")]
+	[Switch]$NoPolicies=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("NS")]
+	[Switch]$NoSessions=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("Pol")]
+	[Switch]$Policies=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("SF")]
+	[Switch]$StoreFront=$False,	
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("MAX")]
+	[Switch]$MaxDetails=$False,
+
+	[ValidateSet('All', 'Admins', 'Apps', 'AppV', 'Catalogs', 'Config', 'Controllers', 
+	'Groups', 'Hosting', 'Licensing', 'Logging', 'Policies', 'StoreFront', 'Zones')]
+	[parameter(Mandatory=$False)] 
+	[string]$Section="All",
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("ADT")]
+	[Switch]$AddDateTime=$False,
+	
+	[parameter(Mandatory=$False)] 
+	[Switch]$Dev=$False,
+	
+	[parameter(Mandatory=$False)] 
+	[string]$Folder="",
+	
+	[parameter(Mandatory=$False)] 
+	[Switch]$Log=$False,
+	
+	[parameter(Mandatory=$False)] 
+	[Alias("SI")]
+	[Switch]$ScriptInfo=$False,
+	
+	[parameter(ParameterSetName="Word",Mandatory=$False)] 
+	[Switch]$MSWord=$False,
+
+	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
+	[Switch]$PDF=$False,
+
 	[parameter(ParameterSetName="Word",Mandatory=$False)] 
 	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
 	[Alias("CA")]
@@ -1032,77 +1098,6 @@ Param(
 	[ValidateNotNullOrEmpty()]
 	[string]$CoverPage="Sideline", 
 
-	[parameter(Mandatory=$False)] 
-	[Alias("DG")]
-	[Switch]$DeliveryGroups=$False,	
-
-	[parameter(Mandatory=$False)] 
-	[Alias("DGU")]
-	[Switch]$DeliveryGroupsUtilization=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Switch]$Dev=$False,
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("ED")]
-	[Datetime]$EndDate = (Get-Date -displayhint date),
-	
-	[parameter(Mandatory=$False)] 
-	[string]$Folder="",
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("HW")]
-	[Switch]$Hardware=$False,
-
-	[parameter(Mandatory=$False)] 
-	[Alias("Host")]
-	[Switch]$Hosting=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Switch]$Log=$False,
-	
-	[parameter(Mandatory=$False)] 
-	[Switch]$Logging=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("MC")]
-	[Switch]$MachineCatalogs=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("MAX")]
-	[Switch]$MaxDetails=$False,
-
-	[parameter(Mandatory=$False)] 
-	[Alias("NoAD")]
-	[Switch]$NoADPolicies=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("NP")]
-	[Switch]$NoPolicies=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("NS")]
-	[Switch]$NoSessions=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("Pol")]
-	[Switch]$Policies=$False,	
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("SI")]
-	[Switch]$ScriptInfo=$False,
-	
-	[parameter(Mandatory=$False)] 
-	[string]$Section="All",
-	
-	[parameter(Mandatory=$False)] 
-	[Alias("SD")]
-	[Datetime]$StartDate = ((Get-Date -displayhint date).AddDays(-7)),
-
-	[parameter(Mandatory=$False)] 
-	[Alias("SF")]
-	[Switch]$StoreFront=$False,	
-	
 	[parameter(ParameterSetName="Word",Mandatory=$False)] 
 	[parameter(ParameterSetName="PDF",Mandatory=$False)] 
 	[Alias("UN")]
@@ -1116,13 +1111,13 @@ Param(
 	[int]$SmtpPort=25,
 
 	[parameter(Mandatory=$False)] 
-	[switch]$UseSSL=$False,
-
-	[parameter(Mandatory=$False)] 
 	[string]$From="",
 
 	[parameter(Mandatory=$False)] 
-	[string]$To=""
+	[string]$To="",
+
+	[parameter(Mandatory=$False)] 
+	[switch]$UseSSL=$False
 
 	)
 #endregion
@@ -1135,6 +1130,18 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.46 24-Jan-2021
+#	Added error checking in Function Check-NeededPSSnapins (Requested by Guy Leech)
+#	In Function OutputDatastores, if the Principal, Mirror, Mirror Partner, or Mirror Witness contains a "\", 
+#		then get the IP address for the server name before the "\" (Found by Ken Avram)
+#		This should mean the database is running on SQL Server Express or has an Instance name
+#		This fix is backported from the V2 doc script
+#	In Function OutputXenDesktopLicenses, if there are no licenses installed, output the text "XenDesktop Platinum (30-day trial)"
+#	Update Function ProcessScriptSetup to have standard error checking between the four XA/XD/CVAD/CC doc scripts
+#	Updated the link to the ReadMe file from Dropbox to Sharefile
+#	Updated the help text
+#	Updated the ReadMe file
+#
 #Version 1.45 8-May-2020
 #	Add checking for a Word version of 0, which indicates the Office installation needs repairing
 #	Add Receive Side Scaling setting to Function OutputNICItem
@@ -5389,8 +5396,8 @@ Function Check-NeededPSSnapins
 	$RegisteredSnapins = @()
 
 	#Creates arrays of strings, rather than objects, we're passing strings so this will be more robust.
-	$loadedSnapins += get-pssnapin | ForEach-Object {$_.name}
-	$registeredSnapins += get-pssnapin -Registered | ForEach-Object {$_.name}
+	$loadedSnapins += Get-PSSnapin | ForEach-Object {$_.name}
+	$registeredSnapins += Get-PSSnapin -Registered | ForEach-Object {$_.name}
 
 	ForEach($Snapin in $Snapins)
 	{
@@ -5411,7 +5418,19 @@ Function Check-NeededPSSnapins
 			Else
 			{
 				#Snapin is registered, but not loaded, loading it now:
-				Add-PSSnapin -Name $snapin -EA 0 *>$Null
+				Write-Host "Loading Windows PowerShell snap-in: $snapin"
+				Add-PSSnapin -Name $snapin -EA 0
+
+				If(!($?))
+				{
+					Write-Error "
+	`n`n
+	Error loading snapin: $($error[0].Exception.Message)
+	`n`n
+	Script cannot continue.
+	`n`n"
+					Return $false
+				}				
 			}
 		}
 	}
@@ -5419,7 +5438,9 @@ Function Check-NeededPSSnapins
 	If($FoundMissingSnapin)
 	{
 		Write-Warning "Missing Windows PowerShell snap-ins Detected:"
-		$missingSnapins | ForEach-Object {Write-Warning "($_)"}
+		Write-Host ""
+		$missingSnapins | ForEach-Object {Write-Host "`tMissing Snapin: ($_)"}
+		Write-Host ""
 		Return $False
 	}
 	Else
@@ -5739,7 +5760,7 @@ Function ShowScriptOptions
 	{
 		Write-Verbose "$(Get-Date): User Name       : $($UserName)"
 	}
-	Write-Verbose "$(Get-Date): XA/XD Version   : $($Script:XDSiteVersion)"
+	Write-Verbose "$(Get-Date): XA/XD Version   : $($Script:XDSiteVersionReal)"
 	Write-Verbose "$(Get-Date): "
 	Write-Verbose "$(Get-Date): OS Detected     : $($Script:RunningOS)"
 	Write-Verbose "$(Get-Date): PoSH version    : $($Host.Version)"
@@ -26170,16 +26191,31 @@ Function OutputDatastores
 			}
 		}
 
-		$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName
+		If($ConfigSQLServerPrincipalName.Contains("\"))
+		{
+			$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName.Substring(0,$ConfigSQLServerPrincipalName.IndexOf("\"))
+		}
+		Else
+		{
+			$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName
+		}
+
 		If($ConfigSQLServerMirrorName -ne "Not Configured")
 		{
-			$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName
+			If($ConfigSQLServerMirrorName.Contains("\"))
+			{
+				$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf("\"))
+			}
+			Else
+			{
+				$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName
+			}
 		}
 		Else
 		{
 			$ConfigSQLServerMirrorNameIPAddress = "-"
 		}
-		
+
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($ConfigSQLServerPrincipalName)")
@@ -26234,12 +26270,27 @@ Function OutputDatastores
 			If($Configdb.IsMirroringEnabled)
 			{
 				$ConfigDBMirroringPartner			= $Configdb.MirroringPartner
-				$ConfigDBMirroringPartnerIPAddress	= Get-IPAddress $Configdb.MirroringPartner
+				If($Configdb.MirroringPartner.Contains("\"))
+				{
+					$ConfigDBMirroringPartnerIPAddress = Get-IPAddress $Configdb.MirroringPartner.Substring(0,$Configdb.MirroringPartner.IndexOf("\"))
+				}
+				Else
+				{
+					$ConfigDBMirroringPartnerIPAddress = Get-IPAddress $Configdb.MirroringPartner
+				}
 				$ConfigDBMirroringPartnerInstance	= $Configdb.MirroringPartnerInstance
 				$ConfigDBMirroringSafetyLevel		= $Configdb.MirroringSafetyLevel
 				$ConfigDBMirroringStatus			= $Configdb.MirroringStatus
 				$ConfigDBMirroringWitness			= $Configdb.MirroringWitness
 				$ConfigDBMirroringWitnessIPAddress	= Get-IPAddress $Configdb.MirroringWitness
+				If($Configdb.MirroringPartner.Contains("\"))
+				{
+					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
+				}
+				Else
+				{
+					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness
+				}
 				$ConfigDBMirroringWitnessStatus		= $Configdb.MirroringWitnessStatus
 			}
 			Else
@@ -26316,10 +26367,25 @@ Function OutputDatastores
 			}
 		}
 
-		$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName
+		If($LogSQLServerPrincipalName.Contains("\"))
+		{
+			$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName.Substring(0,$LogSQLServerPrincipalName.IndexOf("\"))
+		}
+		Else
+		{
+			$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName
+		}
+
 		If($LogSQLServerMirrorName -ne "Not Configured")
 		{
-			$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName
+			If($LogSQLServerMirrorName.Contains("\"))
+			{
+				$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf("\"))
+			}
+			Else
+			{
+				$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName
+			}
 		}
 		Else
 		{
@@ -26380,12 +26446,26 @@ Function OutputDatastores
 			If($LogDB.IsMirroringEnabled)
 			{
 				$LogDBMirroringPartner			= $LogDB.MirroringPartner
-				$LogDBMirroringPartnerIPAddress	= Get-IPAddress $Logdb.MirroringPartner
+				If($Logdb.MirroringPartner.Contains("\"))
+				{
+					$LogDBMirroringPartnerIPAddress = Get-IPAddress $Logdb.MirroringPartner.Substring(0,$Logdb.MirroringPartner.IndexOf("\"))
+				}
+				Else
+				{
+					$LogDBMirroringPartnerIPAddress = Get-IPAddress $Logdb.MirroringPartner
+				}
 				$LogDBMirroringPartnerInstance	= $LogDB.MirroringPartnerInstance
 				$LogDBMirroringSafetyLevel		= $LogDB.MirroringSafetyLevel
 				$LogDBMirroringStatus			= $LogDB.MirroringStatus
 				$LogDBMirroringWitness			= $LogDB.MirroringWitness
-				$LogDBMirroringWitnessIPAddress	= Get-IPAddress $Logdb.MirroringWitness
+				If($Logdb.MirroringPartner.Contains("\"))
+				{
+					$LogDBMirroringWitnessIPAddress = Get-IPAddress $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf("\"))
+				}
+				Else
+				{
+					$LogDBMirroringWitnessIPAddress = Get-IPAddress $Logdb.MirroringWitness
+				}
 				$LogDBMirroringWitnessStatus	= $LogDB.MirroringWitnessStatus
 			}
 			Else
@@ -26466,10 +26546,25 @@ Function OutputDatastores
 			}
 		}
 
-		$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName
+		If($MonitorSQLServerPrincipalName.Contains("\"))
+		{
+			$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName.Substring(0,$MonitorSQLServerPrincipalName.IndexOf("\"))
+		}
+		Else
+		{
+			$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName
+		}
+
 		If($MonitorSQLServerMirrorName -ne "Not Configured")
 		{
-			$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName
+			If($MonitorSQLServerMirrorName.Contains("\"))
+			{
+				$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf("\"))
+			}
+			Else
+			{
+				$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName
+			}
 		}
 		Else
 		{
@@ -26530,12 +26625,26 @@ Function OutputDatastores
 			If($MonitorDB.IsMirroringEnabled)
 			{
 				$MonitorDBMirroringPartner			= $MonitorDB.MirroringPartner
-				$MonitorDBMirroringPartnerIPAddress	= Get-IPAddress $Monitordb.MirroringPartner
+				If($Monitordb.MirroringPartner.Contains("\"))
+				{
+					$MonitorDBMirroringPartnerIPAddress = Get-IPAddress $Monitordb.MirroringPartner.Substring(0,$Monitordb.MirroringPartner.IndexOf("\"))
+				}
+				Else
+				{
+					$MonitorDBMirroringPartnerIPAddress = Get-IPAddress $Monitordb.MirroringPartner
+				}
 				$MonitorDBMirroringPartnerInstance	= $MonitorDB.MirroringPartnerInstance
 				$MonitorDBMirroringSafetyLevel		= $MonitorDB.MirroringSafetyLevel
 				$MonitorDBMirroringStatus			= $MonitorDB.MirroringStatus
 				$MonitorDBMirroringWitness			= $MonitorDB.MirroringWitness
-				$MonitorDBMirroringWitnessIPAddress	= Get-IPAddress $Monitordb.MirroringWitness
+				If($Configdb.MirroringPartner.Contains("\"))
+				{
+					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
+				}
+				Else
+				{
+					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness
+				}
 				$MonitorDBMirroringWitnessStatus	= $MonitorDB.MirroringWitnessStatus
 			}
 			Else
@@ -30074,6 +30183,7 @@ Function OutputXenDesktopLicenses
 	Param([object]$LSAdminAddress, [object]$LSCertificate, [object]$ProductLicenses)
 	
 	Write-Verbose "$(Get-Date): `tOutput Licenses"
+	[int]$NumLicenses = 0
 	
 	ForEach($Product in $ProductLicenses)
 	{
@@ -30094,102 +30204,124 @@ Function OutputXenDesktopLicenses
 			$obj | Add-Member -MemberType NoteProperty -Name LicenseModel	-Value $LicModel
 			$obj | Add-Member -MemberType NoteProperty -Name LicenseCount	-Value $Product.LicensesAvailable
 			$Script:Licenses += $obj
+			$NumLicenses++
 		}
 	}
 	
-	If($MSWord -or $PDF)
+	If($NumLicenses -eq 0)
 	{
-		WriteWordLine 3 0 "XenDesktop Licenses"
-		[System.Collections.Hashtable[]] $LicensesWordTable = @();
-		ForEach($Product in $ProductLicenses)
+		If($MSWord -or $PDF)
 		{
-			If($Product.LicenseProductName -eq $Script:XDSite2.ProductCode)
+			WriteWordLine 3 0 "XenDesktop Licenses"
+			WriteWordLine 0 0 "XenDesktop Platinum (30-day trial)"
+		}
+		If($Text)
+		{
+			Line 0 "XenDesktop Licenses"
+			Line 0 "XenDesktop Platinum (30-day trial)"
+		}
+		If($HTML)
+		{
+			WriteHTMLLine 3 0 "XenDesktop Licenses"
+			WriteHTMLLine 0 0 "XenDesktop Platinum (30-day trial)"
+		}
+	}
+	Else
+	{
+		If($MSWord -or $PDF)
+		{
+			WriteWordLine 3 0 "XenDesktop Licenses"
+			[System.Collections.Hashtable[]] $LicensesWordTable = @();
+			ForEach($Product in $ProductLicenses)
 			{
-				$tmpdate1 = '{0:d}' -f $Product.LicenseExpirationDate
-				$tmpdate2 = '{0:yyyy\.MMdd}' -f $Product.LicenseSubscriptionAdvantageDate
-				$WordTableRowHash = @{ 
-				Product = $Product.LocalizedLicenseProductName;
-				Mode = $Product.LocalizedLicenseModel;
-				ExpirationDate = $tmpdate1;
-				SubscriptionAdvantageDate = $tmpdate2;
-				Type = $Product.LocalizedLicenseType;
-				Quantity = $Product.LicensesAvailable;
+				If($Product.LicenseProductName -eq $Script:XDSite2.ProductCode)
+				{
+					$tmpdate1 = '{0:d}' -f $Product.LicenseExpirationDate
+					$tmpdate2 = '{0:yyyy\.MMdd}' -f $Product.LicenseSubscriptionAdvantageDate
+					$WordTableRowHash = @{ 
+					Product = $Product.LocalizedLicenseProductName;
+					Mode = $Product.LocalizedLicenseModel;
+					ExpirationDate = $tmpdate1;
+					SubscriptionAdvantageDate = $tmpdate2;
+					Type = $Product.LocalizedLicenseType;
+					Quantity = $Product.LicensesAvailable;
+					}
+
+					$LicensesWordTable += $WordTableRowHash;
 				}
-
-				$LicensesWordTable += $WordTableRowHash;
 			}
+			$Table = AddWordTable -Hashtable $LicensesWordTable `
+			-Columns Product, Mode, ExpirationDate, SubscriptionAdvantageDate, Type, Quantity `
+			-Headers "Product", "Mode", "Expiration Date", "Subscription Advantage Date", "Type", "Quantity" `
+			-Format $wdTableGrid `
+			-AutoFit $wdAutoFitFixed;
+
+			SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
+
+			$Table.Columns.Item(1).Width = 140;
+			$Table.Columns.Item(2).Width = 70;
+			$Table.Columns.Item(3).Width = 65;
+			$Table.Columns.Item(4).Width = 90;
+			$Table.Columns.Item(5).Width = 80;
+			$Table.Columns.Item(6).Width = 55;
+			
+			$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
+
+			FindWordDocumentEnd
+			$Table = $Null
 		}
-		$Table = AddWordTable -Hashtable $LicensesWordTable `
-		-Columns Product, Mode, ExpirationDate, SubscriptionAdvantageDate, Type, Quantity `
-		-Headers "Product", "Mode", "Expiration Date", "Subscription Advantage Date", "Type", "Quantity" `
-		-Format $wdTableGrid `
-		-AutoFit $wdAutoFitFixed;
-
-		SetWordCellFormat -Collection $Table.Rows.Item(1).Cells -Bold -BackgroundColor $wdColorGray15;
-
-		$Table.Columns.Item(1).Width = 140;
-		$Table.Columns.Item(2).Width = 70;
-		$Table.Columns.Item(3).Width = 65;
-		$Table.Columns.Item(4).Width = 90;
-		$Table.Columns.Item(5).Width = 80;
-		$Table.Columns.Item(6).Width = 55;
-		
-		$Table.Rows.SetLeftIndent($Indent0TabStops,$wdAdjustProportional)
-
-		FindWordDocumentEnd
-		$Table = $Null
-	}
-	ElseIf($Text)
-	{
-		Line 0 "XenDesktop Licenses"
-		Line 0 ""
-		ForEach($Product in $ProductLicenses)
+		ElseIf($Text)
 		{
-			If($Product.LicenseProductName -eq "XDT")
+			Line 0 "XenDesktop Licenses"
+			Line 0 ""
+			ForEach($Product in $ProductLicenses)
 			{
-				$tmpdate1 = '{0:d}' -f $Product.LicenseExpirationDate
-				$tmpdate2 = '{0:yyyy\.MMdd}' -f $Product.LicenseSubscriptionAdvantageDate
-				Line 0 "Product`t`t`t`t: " $Product.LocalizedLicenseProductName
-				Line 0 "Mode`t`t`t`t: " $Product.LocalizedLicenseModel
-				Line 0 "Expiration Date`t`t`t: " $tmpdate1
-				Line 0 "Subscription Advantage Date`t: " $tmpdate2
-				Line 0 "Type`t`t`t`t: " $Product.LocalizedLicenseType
-				Line 0 "Quantity`t`t`t: " $Product.LicensesAvailable
-				Line 0 ""
+				If($Product.LicenseProductName -eq "XDT")
+				{
+					$tmpdate1 = '{0:d}' -f $Product.LicenseExpirationDate
+					$tmpdate2 = '{0:yyyy\.MMdd}' -f $Product.LicenseSubscriptionAdvantageDate
+					Line 0 "Product`t`t`t`t: " $Product.LocalizedLicenseProductName
+					Line 0 "Mode`t`t`t`t: " $Product.LocalizedLicenseModel
+					Line 0 "Expiration Date`t`t`t: " $tmpdate1
+					Line 0 "Subscription Advantage Date`t: " $tmpdate2
+					Line 0 "Type`t`t`t`t: " $Product.LocalizedLicenseType
+					Line 0 "Quantity`t`t`t: " $Product.LicensesAvailable
+					Line 0 ""
+				}
 			}
 		}
-	}
-	ElseIf($HTML)
-	{
-		WriteHTMLLine 3 0 "XenDesktop Licenses"
-		$rowdata = @()
-		ForEach($Product in $ProductLicenses)
+		ElseIf($HTML)
 		{
-			If($Product.LicenseProductName -eq "XDT")
+			WriteHTMLLine 3 0 "XenDesktop Licenses"
+			$rowdata = @()
+			ForEach($Product in $ProductLicenses)
 			{
-				$tmpdate1 = '{0:d}' -f $Product.LicenseExpirationDate
-				$tmpdate2 = '{0:yyyy\.MMdd}' -f $Product.LicenseSubscriptionAdvantageDate
-				$rowdata += @(,(
-				$Product.LocalizedLicenseProductName,$htmlwhite,
-				$Product.LocalizedLicenseModel,$htmlwhite,
-				$tmpdate1,$htmlwhite,
-				$tmpdate2,$htmlwhite,
-				$Product.LocalizedLicenseType,$htmlwhite,
-				$Product.LicensesAvailable,$htmlwhite))
+				If($Product.LicenseProductName -eq "XDT")
+				{
+					$tmpdate1 = '{0:d}' -f $Product.LicenseExpirationDate
+					$tmpdate2 = '{0:yyyy\.MMdd}' -f $Product.LicenseSubscriptionAdvantageDate
+					$rowdata += @(,(
+					$Product.LocalizedLicenseProductName,$htmlwhite,
+					$Product.LocalizedLicenseModel,$htmlwhite,
+					$tmpdate1,$htmlwhite,
+					$tmpdate2,$htmlwhite,
+					$Product.LocalizedLicenseType,$htmlwhite,
+					$Product.LicensesAvailable,$htmlwhite))
+				}
 			}
-		}
-		$columnHeaders = @(
-		'Product',($htmlsilver -bor $htmlbold),
-		'Mode',($htmlsilver -bor $htmlbold),
-		'Expiration Date',($htmlsilver -bor $htmlbold),
-		'Subscription Advantage Date',($htmlsilver -bor $htmlbold),
-		'Type',($htmlsilver -bor $htmlbold),
-		'Quantity',($htmlsilver -bor $htmlbold))
+			$columnHeaders = @(
+			'Product',($htmlsilver -bor $htmlbold),
+			'Mode',($htmlsilver -bor $htmlbold),
+			'Expiration Date',($htmlsilver -bor $htmlbold),
+			'Subscription Advantage Date',($htmlsilver -bor $htmlbold),
+			'Type',($htmlsilver -bor $htmlbold),
+			'Quantity',($htmlsilver -bor $htmlbold))
 
-		$msg = ""
-		$columnWidths = @("150","125","65","90","80","55")
-		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "565"
-		WriteHTMLLine 0 0 " "
+			$msg = ""
+			$columnWidths = @("150","125","65","90","80","55")
+			FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "565"
+			WriteHTMLLine 0 0 " "
+		}
 	}
 }
 
@@ -30909,16 +31041,16 @@ Function ProcessSummaryPage
 	If($MSWord -or $PDF)
 	{
 		$selection.InsertNewPage()
-		WriteWordLine 1 0 "XenDesktop $($Script:XDSiteVersion) $($XDSiteName) Summary Page"
+		WriteWordLine 1 0 "XenDesktop $($Script:XDSiteVersionReal) $($XDSiteName) Summary Page"
 	}
 	ElseIf($Text)
 	{
 		Line 0 ""
-		Line 0 "XenDesktop $($Script:XDSiteVersion) $($XDSiteName) Summary Page"
+		Line 0 "XenDesktop $($Script:XDSiteVersionReal) $($XDSiteName) Summary Page"
 	}
 	ElseIf($HTML)
 	{
-		WriteHTMLLine 1 0 "XenDesktop $($Script:XDSiteVersion) $($XDSiteName) Summary Page"
+		WriteHTMLLine 1 0 "XenDesktop $($Script:XDSiteVersionReal) $($XDSiteName) Summary Page"
 	}
 
 	Write-Verbose "$(Get-Date): `tAdd administrator summary info"
@@ -31176,7 +31308,6 @@ Function ProcessScriptSetup
 	If(!(Check-NeededPSSnapins "Citrix.AdIdentity.Admin.V2",
 	"Citrix.AppV.Admin.V1",
 	"Citrix.Broker.Admin.V2",
-	"Citrix.Common.Commands",
 	"Citrix.Common.GroupPolicy",
 	"Citrix.Configuration.Admin.V2",
 	"Citrix.ConfigurationLogging.Admin.V1",
@@ -31191,25 +31322,119 @@ Function ProcessScriptSetup
 	{
 		#We're missing Citrix Snapins that we need
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Error "
-		`n`n
-		`t`t
-		Missing Citrix PowerShell Snap-ins Detected, check the console above for more information. 
-		`n`n
-		`t`t
-		Are you sure you are running this script against a XenDesktop 7.x Controller? 
-		`n`n
-		`t`t
-		If you are running the script remotely, did you install Studio or the PowerShell snapins on $($env:computername)?
-		`n`n
-		`t`t
-		Please see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf).
-		`n`n
-		`t`t
-		Script will now close.
-		`n`n
-		"
-		Exit
+		If(Get-Command Get-ConfigSite -EA 0)
+		{
+			$XDSite2 = Get-ConfigSite -AdminAddress $AdminAddress -EA 0
+
+			[version]$XDSiteVersion = $XDSite2.ProductVersion
+			$XDSiteVersionReal = "Unknown"
+			Switch ($XDSiteVersion)
+			{
+				"7.28"	{$XDSiteVersionReal = "CVAD 2012"; Break}
+				"7.27"	{$XDSiteVersionReal = "CVAD 2009"; Break}
+				"7.26"	{$XDSiteVersionReal = "CVAD 2006"; Break}
+				"7.25"	{$XDSiteVersionReal = "CVAD 2003"; Break}
+				"7.24"	{$XDSiteVersionReal = "CVAD 1912"; Break}
+				"7.23"	{$XDSiteVersionReal = "CVAD 1909"; Break}
+				"7.22"	{$XDSiteVersionReal = "CVAD 1906"; Break}
+				"7.21"	{$XDSiteVersionReal = "CVAD 1903"; Break}
+				"7.20"	{$XDSiteVersionReal = "CVAD 1811"; Break}
+				"7.19"	{$XDSiteVersionReal = "CVAD 1808"; Break}
+				"7.18"	{$XDSiteVersionReal = "XA/XD 7.18"; Break}
+				"7.17"	{$XDSiteVersionReal = "XA/XD 7.17"; Break}
+				"7.16"	{$XDSiteVersionReal = "XA/XD 7.16"; Break}
+				"7.15"	{$XDSiteVersionReal = "XA/XD 7.15"; Break}
+				"7.14"	{$XDSiteVersionReal = "XA/XD 7.14"; Break}
+				"7.13"	{$XDSiteVersionReal = "XA/XD 7.13"; Break}
+				"7.12"	{$XDSiteVersionReal = "XA/XD 7.12"; Break}
+				"7.11"	{$XDSiteVersionReal = "XA/XD 7.11"; Break}
+				"7.9"	{$XDSiteVersionReal = "XA/XD 7.9"; Break}
+				"7.8"	{$XDSiteVersionReal = "XA/XD 7.8"; Break}
+				"7.7"	{$XDSiteVersionReal = "XA/XD 7.7"; Break}
+				"7.6"	{$XDSiteVersionReal = "XA/XD 7.6"; Break}
+				"7.5"	{$XDSiteVersionReal = "XA/XD 7.5"; Break}
+				"7.1"	{$XDSiteVersionReal = "XD 7.1"; Break}
+				"7.0"	{$XDSiteVersionReal = "XD 7.0"; Break}
+				Default	{$XDSiteVersionReal = "Unknown"; Break}
+			}
+			Write-Verbose "$(Get-Date -Format G): You are running version $XDSiteVersion ($XDSiteVersionReal)"
+	
+			If($XDSiteVersion.Major -eq 0 -and $XDSiteVersion.Minor -eq 0)
+			{
+				#something is wrong, we shouldn't be here
+				Write-Error "
+	`n`n
+	Something bad happened. We shouldn't be here. Could not find the version information.
+	`n`n
+	Script cannot continue
+	`n`n
+	"
+				AbortScript
+			}
+			Else
+			{
+				Write-Host "You are running version $XDSiteVersion ($XDSiteVersionReal)" -ForegroundColor White
+				Write-Error "
+	`n`n
+	Missing Citrix PowerShell Snap-ins Detected, check the console above for more information. 
+	`n`n
+	This script is designed for XenApp/XenDesktop 7.0 through 7.7 and should not be run on $XDSiteVersionReal.
+	`n`n
+	Please see the Prerequisites section in the ReadMe file:
+	(https://carlwebster.sharefile.com/d-sc33767b127542c89).
+	`n`n
+	If you are running XenApp 6.0, please use:
+	https://carlwebster.com/downloads/download-info/xenapp-6/
+	`n`n
+	If you are running XenApp 6.5, please use:
+	https://carlwebster.com/downloads/download-info/xenapp-6-5/
+	`n`n
+	If you are running XA/XD 7.8 through CVAD 2006, please use: 
+	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	`n`n
+	If you are running CVAD 2006 and later, please use:
+	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	`n`n
+	If you are running Citrix Cloud, please use:
+	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	`n`n
+	Script cannot continue
+	`n`n
+	"
+				AbortScript
+			}
+		}
+		Else
+		{
+			Write-Error "
+	`n`n
+	Missing Citrix PowerShell Snap-ins Detected, check the console above for more information. 
+	`n`n
+	This script is designed for XenApp/XenDesktop 7.0 through 7.7 and should not be run on any other version.
+	`n`n
+	Please see the Prerequisites section in the ReadMe file:
+	(https://carlwebster.sharefile.com/d-sc33767b127542c89).
+	`n`n
+	If you are running XenApp 6.0, please use:
+	https://carlwebster.com/downloads/download-info/xenapp-6/
+	`n`n
+	If you are running XenApp 6.5, please use:
+	https://carlwebster.com/downloads/download-info/xenapp-6-5/
+	`n`n
+	If you are running XA/XD 7.8 through CVAD 2006, please use: 
+	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	`n`n
+	If you are running CVAD 2006 and later, please use:
+	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	`n`n
+	If you are running Citrix Cloud, please use:
+	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	`n`n
+	Script cannot continue
+	`n`n
+	"
+			AbortScript
+		}
 	}
 
 	$Script:DoPolicies = $True
@@ -31220,26 +31445,28 @@ Function ProcessScriptSetup
 	}
 	ElseIf(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $False)
 	{
-		Write-Warning "The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded `n
-		Please see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf). 
-		`nCitrix Policy documentation will not take place"
+		Write-Warning "
+	The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded
+	`n`n
+	Please see the Prerequisites section in the ReadMe file:
+	(https://carlwebster.sharefile.com/d-sc33767b127542c89). 
+	`n`n
+	Citrix Policy documentation will not take place"
 		Write-Verbose "$(Get-Date): "
 		$Script:DoPolicies = $False
 	}
 	ElseIf(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $True)
 	{
 		Write-Error "
-		`n`n
-		`t`t
-		The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded 
-		`n`n
-		`t`t
-		Please see the Prerequisites section in the ReadMe file (https://dl.dropboxusercontent.com/u/43555945/XD7_Inventory_V1_ReadMe.rtf). 
-		`n`n
-		`t`t
-		Because the Policies parameter was used the script will now close.
-		`n`n
-		"
+	`n`n
+	The Citrix Group Policy module Citrix.GroupPolicy.Commands.psm1 could not be loaded 
+	`n`n
+	Please see the Prerequisites section in the ReadMe file:
+	(https://carlwebster.sharefile.com/d-sc33767b127542c89). 
+	`n`n
+	Because the Policies parameter was used the script will now close.
+	`n`n
+	"
 		Write-Verbose "$(Get-Date): "
 		Exit
 	}
@@ -31284,10 +31511,9 @@ Function ProcessScriptSetup
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Warning "XenDesktop Site1 information could not be retrieved.  Script cannot continue"
 		Write-Error "
-		`n`n
-		`t`t
-		cmdlet failed $($error[ 0 ].ToString())
-		`n`n
+	`n`n
+	cmdlet failed $($error[ 0 ].ToString())
+	`n`n
 		"
 		AbortScript
 	}
@@ -31299,77 +31525,84 @@ Function ProcessScriptSetup
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Warning "XenDesktop Site2 information could not be retrieved.  Script cannot continue"
 		Write-Error "
-		`n`n
-		`t`t
-		cmdlet failed $($error[ 0 ].ToString())
-		`n`n
+	`n`n
+	cmdlet failed $($error[ 0 ].ToString())
+	`n`n
 		"
 		AbortScript
 	}
 	
-	#$Script:XDSiteVersion = (Get-RegistryValue "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller" "DisplayVersion").Substring(0,3)
-	
-	#changed 18-dec-2016 to allow 32-bit PoSH to get the data in the 64-bit registry location
-	#initial idea from WC at Citrix and also from http://stackoverflow.com/questions/630382/how-to-access-the-64-bit-registry-from-a-32-bit-powershell-instance reply from SergVro
-	$key = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry64)
-	$subKey =  $key.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller")
-
-	#new test added 23-Jun-2017
-	#if subkey is Null, then check the -AdminAddress computer for the key
-	If($Null -eq $subkey)
+	[version]$Script:XDSiteVersion = $Script:XDSite2.ProductVersion
+	$Script:XDSiteVersionReal = "Unknown"
+	Switch ($Script:XDSiteVersion)
 	{
-		Write-Verbose "$(Get-Date): Could not find the version information on $($env:ComputerName), testing $($AdminAddress) now"
-		$key = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $AdminAddress)
-		$subKey =  $key.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Citrix Desktop Delivery Controller")
-		
-		If($Null -eq $subkey)
-		{
-			#something is really wrong
-			Write-Verbose "$(Get-Date): Could not find the version information on $($AdminAddress),`n`nScript cannot continue`n "
-			AbortScript
-		}
-		
-		$value = $subKey.GetValue("DisplayVersion")
-		$Script:XDSiteVersion = $value.Substring(0,4)
-		$tmp = $Script:XDSiteVersion.Split(".")
-		[int]$MajorVersion = $tmp[0]
-		[int]$MinorVersion = $tmp[1]
+		"7.28"	{$Script:XDSiteVersionReal = "CVAD 2012"; Break}
+		"7.27"	{$Script:XDSiteVersionReal = "CVAD 2009"; Break}
+		"7.26"	{$Script:XDSiteVersionReal = "CVAD 2006"; Break}
+		"7.25"	{$Script:XDSiteVersionReal = "CVAD 2003"; Break}
+		"7.24"	{$Script:XDSiteVersionReal = "CVAD 1912"; Break}
+		"7.23"	{$Script:XDSiteVersionReal = "CVAD 1909"; Break}
+		"7.22"	{$Script:XDSiteVersionReal = "CVAD 1906"; Break}
+		"7.21"	{$Script:XDSiteVersionReal = "CVAD 1903"; Break}
+		"7.20"	{$Script:XDSiteVersionReal = "CVAD 1811"; Break}
+		"7.19"	{$Script:XDSiteVersionReal = "CVAD 1808"; Break}
+		"7.18"	{$Script:XDSiteVersionReal = "XA/XD 7.18"; Break}
+		"7.17"	{$Script:XDSiteVersionReal = "XA/XD 7.17"; Break}
+		"7.16"	{$Script:XDSiteVersionReal = "XA/XD 7.16"; Break}
+		"7.15"	{$Script:XDSiteVersionReal = "XA/XD 7.15"; Break}
+		"7.14"	{$Script:XDSiteVersionReal = "XA/XD 7.14"; Break}
+		"7.13"	{$Script:XDSiteVersionReal = "XA/XD 7.13"; Break}
+		"7.12"	{$Script:XDSiteVersionReal = "XA/XD 7.12"; Break}
+		"7.11"	{$Script:XDSiteVersionReal = "XA/XD 7.11"; Break}
+		"7.9"	{$Script:XDSiteVersionReal = "XA/XD 7.9"; Break}
+		"7.8"	{$Script:XDSiteVersionReal = "XA/XD 7.8"; Break}
+		"7.7"	{$Script:XDSiteVersionReal = "XA/XD 7.7"; Break}
+		"7.6"	{$Script:XDSiteVersionReal = "XA/XD 7.6"; Break}
+		"7.5"	{$Script:XDSiteVersionReal = "XA/XD 7.5"; Break}
+		"7.1"	{$Script:XDSiteVersionReal = "XD 7.1"; Break}
+		"7.0"	{$Script:XDSiteVersionReal = "XD 7.0"; Break}
+		Default	{$Script:XDSiteVersionReal = "Unknown"; Break}
 	}
-	Else
-	{
-		Write-Verbose "$(Get-Date): Found the version information on $($env:ComputerName)"
-	}
-
-	$value = $subKey.GetValue("DisplayVersion")
-	$Script:XDSiteVersion = $value.Substring(0,3)
-	$tmp = $Script:XDSiteVersion.Split(".")
-	[int]$MajorVersion = $tmp[0]
-	[int]$MinorVersion = $tmp[1]
+	Write-Verbose "$(Get-Date -Format G): You are running version $Script:XDSiteVersion ($Script:XDSiteVersionReal)"
 	
-	Write-Verbose "$(Get-Date): You are running version $($value)"
-	Write-Verbose "$(Get-Date): Major version $($MajorVersion)"
-	Write-Verbose "$(Get-Date): Minor version $($MinorVersion)"
-
 	#first check to make sure this is a Site between 7.0 and 7.7
-	If($MajorVersion -eq 7)
-	{
-		#this is a XenDesktop 7.x Site, now test to make sure it is less than 7.8
-		If($MinorVersion -ge 8)
-		{
-			Write-Warning "This script is designed for XenDesktop 7.7 and prior and should not be run on 7.8 and later.`n`nScript cannot continue`n"
-			AbortScript
-		}
-	}
-	ElseIf($MajorVersion -eq 0 -and $MinorVersion -eq 0)
+	If($MajorVersion -eq 0 -and $MinorVersion -eq 0)
 	{
 		#something is wrong, we shouldn't be here
-		Write-Verbose "$(Get-Date): Something bad happened. We shouldn't be here. Could not find the version information.`n`nScript cannot continue`n"
+		Write-Error "
+	`n`n
+	Something bad happened. We shouldn't be here. Could not find the version information.
+	`n`n
+	Script cannot continue
+	`n`n
+		"
 		AbortScript
 	}
 	Else
 	{
-		#this is not a XenDesktop 7.x Site, script cannot proceed
-		Write-Warning "This script is designed for XenDesktop 7.x and should not be run on other versions of XenDesktop.`n`nScript cannot continue`n"
+		Write-Host "You are running version $Script:XDSiteVersion ($Script:XDSiteVersionReal)" -ForegroundColor White
+		Write-Error "
+	`n`n
+	This script is designed for XenApp/XenDesktop 7.0 through 7.7 and should not be run on $Script:XDSiteVersionReal.
+	`n`n
+	If you are running XenApp 6.0, please use:
+	https://carlwebster.com/downloads/download-info/xenapp-6/
+	`n`n
+	If you are running XenApp 6.5, please use:
+	https://carlwebster.com/downloads/download-info/xenapp-6-5/
+	`n`n
+	If you are running XA/XD 7.8 through CVAD 2006, please use:
+	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	`n`n
+	If you are running CVAD 2006 and later, please use:
+	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	`n`n
+	If you are running Citrix Cloud, please use:
+	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	`n`n
+	Script cannot continue
+	`n`n
+		"
 		AbortScript
 	}
 
