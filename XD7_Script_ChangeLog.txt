@@ -5,11 +5,13 @@
 
 #Version 1.46 24-Jan-2021
 #	Added error checking in Function Check-NeededPSSnapins (Requested by Guy Leech)
+#	Added to the Computer Hardware section, the server's Power Plan
 #	In Function OutputDatastores, if the Principal, Mirror, Mirror Partner, or Mirror Witness contains a "\", 
 #		then get the IP address for the server name before the "\" (Found by Ken Avram)
 #		This should mean the database is running on SQL Server Express or has an Instance name
 #		This fix is backported from the V2 doc script
 #	In Function OutputXenDesktopLicenses, if there are no licenses installed, output the text "XenDesktop Platinum (30-day trial)"
+#	Reordered the parameters in an order recommended by Guy Leech
 #	Update Function ProcessScriptSetup to have standard error checking between the four XA/XD/CVAD/CC doc scripts
 #	Updated the link to the ReadMe file from Dropbox to Sharefile
 #	Updated the help text
