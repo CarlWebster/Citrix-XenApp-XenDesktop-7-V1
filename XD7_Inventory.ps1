@@ -31394,7 +31394,7 @@ Function ProcessScriptSetup
 	"
 				AbortScript
 			}
-			Else
+			ElseIf($XDSiteVersion.Major -eq 7 -and $XDSiteVersion.Minor -gt 7)
 			{
 				Write-Host "You are running version $XDSiteVersion ($XDSiteVersionReal)" -ForegroundColor White
 				Write-Error "
@@ -31589,7 +31589,7 @@ Function ProcessScriptSetup
 	Write-Verbose "$(Get-Date -Format G): You are running version $Script:XDSiteVersion ($Script:XDSiteVersionReal)"
 	
 	#first check to make sure this is a Site between 7.0 and 7.7
-	If($MajorVersion -eq 0 -and $MinorVersion -eq 0)
+	If($XDSiteVersion.Major -eq 0 -and $XDSiteVersion.Minor -eq 0)
 	{
 		#something is wrong, we shouldn't be here
 		Write-Error "
@@ -31601,7 +31601,7 @@ Function ProcessScriptSetup
 		"
 		AbortScript
 	}
-	Else
+	ElseIf($XDSiteVersion.Major -eq 7 -and $XDSiteVersion.Minor -gt 7)
 	{
 		Write-Host "You are running version $Script:XDSiteVersion ($Script:XDSiteVersionReal)" -ForegroundColor White
 		Write-Error "
