@@ -948,9 +948,9 @@
 	plain text or HTML document.
 .NOTES
 	NAME: XD7_Inv5ntory.ps1
-	VERSION: 1.46
+	VERSION: 1.47
 	AUTHOR: Carl Webster
-	LASTEDIT: January 24, 2021
+	LASTEDIT: January 30, 2021
 #>
 
 #endregion
@@ -1130,6 +1130,14 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.47 30-Jan-2021
+#	Added getting hardware information for the license server when -Hardware is used
+#	Added getting hardware information for the SQL Server(s) when -Hardware is used
+#	Changed all Write-Verbose $(Get-Date) to add -Format G to put the dates in the user's locale
+#	Fixed duplicate item in the HTML output for Machine Catalogs
+#	Fixed wrong variable name when getting the Monitoring database mirroring information
+#	Updated the WMI query code for getting the Power Plan to handle the case where the Power Plan data is missing in the WMI repository
+#
 #Version 1.46 24-Jan-2021
 #	Added error checking in Function Check-NeededPSSnapins (Requested by Guy Leech)
 #	Added to the Computer Hardware section, the server's Power Plan
@@ -1499,50 +1507,50 @@ If($MSWord -eq $False -and $PDF -eq $False -and $Text -eq $False -and $HTML -eq 
 	$MSWord = $True
 }
 
-Write-Verbose "$(Get-Date): Testing output parameters"
+Write-Verbose "$(Get-Date -Format G): Testing output parameters"
 
 If($MSWord)
 {
-	Write-Verbose "$(Get-Date): MSWord is set"
+	Write-Verbose "$(Get-Date -Format G): MSWord is set"
 }
 ElseIf($PDF)
 {
-	Write-Verbose "$(Get-Date): PDF is set"
+	Write-Verbose "$(Get-Date -Format G): PDF is set"
 }
 ElseIf($Text)
 {
-	Write-Verbose "$(Get-Date): Text is set"
+	Write-Verbose "$(Get-Date -Format G): Text is set"
 }
 ElseIf($HTML)
 {
-	Write-Verbose "$(Get-Date): HTML is set"
+	Write-Verbose "$(Get-Date -Format G): HTML is set"
 }
 Else
 {
 	$ErrorActionPreference = $SaveEAPreference
-	Write-Verbose "$(Get-Date): Unable to determine output parameter"
+	Write-Verbose "$(Get-Date -Format G): Unable to determine output parameter"
 	If($Null -eq $MSWord)
 	{
-		Write-Verbose "$(Get-Date): MSWord is Null"
+		Write-Verbose "$(Get-Date -Format G): MSWord is Null"
 	}
 	ElseIf($Null -eq $PDF)
 	{
-		Write-Verbose "$(Get-Date): PDF is Null"
+		Write-Verbose "$(Get-Date -Format G): PDF is Null"
 	}
 	ElseIf($Null -eq $Text)
 	{
-		Write-Verbose "$(Get-Date): Text is Null"
+		Write-Verbose "$(Get-Date -Format G): Text is Null"
 	}
 	ElseIf($Null -eq $HTML)
 	{
-		Write-Verbose "$(Get-Date): HTML is Null"
+		Write-Verbose "$(Get-Date -Format G): HTML is Null"
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): MSWord is $($MSWord)"
-		Write-Verbose "$(Get-Date): PDF is $($PDF)"
-		Write-Verbose "$(Get-Date): Text is $($Text)"
-		Write-Verbose "$(Get-Date): HTML is $($HTML)"
+		Write-Verbose "$(Get-Date -Format G): MSWord is $($MSWord)"
+		Write-Verbose "$(Get-Date -Format G): PDF is $($PDF)"
+		Write-Verbose "$(Get-Date -Format G): Text is $($Text)"
+		Write-Verbose "$(Get-Date -Format G): HTML is $($HTML)"
 	}
 	Write-Error "
 	`n`n
@@ -1727,7 +1735,7 @@ If($ValidSection -eq $False)
 
 If($Folder -ne "")
 {
-	Write-Verbose "$(Get-Date): Testing folder path"
+	Write-Verbose "$(Get-Date -Format G): Testing folder path"
 	#does it exist
 	If(Test-Path $Folder -EA 0)
 	{
@@ -1735,7 +1743,7 @@ If($Folder -ne "")
 		If(Test-Path $Folder -pathType Container -EA 0)
 		{
 			#it exists and it is a folder
-			Write-Verbose "$(Get-Date): Folder path $Folder exists and is a folder"
+			Write-Verbose "$(Get-Date -Format G): Folder path $Folder exists and is a folder"
 		}
 		Else
 		{
@@ -1792,12 +1800,12 @@ If($Log)
 	try 
 	{
 		Start-Transcript -Path $Script:LogPath -Force -Verbose:$false | Out-Null
-		Write-Verbose "$(Get-Date): Transcript/log started at $Script:LogPath"
+		Write-Verbose "$(Get-Date -Format G): Transcript/log started at $Script:LogPath"
 		$Script:StartLog = $true
 	} 
 	catch 
 	{
-		Write-Verbose "$(Get-Date): Transcript/log failed at $Script:LogPath"
+		Write-Verbose "$(Get-Date -Format G): Transcript/log failed at $Script:LogPath"
 		$Script:StartLog = $false
 	}
 }
@@ -1817,19 +1825,19 @@ Function ElevatedSession
 
 	If($currentPrincipal.IsInRole( [Security.Principal.WindowsBuiltInRole]::Administrator ))
 	{
-		Write-Verbose "$(Get-Date): This is an elevated PowerShell session"
+		Write-Verbose "$(Get-Date -Format G): This is an elevated PowerShell session"
 		Return $True
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): This is NOT an elevated PowerShell session" -Foreground White
+		Write-Verbose "$(Get-Date -Format G): This is NOT an elevated PowerShell session" -Foreground White
 		Return $False
 	}
 }
 
 If($Policies -eq $True)
 {
-	Write-Verbose "$(Get-Date): Testing for elevated PowerShell session."
+	Write-Verbose "$(Get-Date -Format G): Testing for elevated PowerShell session."
 	#see if session is elevated
 	$Elevated = ElevatedSession
 	
@@ -1848,7 +1856,7 @@ If($Policies -eq $True)
 		Rerun the script from a non-elevated PowerShell session. The script will now close.
 		`n`n
 		"
-		Write-Verbose "$(Get-Date): "
+		Write-Verbose "$(Get-Date -Format G): "
 		Exit
 	}
 }
@@ -1861,7 +1869,7 @@ If($MSWord -or $PDF)
 {
 	#try and fix the issue with the $CompanyName variable
 	$Script:CoName = $CompanyName
-	Write-Verbose "$(Get-Date): CoName is $($Script:CoName)"
+	Write-Verbose "$(Get-Date -Format G): CoName is $($Script:CoName)"
 	
 	#the following values were attained from 
 	#http://groovy.codehaus.org/modules/scriptom/1.6.0/scriptom-office-2K3-tlb/apidocs/
@@ -1987,8 +1995,8 @@ Function GetComputerWMIInfo
 	# modified 29-Apr-2018 to change from Arrays to New-Object System.Collections.ArrayList
 
 	#Get Computer info
-	Write-Verbose "$(Get-Date): `t`tProcessing WMI Computer information"
-	Write-Verbose "$(Get-Date): `t`t`tHardware information"
+	Write-Verbose "$(Get-Date -Format G): `t`tProcessing WMI Computer information"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tHardware information"
 	If($MSWord -or $PDF)
 	{
 		WriteWordLine 3 0 "Computer Information: $($RemoteComputerName)"
@@ -2030,7 +2038,7 @@ Function GetComputerWMIInfo
 	}
 	ElseIf(!$?)
 	{
-		Write-Verbose "$(Get-Date): Get-WmiObject win32_computersystem failed for $($RemoteComputerName)"
+		Write-Verbose "$(Get-Date -Format G): Get-WmiObject win32_computersystem failed for $($RemoteComputerName)"
 		Write-Warning "Get-WmiObject win32_computersystem failed for $($RemoteComputerName)"
 		If($MSWORD -or $PDF)
 		{
@@ -2057,7 +2065,7 @@ Function GetComputerWMIInfo
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): No results Returned for Computer information"
+		Write-Verbose "$(Get-Date -Format G): No results Returned for Computer information"
 		If($MSWORD -or $PDF)
 		{
 			WriteWordLine 0 2 "No results Returned for Computer information" "" $Null 0 $False $True
@@ -2073,7 +2081,7 @@ Function GetComputerWMIInfo
 	}
 	
 	#Get Disk info
-	Write-Verbose "$(Get-Date): `t`t`tDrive information"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tDrive information"
 
 	If($MSWord -or $PDF)
 	{
@@ -2114,7 +2122,7 @@ Function GetComputerWMIInfo
 	}
 	ElseIf(!$?)
 	{
-		Write-Verbose "$(Get-Date): Get-WmiObject Win32_LogicalDisk failed for $($RemoteComputerName)"
+		Write-Verbose "$(Get-Date -Format G): Get-WmiObject Win32_LogicalDisk failed for $($RemoteComputerName)"
 		Write-Warning "Get-WmiObject Win32_LogicalDisk failed for $($RemoteComputerName)"
 		If($MSWORD -or $PDF)
 		{
@@ -2140,7 +2148,7 @@ Function GetComputerWMIInfo
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): No results Returned for Drive information"
+		Write-Verbose "$(Get-Date -Format G): No results Returned for Drive information"
 		If($MSWORD -or $PDF)
 		{
 			WriteWordLine 0 2 "No results Returned for Drive information" "" $Null 0 $False $True
@@ -2157,7 +2165,7 @@ Function GetComputerWMIInfo
 	
 
 	#Get CPU's and stepping
-	Write-Verbose "$(Get-Date): `t`t`tProcessor information"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tProcessor information"
 
 	If($MSWord -or $PDF)
 	{
@@ -2194,7 +2202,7 @@ Function GetComputerWMIInfo
 	}
 	ElseIf(!$?)
 	{
-		Write-Verbose "$(Get-Date): Get-WmiObject win32_Processor failed for $($RemoteComputerName)"
+		Write-Verbose "$(Get-Date -Format G): Get-WmiObject win32_Processor failed for $($RemoteComputerName)"
 		Write-Warning "Get-WmiObject win32_Processor failed for $($RemoteComputerName)"
 		If($MSWORD -or $PDF)
 		{
@@ -2220,7 +2228,7 @@ Function GetComputerWMIInfo
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): No results Returned for Processor information"
+		Write-Verbose "$(Get-Date -Format G): No results Returned for Processor information"
 		If($MSWORD -or $PDF)
 		{
 			WriteWordLine 0 2 "No results Returned for Processor information" "" $Null 0 $False $True
@@ -2236,7 +2244,7 @@ Function GetComputerWMIInfo
 	}
 
 	#Get Nics
-	Write-Verbose "$(Get-Date): `t`t`tNIC information"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tNIC information"
 
 	If($MSWord -or $PDF)
 	{
@@ -2298,7 +2306,7 @@ Function GetComputerWMIInfo
 				ElseIf(!$?)
 				{
 					Write-Warning "$(Get-Date): Error retrieving NIC information"
-					Write-Verbose "$(Get-Date): Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
+					Write-Verbose "$(Get-Date -Format G): Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
 					Write-Warning "Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
 					If($MSWORD -or $PDF)
 					{
@@ -2327,7 +2335,7 @@ Function GetComputerWMIInfo
 				}
 				Else
 				{
-					Write-Verbose "$(Get-Date): No results Returned for NIC information"
+					Write-Verbose "$(Get-Date -Format G): No results Returned for NIC information"
 					If($MSWORD -or $PDF)
 					{
 						WriteWordLine 0 2 "No results Returned for NIC information" "" $Null 0 $False $True
@@ -2347,7 +2355,7 @@ Function GetComputerWMIInfo
 	ElseIf(!$?)
 	{
 		Write-Warning "$(Get-Date): Error retrieving NIC configuration information"
-		Write-Verbose "$(Get-Date): Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
+		Write-Verbose "$(Get-Date -Format G): Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
 		Write-Warning "Get-WmiObject win32_networkadapterconfiguration failed for $($RemoteComputerName)"
 		If($MSWORD -or $PDF)
 		{
@@ -2376,7 +2384,7 @@ Function GetComputerWMIInfo
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): No results Returned for NIC configuration information"
+		Write-Verbose "$(Get-Date -Format G): No results Returned for NIC configuration information"
 		If($MSWORD -or $PDF)
 		{
 			WriteWordLine 0 2 "No results Returned for NIC configuration information" "" $Null 0 $False $True
@@ -2415,7 +2423,7 @@ Function OutputComputerItem
 	try 
 	{
 
-		$PowerPlan = (Get-WmiObject -ComputerName $RemoteComputerName -Class Win32_PowerPlan -Namespace "root\cimv2\power" |
+		$PowerPlan = (Get-WmiObject -ComputerName $RemoteComputerName -Class Win32_PowerPlan -Namespace "root\cimv2\power" -EA 0|
 			Where-Object {$_.IsActive -eq $true} |
 			Select-Object @{Name = "PowerPlan"; Expression = {$_.ElementName}}).PowerPlan
 	}
@@ -2423,7 +2431,7 @@ Function OutputComputerItem
 	catch 
 	{
 
-		$PowerPlan = $_.Exception
+		$PowerPlan = $_.Exception.Message
 
 	}	
 	
@@ -3662,10 +3670,10 @@ Function FindWordDocumentEnd
 
 Function SetupWord
 {
-	Write-Verbose "$(Get-Date): Setting up Word"
+	Write-Verbose "$(Get-Date -Format G): Setting up Word"
     
 	# Setup word for output
-	Write-Verbose "$(Get-Date): Create Word comObject."
+	Write-Verbose "$(Get-Date -Format G): Create Word comObject."
 	$Script:Word = New-Object -comobject "Word.Application" -EA 0 4>$Null
 	
 	If(!$? -or $Null -eq $Script:Word)
@@ -3684,7 +3692,7 @@ Function SetupWord
 		Exit
 	}
 
-	Write-Verbose "$(Get-Date): Determine Word language value"
+	Write-Verbose "$(Get-Date -Format G): Determine Word language value"
 	If( ( validStateProp $Script:Word Language Value__ ) )
 	{
 		[int]$Script:WordLanguageValue = [int]$Script:Word.Language.Value__
@@ -3708,7 +3716,7 @@ Function SetupWord
 		"
 		AbortScript
 	}
-	Write-Verbose "$(Get-Date): Word language value is $($Script:WordLanguageValue)"
+	Write-Verbose "$(Get-Date -Format G): Word language value is $($Script:WordLanguageValue)"
 	
 	$Script:WordCultureCode = GetCulture $Script:WordLanguageValue
 	
@@ -3775,7 +3783,7 @@ Function SetupWord
 	#only validate CompanyName if the field is blank
 	If([String]::IsNullOrEmpty($Script:CoName))
 	{
-		Write-Verbose "$(Get-Date): Company name is blank.  Retrieve company name from registry."
+		Write-Verbose "$(Get-Date -Format G): Company name is blank.  Retrieve company name from registry."
 		$TmpName = ValidateCompanyName
 		
 		If([String]::IsNullOrEmpty($TmpName))
@@ -3787,13 +3795,13 @@ Function SetupWord
 		Else
 		{
 			$Script:CoName = $TmpName
-			Write-Verbose "$(Get-Date): Updated company name to $($Script:CoName)"
+			Write-Verbose "$(Get-Date -Format G): Updated company name to $($Script:CoName)"
 		}
 	}
 
 	If($Script:WordCultureCode -ne "en-")
 	{
-		Write-Verbose "$(Get-Date): Check Default Cover Page for $($WordCultureCode)"
+		Write-Verbose "$(Get-Date -Format G): Check Default Cover Page for $($WordCultureCode)"
 		[bool]$CPChanged = $False
 		Switch ($Script:WordCultureCode)
 		{
@@ -3896,11 +3904,11 @@ Function SetupWord
 
 		If($CPChanged)
 		{
-			Write-Verbose "$(Get-Date): Changed Default Cover Page from Sideline to $($CoverPage)"
+			Write-Verbose "$(Get-Date -Format G): Changed Default Cover Page from Sideline to $($CoverPage)"
 		}
 	}
 
-	Write-Verbose "$(Get-Date): Validate cover page $($CoverPage) for culture code $($Script:WordCultureCode)"
+	Write-Verbose "$(Get-Date -Format G): Validate cover page $($CoverPage) for culture code $($Script:WordCultureCode)"
 	[bool]$ValidCP = $False
 	
 	$ValidCP = ValidateCoverPage $Script:WordVersion $CoverPage $Script:WordCultureCode
@@ -3908,8 +3916,8 @@ Function SetupWord
 	If(!$ValidCP)
 	{
 		$ErrorActionPreference = $SaveEAPreference
-		Write-Verbose "$(Get-Date): Word language value $($Script:WordLanguageValue)"
-		Write-Verbose "$(Get-Date): Culture code $($Script:WordCultureCode)"
+		Write-Verbose "$(Get-Date -Format G): Word language value $($Script:WordLanguageValue)"
+		Write-Verbose "$(Get-Date -Format G): Culture code $($Script:WordCultureCode)"
 		Write-Error "
 		`n`n
 		`t`t
@@ -3928,7 +3936,7 @@ Function SetupWord
 
 	#http://jdhitsolutions.com/blog/2012/05/san-diego-2012-powershell-deep-dive-slides-and-demos/
 	#using Jeff's Demo-WordReport.ps1 file for examples
-	Write-Verbose "$(Get-Date): Load Word Templates"
+	Write-Verbose "$(Get-Date -Format G): Load Word Templates"
 
 	[bool]$Script:CoverPagesExist = $False
 	[bool]$BuildingBlocksExist = $False
@@ -3937,7 +3945,7 @@ Function SetupWord
 	#word 2010/2013/2016
 	$BuildingBlocksCollection = $Script:Word.Templates | Where-Object {$_.name -eq "Built-In Building Blocks.dotx"}
 
-	Write-Verbose "$(Get-Date): Attempt to load cover page $($CoverPage)"
+	Write-Verbose "$(Get-Date -Format G): Attempt to load cover page $($CoverPage)"
 	$part = $Null
 
 	$BuildingBlocksCollection | 
@@ -3970,16 +3978,16 @@ Function SetupWord
 
 	If(!$Script:CoverPagesExist)
 	{
-		Write-Verbose "$(Get-Date): Cover Pages are not installed or the Cover Page $($CoverPage) does not exist."
+		Write-Verbose "$(Get-Date -Format G): Cover Pages are not installed or the Cover Page $($CoverPage) does not exist."
 		Write-Warning "Cover Pages are not installed or the Cover Page $($CoverPage) does not exist."
 		Write-Warning "This report will not have a Cover Page."
 	}
 
-	Write-Verbose "$(Get-Date): Create empty word doc"
+	Write-Verbose "$(Get-Date -Format G): Create empty word doc"
 	$Script:Doc = $Script:Word.Documents.Add()
 	If($Null -eq $Script:Doc)
 	{
-		Write-Verbose "$(Get-Date): "
+		Write-Verbose "$(Get-Date -Format G): "
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Error "
 		`n`n
@@ -3996,7 +4004,7 @@ Function SetupWord
 	$Script:Selection = $Script:Word.Selection
 	If($Null -eq $Script:Selection)
 	{
-		Write-Verbose "$(Get-Date): "
+		Write-Verbose "$(Get-Date -Format G): "
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Error "
 		`n`n
@@ -4015,7 +4023,7 @@ Function SetupWord
 	$Script:Word.ActiveDocument.DefaultTabStop = 36
 
 	#Disable Spell and Grammar Check to resolve issue and improve performance (from Pat Coughlin)
-	Write-Verbose "$(Get-Date): Disable grammar and spell checking"
+	Write-Verbose "$(Get-Date -Format G): Disable grammar and spell checking"
 	#bug reported 1-Apr-2014 by Tim Mangan
 	#save current options first before turning them off
 	$Script:CurrentGrammarOption = $Script:Word.Options.CheckGrammarAsYouType
@@ -4026,17 +4034,17 @@ Function SetupWord
 	If($BuildingBlocksExist)
 	{
 		#insert new page, getting ready for table of contents
-		Write-Verbose "$(Get-Date): Insert new page, getting ready for table of contents"
+		Write-Verbose "$(Get-Date -Format G): Insert new page, getting ready for table of contents"
 		$part.Insert($Script:Selection.Range,$True) | Out-Null
 		$Script:Selection.InsertNewPage()
 
 		#table of contents
-		Write-Verbose "$(Get-Date): Table of Contents - $($Script:MyHash.Word_TableOfContents)"
+		Write-Verbose "$(Get-Date -Format G): Table of Contents - $($Script:MyHash.Word_TableOfContents)"
 		$toc = $BuildingBlocks.BuildingBlockEntries.Item($Script:MyHash.Word_TableOfContents)
 		If($Null -eq $toc)
 		{
-			Write-Verbose "$(Get-Date): "
-			Write-Verbose "$(Get-Date): Table of Content - $($Script:MyHash.Word_TableOfContents) could not be retrieved."
+			Write-Verbose "$(Get-Date -Format G): "
+			Write-Verbose "$(Get-Date -Format G): Table of Content - $($Script:MyHash.Word_TableOfContents) could not be retrieved."
 			Write-Warning "This report will not have a Table of Contents."
 		}
 		Else
@@ -4046,16 +4054,16 @@ Function SetupWord
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): Table of Contents are not installed."
+		Write-Verbose "$(Get-Date -Format G): Table of Contents are not installed."
 		Write-Warning "Table of Contents are not installed so this report will not have a Table of Contents."
 	}
 
 	#set the footer
-	Write-Verbose "$(Get-Date): Set the footer"
+	Write-Verbose "$(Get-Date -Format G): Set the footer"
 	[string]$footertext = "Report created by $username"
 
 	#get the footer
-	Write-Verbose "$(Get-Date): Get the footer and format font"
+	Write-Verbose "$(Get-Date -Format G): Get the footer and format font"
 	$Script:Doc.ActiveWindow.ActivePane.view.SeekView = $wdSeekPrimaryFooter
 	#get the footer and format font
 	$footers = $Script:Doc.Sections.Last.Footers
@@ -4069,15 +4077,15 @@ Function SetupWord
 			$footer.range.Font.Bold = $True
 		}
 	} #end ForEach
-	Write-Verbose "$(Get-Date): Footer text"
+	Write-Verbose "$(Get-Date -Format G): Footer text"
 	$Script:Selection.HeaderFooter.Range.Text = $footerText
 
 	#add page numbering
-	Write-Verbose "$(Get-Date): Add page numbering"
+	Write-Verbose "$(Get-Date -Format G): Add page numbering"
 	$Script:Selection.HeaderFooter.PageNumbers.Add($wdAlignPageNumberRight) | Out-Null
 
 	FindWordDocumentEnd
-	Write-Verbose "$(Get-Date):"
+	Write-Verbose "$(Get-Date -Format G):"
 	#end of Jeff Hicks 
 }
 
@@ -4090,7 +4098,7 @@ Function UpdateDocumentProperties
 	{
 		If($Script:CoverPagesExist)
 		{
-			Write-Verbose "$(Get-Date): Set Cover Page Properties"
+			Write-Verbose "$(Get-Date -Format G): Set Cover Page Properties"
 			#8-Jun-2017 put these 4 items in alpha order
             Set-DocumentProperty -Document $Script:Doc -DocProperty Author -Value $UserName
             Set-DocumentProperty -Document $Script:Doc -DocProperty Company -Value $Script:CoName
@@ -4142,7 +4150,7 @@ Function UpdateDocumentProperties
 			[string]$abstract = (Get-Date -Format d).ToString()
 			$ab.Text = $abstract
 
-			Write-Verbose "$(Get-Date): Update the Table of Contents"
+			Write-Verbose "$(Get-Date -Format G): Update the Table of Contents"
 			#update the Table of Contents
 			$Script:Doc.TablesOfContents.item(1).Update()
 			$cp = $Null
@@ -4869,7 +4877,7 @@ Function CheckHTMLColor
 
 Function SetupHTML
 {
-	Write-Verbose "$(Get-Date): Setting up HTML"
+	Write-Verbose "$(Get-Date -Format G): Setting up HTML"
 	If(!$AddDateTime)
 	{
 		[string]$Script:FileName1 = "$($Script:pwdpath)\$($OutputFileName).html"
@@ -5479,7 +5487,7 @@ Function SaveandCloseDocumentandShutdownWord
 	$Script:Word.Options.CheckGrammarAsYouType = $Script:CurrentGrammarOption
 	$Script:Word.Options.CheckSpellingAsYouType = $Script:CurrentSpellingOption
 
-	Write-Verbose "$(Get-Date): Save and Close document and Shutdown Word"
+	Write-Verbose "$(Get-Date -Format G): Save and Close document and Shutdown Word"
 	If($Script:WordVersion -eq $wdWord2010)
 	{
 		#the $saveFormat below passes StrictMode 2
@@ -5488,11 +5496,11 @@ Function SaveandCloseDocumentandShutdownWord
 		#http://msdn.microsoft.com/en-us/library/microsoft.office.interop.word.wdsaveformat(v=office.14).aspx
 		If($PDF)
 		{
-			Write-Verbose "$(Get-Date): Saving as DOCX file first before saving to PDF"
+			Write-Verbose "$(Get-Date -Format G): Saving as DOCX file first before saving to PDF"
 		}
 		Else
 		{
-			Write-Verbose "$(Get-Date): Saving DOCX file"
+			Write-Verbose "$(Get-Date -Format G): Saving DOCX file"
 		}
 		If($AddDateTime)
 		{
@@ -5502,12 +5510,12 @@ Function SaveandCloseDocumentandShutdownWord
 				$Script:FileName2 += "_$(Get-Date -f yyyy-MM-dd_HHmm).pdf"
 			}
 		}
-		Write-Verbose "$(Get-Date): Running $($Script:WordProduct) and detected operating system $($Script:RunningOS)"
+		Write-Verbose "$(Get-Date -Format G): Running $($Script:WordProduct) and detected operating system $($Script:RunningOS)"
 		$saveFormat = [Enum]::Parse([Microsoft.Office.Interop.Word.WdSaveFormat], "wdFormatDocumentDefault")
 		$Script:Doc.SaveAs([REF]$Script:FileName1, [ref]$SaveFormat)
 		If($PDF)
 		{
-			Write-Verbose "$(Get-Date): Now saving as PDF"
+			Write-Verbose "$(Get-Date -Format G): Now saving as PDF"
 			$saveFormat = [Enum]::Parse([Microsoft.Office.Interop.Word.WdSaveFormat], "wdFormatPDF")
 			$Script:Doc.SaveAs([REF]$Script:FileName2, [ref]$saveFormat)
 		}
@@ -5516,11 +5524,11 @@ Function SaveandCloseDocumentandShutdownWord
 	{
 		If($PDF)
 		{
-			Write-Verbose "$(Get-Date): Saving as DOCX file first before saving to PDF"
+			Write-Verbose "$(Get-Date -Format G): Saving as DOCX file first before saving to PDF"
 		}
 		Else
 		{
-			Write-Verbose "$(Get-Date): Saving DOCX file"
+			Write-Verbose "$(Get-Date -Format G): Saving DOCX file"
 		}
 		If($AddDateTime)
 		{
@@ -5530,16 +5538,16 @@ Function SaveandCloseDocumentandShutdownWord
 				$Script:FileName2 += "_$(Get-Date -f yyyy-MM-dd_HHmm).pdf"
 			}
 		}
-		Write-Verbose "$(Get-Date): Running $($Script:WordProduct) and detected operating system $($Script:RunningOS)"
+		Write-Verbose "$(Get-Date -Format G): Running $($Script:WordProduct) and detected operating system $($Script:RunningOS)"
 		$Script:Doc.SaveAs2([ref]$Script:FileName1, [ref]$wdFormatDocumentDefault)
 		If($PDF)
 		{
-			Write-Verbose "$(Get-Date): Now saving as PDF"
+			Write-Verbose "$(Get-Date -Format G): Now saving as PDF"
 			$Script:Doc.SaveAs([ref]$Script:FileName2, [ref]$wdFormatPDF)
 		}
 	}
 
-	Write-Verbose "$(Get-Date): Closing Word"
+	Write-Verbose "$(Get-Date -Format G): Closing Word"
 	$Script:Doc.Close()
 	$Script:Word.Quit()
 	If($PDF)
@@ -5550,7 +5558,7 @@ Function SaveandCloseDocumentandShutdownWord
 			$cnt++
 			If($cnt -gt 1)
 			{
-				Write-Verbose "$(Get-Date): Waiting another 10 seconds to allow Word to fully close (try # $($cnt))"
+				Write-Verbose "$(Get-Date -Format G): Waiting another 10 seconds to allow Word to fully close (try # $($cnt))"
 				Start-Sleep -Seconds 10
 				$Script:Word.Quit()
 				If($cnt -gt 2)
@@ -5564,16 +5572,16 @@ Function SaveandCloseDocumentandShutdownWord
 					$wordprocess = ((Get-Process 'WinWord' -ea 0) | Where-Object {$_.SessionId -eq $SessionID}).Id
 					If($wordprocess -gt 0)
 					{
-						Write-Verbose "$(Get-Date): Attempting to stop WinWord process # $($wordprocess)"
+						Write-Verbose "$(Get-Date -Format G): Attempting to stop WinWord process # $($wordprocess)"
 						Stop-Process $wordprocess -EA 0
 					}
 				}
 			}
-			Write-Verbose "$(Get-Date): Attempting to delete $($Script:FileName1) since only $($Script:FileName2) is needed (try # $($cnt))"
+			Write-Verbose "$(Get-Date -Format G): Attempting to delete $($Script:FileName1) since only $($Script:FileName2) is needed (try # $($cnt))"
 			Remove-Item $Script:FileName1 -EA 0 4>$Null
 		}
 	}
-	Write-Verbose "$(Get-Date): System Cleanup"
+	Write-Verbose "$(Get-Date -Format G): System Cleanup"
 	[System.Runtime.Interopservices.Marshal]::ReleaseComObject($Script:Word) | Out-Null
 	If(Test-Path variable:global:word)
 	{
@@ -5593,7 +5601,7 @@ Function SaveandCloseDocumentandShutdownWord
 	$wordprocess = ((Get-Process 'WinWord' -ea 0) | Where-Object {$_.SessionId -eq $SessionID}).Id
 	If($null -ne $wordprocess -and $wordprocess -gt 0)
 	{
-		Write-Verbose "$(Get-Date): WinWord process is still running. Attempting to stop WinWord process # $($wordprocess)"
+		Write-Verbose "$(Get-Date -Format G): WinWord process is still running. Attempting to stop WinWord process # $($wordprocess)"
 		Stop-Process $wordprocess -EA 0
 	}
 }
@@ -5683,7 +5691,7 @@ Function ProcessDocumentOutput
 	{
 		If(Test-Path "$($Script:FileName2)")
 		{
-			Write-Verbose "$(Get-Date): $($Script:FileName2) is ready for use"
+			Write-Verbose "$(Get-Date -Format G): $($Script:FileName2) is ready for use"
 			$GotFile = $True
 		}
 		Else
@@ -5696,7 +5704,7 @@ Function ProcessDocumentOutput
 	{
 		If(Test-Path "$($Script:FileName1)")
 		{
-			Write-Verbose "$(Get-Date): $($Script:FileName1) is ready for use"
+			Write-Verbose "$(Get-Date -Format G): $($Script:FileName1) is ready for use"
 			$GotFile = $True
 		}
 		Else
@@ -5723,81 +5731,81 @@ Function ProcessDocumentOutput
 
 Function ShowScriptOptions
 {
-	Write-Verbose "$(Get-Date): "
-	Write-Verbose "$(Get-Date): "
-	Write-Verbose "$(Get-Date): AddDateTime     : $($AddDateTime)"
-	Write-Verbose "$(Get-Date): AdminAddress    : $($AdminAddress)"
-	Write-Verbose "$(Get-Date): Administrators  : $($Administrators)"
-	Write-Verbose "$(Get-Date): Applications    : $($Applications)"
+	Write-Verbose "$(Get-Date -Format G): "
+	Write-Verbose "$(Get-Date -Format G): "
+	Write-Verbose "$(Get-Date -Format G): AddDateTime     : $($AddDateTime)"
+	Write-Verbose "$(Get-Date -Format G): AdminAddress    : $($AdminAddress)"
+	Write-Verbose "$(Get-Date -Format G): Administrators  : $($Administrators)"
+	Write-Verbose "$(Get-Date -Format G): Applications    : $($Applications)"
 	If($MSWORD -or $PDF)
 	{
-		Write-Verbose "$(Get-Date): Company Name    : $($Script:CoName)"
-		Write-Verbose "$(Get-Date): Company Address : $($CompanyAddress)"
-		Write-Verbose "$(Get-Date): Company Email   : $($CompanyEmail)"
-		Write-Verbose "$(Get-Date): Company Fax     : $($CompanyFax)"
-		Write-Verbose "$(Get-Date): Company Phone   : $($CompanyPhone)"
-		Write-Verbose "$(Get-Date): Cover Page      : $($CoverPage)"
+		Write-Verbose "$(Get-Date -Format G): Company Name    : $($Script:CoName)"
+		Write-Verbose "$(Get-Date -Format G): Company Address : $($CompanyAddress)"
+		Write-Verbose "$(Get-Date -Format G): Company Email   : $($CompanyEmail)"
+		Write-Verbose "$(Get-Date -Format G): Company Fax     : $($CompanyFax)"
+		Write-Verbose "$(Get-Date -Format G): Company Phone   : $($CompanyPhone)"
+		Write-Verbose "$(Get-Date -Format G): Cover Page      : $($CoverPage)"
 	}
-	Write-Verbose "$(Get-Date): DeliveryGroups  : $($DeliveryGroups)"
-	Write-Verbose "$(Get-Date): Dev             : $($Dev)"
+	Write-Verbose "$(Get-Date -Format G): DeliveryGroups  : $($DeliveryGroups)"
+	Write-Verbose "$(Get-Date -Format G): Dev             : $($Dev)"
 	If($Dev)
 	{
-		Write-Verbose "$(Get-Date): DevErrorFile    : $($Script:DevErrorFile)"
+		Write-Verbose "$(Get-Date -Format G): DevErrorFile    : $($Script:DevErrorFile)"
 	}
-	Write-Verbose "$(Get-Date): DGUtilization   : $($DeliveryGroupsUtilization)"
-	Write-Verbose "$(Get-Date): Filename1       : $($Script:Filename1)"
+	Write-Verbose "$(Get-Date -Format G): DGUtilization   : $($DeliveryGroupsUtilization)"
+	Write-Verbose "$(Get-Date -Format G): Filename1       : $($Script:Filename1)"
 	If($PDF)
 	{
-		Write-Verbose "$(Get-Date): Filename2       : $($Script:Filename2)"
+		Write-Verbose "$(Get-Date -Format G): Filename2       : $($Script:Filename2)"
 	}
-	Write-Verbose "$(Get-Date): Folder          : $($Folder)"
-	Write-Verbose "$(Get-Date): From            : $($From)"
-	Write-Verbose "$(Get-Date): Hosting         : $($Hosting)"
-	Write-Verbose "$(Get-Date): HW Inventory    : $($Hardware)"
-	Write-Verbose "$(Get-Date): Log             : $($Log)"
-	Write-Verbose "$(Get-Date): Logging         : $($Logging)"
+	Write-Verbose "$(Get-Date -Format G): Folder          : $($Folder)"
+	Write-Verbose "$(Get-Date -Format G): From            : $($From)"
+	Write-Verbose "$(Get-Date -Format G): Hosting         : $($Hosting)"
+	Write-Verbose "$(Get-Date -Format G): HW Inventory    : $($Hardware)"
+	Write-Verbose "$(Get-Date -Format G): Log             : $($Log)"
+	Write-Verbose "$(Get-Date -Format G): Logging         : $($Logging)"
 	If($Logging)
 	{
-		Write-Verbose "$(Get-Date):    Start Date   : $($StartDate)"
-		Write-Verbose "$(Get-Date):    End Date     : $($EndDate)"
+		Write-Verbose "$(Get-Date -Format G):    Start Date   : $($StartDate)"
+		Write-Verbose "$(Get-Date -Format G):    End Date     : $($EndDate)"
 	}
-	Write-Verbose "$(Get-Date): MachineCatalogs : $($MachineCatalogs)"
-	Write-Verbose "$(Get-Date): MaxDetails      : $($MaxDetails)"
-	Write-Verbose "$(Get-Date): NoADPolicies    : $($NoADPolicies)"
-	Write-Verbose "$(Get-Date): NoPolicies      : $($NoPolicies)"
-	Write-Verbose "$(Get-Date): Policies        : $($Policies)"
-	Write-Verbose "$(Get-Date): Save As HTML    : $($HTML)"
-	Write-Verbose "$(Get-Date): Save As PDF     : $($PDF)"
-	Write-Verbose "$(Get-Date): Save As TEXT    : $($TEXT)"
-	Write-Verbose "$(Get-Date): Save As WORD    : $($MSWORD)"
-	Write-Verbose "$(Get-Date): Section         : $($Section)"
-	Write-Verbose "$(Get-Date): ScriptInfo      : $($ScriptInfo)"
-	Write-Verbose "$(Get-Date): Site Name       : $($XDSiteName)"
-	Write-Verbose "$(Get-Date): Smtp Port       : $($SmtpPort)"
-	Write-Verbose "$(Get-Date): Smtp Server     : $($SmtpServer)"
-	Write-Verbose "$(Get-Date): StoreFront      : $($StoreFront)"
-	Write-Verbose "$(Get-Date): Title           : $($Script:Title)"
-	Write-Verbose "$(Get-Date): To              : $($To)"
-	Write-Verbose "$(Get-Date): Use SSL         : $($UseSSL)"
+	Write-Verbose "$(Get-Date -Format G): MachineCatalogs : $($MachineCatalogs)"
+	Write-Verbose "$(Get-Date -Format G): MaxDetails      : $($MaxDetails)"
+	Write-Verbose "$(Get-Date -Format G): NoADPolicies    : $($NoADPolicies)"
+	Write-Verbose "$(Get-Date -Format G): NoPolicies      : $($NoPolicies)"
+	Write-Verbose "$(Get-Date -Format G): Policies        : $($Policies)"
+	Write-Verbose "$(Get-Date -Format G): Save As HTML    : $($HTML)"
+	Write-Verbose "$(Get-Date -Format G): Save As PDF     : $($PDF)"
+	Write-Verbose "$(Get-Date -Format G): Save As TEXT    : $($TEXT)"
+	Write-Verbose "$(Get-Date -Format G): Save As WORD    : $($MSWORD)"
+	Write-Verbose "$(Get-Date -Format G): Section         : $($Section)"
+	Write-Verbose "$(Get-Date -Format G): ScriptInfo      : $($ScriptInfo)"
+	Write-Verbose "$(Get-Date -Format G): Site Name       : $($XDSiteName)"
+	Write-Verbose "$(Get-Date -Format G): Smtp Port       : $($SmtpPort)"
+	Write-Verbose "$(Get-Date -Format G): Smtp Server     : $($SmtpServer)"
+	Write-Verbose "$(Get-Date -Format G): StoreFront      : $($StoreFront)"
+	Write-Verbose "$(Get-Date -Format G): Title           : $($Script:Title)"
+	Write-Verbose "$(Get-Date -Format G): To              : $($To)"
+	Write-Verbose "$(Get-Date -Format G): Use SSL         : $($UseSSL)"
 	If($MSWORD -or $PDF)
 	{
-		Write-Verbose "$(Get-Date): User Name       : $($UserName)"
+		Write-Verbose "$(Get-Date -Format G): User Name       : $($UserName)"
 	}
-	Write-Verbose "$(Get-Date): XA/XD Version   : $($Script:XDSiteVersionReal)"
-	Write-Verbose "$(Get-Date): "
-	Write-Verbose "$(Get-Date): OS Detected     : $($Script:RunningOS)"
-	Write-Verbose "$(Get-Date): PoSH version    : $($Host.Version)"
-	Write-Verbose "$(Get-Date): PSCulture       : $($PSCulture)"
-	Write-Verbose "$(Get-Date): PSUICulture     : $($PSUICulture)"
+	Write-Verbose "$(Get-Date -Format G): XA/XD Version   : $($Script:XDSiteVersionReal)"
+	Write-Verbose "$(Get-Date -Format G): "
+	Write-Verbose "$(Get-Date -Format G): OS Detected     : $($Script:RunningOS)"
+	Write-Verbose "$(Get-Date -Format G): PoSH version    : $($Host.Version)"
+	Write-Verbose "$(Get-Date -Format G): PSCulture       : $($PSCulture)"
+	Write-Verbose "$(Get-Date -Format G): PSUICulture     : $($PSUICulture)"
 	If($MSWORD -or $PDF)
 	{
-		Write-Verbose "$(Get-Date): Word language   : $($Script:WordLanguageValue)"
-		Write-Verbose "$(Get-Date): Word version    : $($Script:WordProduct)"
+		Write-Verbose "$(Get-Date -Format G): Word language   : $($Script:WordLanguageValue)"
+		Write-Verbose "$(Get-Date -Format G): Word version    : $($Script:WordProduct)"
 	}
-	Write-Verbose "$(Get-Date): "
-	Write-Verbose "$(Get-Date): Script start    : $($Script:StartTime)"
-	Write-Verbose "$(Get-Date): "
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
+	Write-Verbose "$(Get-Date -Format G): Script start    : $($Script:StartTime)"
+	Write-Verbose "$(Get-Date -Format G): "
+	Write-Verbose "$(Get-Date -Format G): "
 	
 	
 }
@@ -5807,7 +5815,7 @@ Function AbortScript
 	If($MSWord -or $PDF)
 	{
 		$Script:Word.quit()
-		Write-Verbose "$(Get-Date): System Cleanup"
+		Write-Verbose "$(Get-Date -Format G): System Cleanup"
 		[System.Runtime.Interopservices.Marshal]::ReleaseComObject($Script:Word) | Out-Null
 		If(Test-Path variable:global:word)
 		{
@@ -5816,7 +5824,7 @@ Function AbortScript
 	}
 	[gc]::collect() 
 	[gc]::WaitForPendingFinalizers()
-	Write-Verbose "$(Get-Date): Script has been aborted"
+	Write-Verbose "$(Get-Date -Format G): Script has been aborted"
 	$ErrorActionPreference = $SaveEAPreference
 	Exit
 }
@@ -5949,12 +5957,12 @@ Function TranscriptLogging
 			{
 				Start-Transcript -Path $Script:LogPath -Append -Verbose:$false | Out-Null
 			}
-			Write-Verbose "$(Get-Date): Transcript/log started at $Script:LogPath"
+			Write-Verbose "$(Get-Date -Format G): Transcript/log started at $Script:LogPath"
 			$Script:StartLog = $true
 		} 
 		catch 
 		{
-			Write-Verbose "$(Get-Date): Transcript/log failed at $Script:LogPath"
+			Write-Verbose "$(Get-Date -Format G): Transcript/log failed at $Script:LogPath"
 			$Script:StartLog = $false
 		}
 	}
@@ -5990,7 +5998,7 @@ Function Get-IPAddress
 Function SendEmail
 {
 	Param([array]$Attachments)
-	Write-Verbose "$(Get-Date): Prepare to email"
+	Write-Verbose "$(Get-Date -Format G): Prepare to email"
 
 	$emailAttachment = $Attachments
 	$emailSubject = $Script:Title
@@ -6030,13 +6038,13 @@ $Script:Title is attached.
 		
 		If($?)
 		{
-			Write-Verbose "$(Get-Date): Email successfully sent using anonymous credentials"
+			Write-Verbose "$(Get-Date -Format G): Email successfully sent using anonymous credentials"
 		}
 		ElseIf(!$?)
 		{
 			$e = $error[0]
 
-			Write-Verbose "$(Get-Date): Email was not sent:"
+			Write-Verbose "$(Get-Date -Format G): Email was not sent:"
 			Write-Warning "$(Get-Date): Exception: $e.Exception" 
 		}
 	}
@@ -6044,7 +6052,7 @@ $Script:Title is attached.
 	{
 		If($UseSSL)
 		{
-			Write-Verbose "$(Get-Date): Trying to send email using current user's credentials with SSL"
+			Write-Verbose "$(Get-Date -Format G): Trying to send email using current user's credentials with SSL"
 			Send-MailMessage -Attachments $emailAttachment -Body $emailBody -BodyAsHtml -From $From `
 			-Port $SmtpPort -SmtpServer $SmtpServer -Subject $emailSubject -To $To `
 			-UseSSL *>$Null
@@ -6064,7 +6072,7 @@ $Script:Title is attached.
 			If($null -ne $e.Exception -and $e.Exception.ToString().Contains("5.7"))
 			{
 				#The server response was: 5.7.xx SMTP; Client was not authenticated to send anonymous mail during MAIL FROM
-				Write-Verbose "$(Get-Date): Current user's credentials failed. Ask for usable credentials."
+				Write-Verbose "$(Get-Date -Format G): Current user's credentials failed. Ask for usable credentials."
 
 				If($Dev)
 				{
@@ -6090,19 +6098,19 @@ $Script:Title is attached.
 
 				If($?)
 				{
-					Write-Verbose "$(Get-Date): Email successfully sent using new credentials"
+					Write-Verbose "$(Get-Date -Format G): Email successfully sent using new credentials"
 				}
 				ElseIf(!$?)
 				{
 					$e = $error[0]
 
-					Write-Verbose "$(Get-Date): Email was not sent:"
+					Write-Verbose "$(Get-Date -Format G): Email was not sent:"
 					Write-Warning "$(Get-Date): Exception: $e.Exception" 
 				}
 			}
 			Else
 			{
-				Write-Verbose "$(Get-Date): Email was not sent:"
+				Write-Verbose "$(Get-Date -Format G): Email was not sent:"
 				Write-Warning "$(Get-Date): Exception: $e.Exception" 
 			}
 		}
@@ -6195,7 +6203,7 @@ Function GetAdmins
 #region Machine Catalog functions
 Function ProcessMachineCatalogs
 {
-	Write-Verbose "$(Get-Date): Retrieving Machine Catalogs"
+	Write-Verbose "$(Get-Date -Format G): Retrieving Machine Catalogs"
 
 	$txt = "Machine Catalogs"
 	If($MSWord -or $PDF)
@@ -6233,14 +6241,14 @@ Function ProcessMachineCatalogs
 		$txt = "Unable to retrieve Machine Catalogs"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputMachines
 {
 	Param([object]$Catalogs)
 	
-	Write-Verbose "$(Get-Date): `tProcessing Machine Catalogs"
+	Write-Verbose "$(Get-Date -Format G): `tProcessing Machine Catalogs"
 
 	#add 16-jun-2015, summary table of catalogs to match what is shown in Studio
 	If($MSWord -or $PDF)
@@ -6402,7 +6410,7 @@ Function OutputMachines
 	
 	ForEach($Catalog in $Catalogs)
 	{
-		Write-Verbose "$(Get-Date): `t`tAdding Catalog $($Catalog.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`tAdding Catalog $($Catalog.Name)"
 		$xType = ""
 		$xCatalogType = ""
 		$xAllocationType = ""
@@ -6807,10 +6815,10 @@ Function OutputMachines
 		{
 			WriteHTMLLine 2 0 "Machine Catalog: $($Catalog.Name)"
 			$rowdata = @()
-			$columnHeaders = @("Machine type",($htmlsilver -bor $htmlbold),$xCatalogType,$htmlwhite)
+			$columnHeaders = @("Description",($htmlsilver -bor $htmlbold),$Catalog.Description,$htmlwhite)
 			If($Catalog.ProvisioningType -eq "MCS")
 			{
-				$rowdata += @(,('Description',($htmlsilver -bor $htmlbold),$Catalog.Description,$htmlwhite))
+				$rowdata += @(,('Machine type',($htmlsilver -bor $htmlbold),$xCatalogType,$htmlwhite))
 				$rowdata += @(,('No. of machines',($htmlsilver -bor $htmlbold),$NumberOfMachines,$htmlwhite))
 				$rowdata += @(,('Allocated machines',($htmlsilver -bor $htmlbold),$Catalog.UsedCount,$htmlwhite))
 				$rowdata += @(,('Allocation type',($htmlsilver -bor $htmlbold),$xAllocationType,$htmlwhite))
@@ -6859,7 +6867,6 @@ Function OutputMachines
 			}
 			ElseIf($Catalog.ProvisioningType -eq "PVS")
 			{
-				$rowdata += @(,('Description',($htmlsilver -bor $htmlbold),$Catalog.Description,$htmlwhite))
 				$rowdata += @(,('Machine type',($htmlsilver -bor $htmlbold),$xCatalogType,$htmlwhite))
 				$rowdata += @(,('Provisioning method',($htmlsilver -bor $htmlbold),$xProvisioningType,$htmlwhite))
 				$rowdata += @(,('PVS address',($htmlsilver -bor $htmlbold),$Catalog.PvsAddress,$htmlwhite))
@@ -6884,7 +6891,7 @@ Function OutputMachines
 			}
 			ElseIf($Catalog.ProvisioningType -eq "Manual" -and $Catalog.IsRemotePC -eq $True)
 			{
-				$rowdata += @(,('Description',($htmlsilver -bor $htmlbold),$Catalog.Description,$htmlwhite))
+				$rowdata += @(,('Machine type',($htmlsilver -bor $htmlbold),$xCatalogType,$htmlwhite))
 				$rowdata += @(,('No. of machines',($htmlsilver -bor $htmlbold),$NumberOfMachines,$htmlwhite))
 				$rowdata += @(,('Allocated machines',($htmlsilver -bor $htmlbold),$Catalog.UsedCount,$htmlwhite))
 				$rowdata += @(,('Machine type',($htmlsilver -bor $htmlbold),$xCatalogType,$htmlwhite))
@@ -6908,7 +6915,7 @@ Function OutputMachines
 			}
 			ElseIf($Catalog.ProvisioningType -eq "Manual" -and $Catalog.IsRemotePC -ne $True)
 			{
-				$rowdata += @(,('Description',($htmlsilver -bor $htmlbold),$Catalog.Description,$htmlwhite))
+				$rowdata += @(,('Machine type',($htmlsilver -bor $htmlbold),$xCatalogType,$htmlwhite))
 				$rowdata += @(,('Organizational Units',($htmlsilver -bor $htmlbold),$RemotePCOU,$htmlwhite))
 				$rowdata += @(,('Allow subfolder matches',($htmlsilver -bor $htmlbold),$RemotePCSubOU,$htmlwhite))
 				$rowdata += @(,('No. of machines',($htmlsilver -bor $htmlbold),$NumberOfMachines,$htmlwhite))
@@ -7085,7 +7092,7 @@ Function OutputMachines
 		{
 			If($Null -ne $Machines)
 			{
-				Write-Verbose "$(Get-Date): `t`tProcessing Machines in $($Catalog.Name)"
+				Write-Verbose "$(Get-Date -Format G): `t`tProcessing Machines in $($Catalog.Name)"
 				
 				If($MSWord -or $PDF)
 				{
@@ -7152,7 +7159,7 @@ Function OutputMachines
 					WriteHTMLLine 0 0 " "
 				}
 				
-				Write-Verbose "$(Get-Date): `t`tProcessing administrators for Machines in $($Catalog.Name)"
+				Write-Verbose "$(Get-Date -Format G): `t`tProcessing administrators for Machines in $($Catalog.Name)"
 				$Admins = GetAdmins "Catalog" $Catalog.Name
 				
 				If($? -and ($Null -ne $Admins))
@@ -7192,7 +7199,7 @@ Function OutputMachineDetails
 {
 	Param([object] $Machine)
 	
-	Write-Verbose "$(Get-Date): `t`tOutput Desktop Machine $($Machine.HostedMachineName)"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Desktop Machine $($Machine.HostedMachineName)"
 	
 	$xAssociatedUserFullNames = @()
 	ForEach($Value in $Machine.AssociatedUserFullNames)
@@ -8001,7 +8008,7 @@ Function OutputServerMachineDetails
 {
 	Param([object] $Machine)
 	
-	Write-Verbose "$(Get-Date): `t`tOutput Server Machine $($Machine.HostedMachineName)"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Server Machine $($Machine.HostedMachineName)"
 	
 	$xAssociatedUserFullNames = @()
 	ForEach($Value in $Machine.AssociatedUserFullNames)
@@ -8778,7 +8785,7 @@ Function OutputServerMachineDetails
 #region Delivery Group functions
 Function ProcessDeliveryGroups
 {
-	Write-Verbose "$(Get-Date): Retrieving Delivery Groups"
+	Write-Verbose "$(Get-Date -Format G): Retrieving Delivery Groups"
 
 	If($MSWord -or $PDF)
 	{
@@ -8803,7 +8810,7 @@ Function ProcessDeliveryGroups
 
 	If($? -and ($Null -ne $AllDeliveryGroups))
 	{
-		Write-Verbose "$(Get-Date): `tProcessing Delivery Groups"
+		Write-Verbose "$(Get-Date -Format G): `tProcessing Delivery Groups"
 		
 		#add 16-jun-2015, summary table of delivery groups to match what is shown in Studio
 		OutputDeliveryGroupTable $AllDeliveryGroups
@@ -8823,7 +8830,7 @@ Function ProcessDeliveryGroups
 		$txt = "Unable to retrieve Delivery Groups"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputDeliveryGroupTable 
@@ -8957,7 +8964,7 @@ Function OutputDeliveryGroup
 {
 	Param([object] $Group)
 	
-	Write-Verbose "$(Get-Date): `t`tAdding Delivery Group $($Group.Name)"
+	Write-Verbose "$(Get-Date -Format G): `t`tAdding Delivery Group $($Group.Name)"
 	$xSingleSession = ""
 	$xState = ""
 	If($Group.SessionSupport -eq "SingleSession")
@@ -9063,7 +9070,7 @@ Function OutputDeliveryGroup
 		$Machines = Get-BrokerMachine -DesktopGroupName $Group.name @XDParams2 -SortBy DNSName
 		If($? -and $Null -ne $Machines)
 		{
-			Write-Verbose "$(Get-Date): `t`tProcessing details"
+			Write-Verbose "$(Get-Date -Format G): `t`tProcessing details"
 			$txt = "Delivery Group Details: "
 			If($MSWord -or $PDF)
 			{
@@ -9079,13 +9086,13 @@ Function OutputDeliveryGroup
 			}
 			OutputDeliveryGroupDetails $Group
 			
-			Write-Verbose "$(Get-Date): `t`tProcessing applications"
+			Write-Verbose "$(Get-Date -Format G): `t`tProcessing applications"
 			OutputDeliveryGroupApplicationDetails $Group
 
-			Write-Verbose "$(Get-Date): `t`tProcessing machine catalogs"
+			Write-Verbose "$(Get-Date -Format G): `t`tProcessing machine catalogs"
 			OutputDeliveryGroupCatalogs $Group
 
-			Write-Verbose "$(Get-Date): `t`tProcessing administrators"
+			Write-Verbose "$(Get-Date -Format G): `t`tProcessing administrators"
 			$Admins = GetAdmins "DesktopGroup" $Group.Name
 			
 			If($? -and ($Null -ne $Admins))
@@ -9129,7 +9136,7 @@ Function OutputDeliveryGroup
 	
 	If($DeliveryGroupsUtilization)
 	{
-		Write-Verbose "$(Get-Date): `t`t`tCreating Delivery Group Utilization report"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tCreating Delivery Group Utilization report"
 		OutputDeliveryGroupUtilization $Group
 	}
 }
@@ -9146,7 +9153,7 @@ Function OutputDeliveryGroupUtilization
 	$txt = "Delivery Group Utilization Report"
 	If($MSWord -or $PDF)
 	{
-		Write-Verbose "$(Get-Date): `t`t`tProcessing Utilization for $($Group.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tProcessing Utilization for $($Group.Name)"
 		WriteWordLine 3 0 $txt
 		WriteWordLine 4 0 "Desktop Group Name: " $Group.Name
 
@@ -9211,10 +9218,10 @@ Function OutputDeliveryGroupUtilization
 		$Table = $Null
 		WriteWordLine 0 0 ""
 		
-		Write-Verbose "$(Get-Date): `t`t`tInitializing utilization chart for $($Group.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tInitializing utilization chart for $($Group.Name)"
 
 		$TempFile =  "$($pwd)\emtempgraph_$(Get-Date -UFormat %Y%m%d_%H%M%S).csv"		
-		Write-Verbose "$(Get-Date): `t`t`tGetting utilization data for $($Group.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tGetting utilization data for $($Group.Name)"
 		$Results = Get-BrokerDesktopUsage @XDParams2 -DesktopGroupName $Group.Name -SortBy Timestamp | Select-Object Timestamp, InUse
 
 		If($? -and $Null -ne $Results)
@@ -9235,7 +9242,7 @@ Function OutputDeliveryGroupUtilization
 			$excelCategoryScale = [Microsoft.Office.Interop.Excel.XlCategoryType]
 			$excelTickMark = [Microsoft.Office.Interop.Excel.XlTickMark]
 
-			Write-Verbose "$(Get-Date): `t`t`tOpening Excel with temp file $($TempFile)"
+			Write-Verbose "$(Get-Date -Format G): `t`t`tOpening Excel with temp file $($TempFile)"
 
 			#Add CSV File into Excel Workbook 
 			$Null = $excel.Workbooks.Open($TempFile)
@@ -9248,7 +9255,7 @@ Function OutputDeliveryGroupUtilization
 			#$Start = @($selectionXL)[0].Text
 			#$End = @($selectionXL)[-1].Text
 
-			Write-Verbose "$(Get-Date): `t`t`tCreating chart for $($Group.Name)"
+			Write-Verbose "$(Get-Date -Format G): `t`t`tCreating chart for $($Group.Name)"
 			$chart = $worksheet.Shapes.AddChart().Chart 
 
 			$chart.chartType = $excelChart::xlXYScatterLines
@@ -9274,7 +9281,7 @@ Function OutputDeliveryGroupUtilization
 			$worksheet.ChartObjects().Item(1).copy()
 			$word.Selection.PasteAndFormat(13)  #Pastes an Excel chart as a picture
 
-			Write-Verbose "$(Get-Date): `t`t`tClosing excel for $($Group.Name)"
+			Write-Verbose "$(Get-Date -Format G): `t`t`tClosing excel for $($Group.Name)"
 			$excel.Workbooks.Close($false)
 			$excel.Quit()
 
@@ -9296,7 +9303,7 @@ Function OutputDeliveryGroupUtilization
 			$SessionID = (Get-Process -PID $PID).SessionId
 			(Get-Process 'Excel' -ea 0 | Where-Object {$_.sessionid -eq $Sessionid}) | Stop-Process 4>$Null
 			
-			Write-Verbose "$(Get-Date): `t`t`tDeleting temp files $($TempFile)"
+			Write-Verbose "$(Get-Date -Format G): `t`t`tDeleting temp files $($TempFile)"
 			Remove-Item $TempFile *>$Null
 		}
 		ElseIf($? -and $Null -eq $Results)
@@ -9310,7 +9317,7 @@ Function OutputDeliveryGroupUtilization
 			OutputWarning $txt
 		}
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputDeliveryGroupDetails 
@@ -10795,11 +10802,11 @@ Function OutputDeliveryGroupApplicationDetails
 		{
 			If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
 			{
-				Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.ApplicationName)"
+				Write-Verbose "$(Get-Date -Format G): `t`tAdding Application $($Application.ApplicationName)"
 			}
 			Else
 			{
-				Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.Name)"
+				Write-Verbose "$(Get-Date -Format G): `t`tAdding Application $($Application.Name)"
 			}
 
 			$xEnabled = "Enabled"
@@ -10956,7 +10963,7 @@ Function OutputDeliveryGroupCatalogs
 
 		ForEach($MC in $MCs)
 		{
-			Write-Verbose "$(Get-Date): `t`t`tAdding catalog $($MC.CatalogName)"
+			Write-Verbose "$(Get-Date -Format G): `t`t`tAdding catalog $($MC.CatalogName)"
 
 			$Catalog = Get-BrokerCatalog @XDParams1 -Name $MC.CatalogName
 			If($? -and $Null -ne $Catalog)
@@ -11039,7 +11046,7 @@ Function OutputDeliveryGroupCatalogs
 #region process application functions
 Function ProcessApplications
 {
-	Write-Verbose "$(Get-Date): Retrieving Applications"
+	Write-Verbose "$(Get-Date -Format G): Retrieving Applications"
 	
 	$txt = "Applications"
 	If($MSWord -or $PDF)
@@ -11083,14 +11090,14 @@ Function ProcessApplications
 		$txt = "Unable to retrieve Applications"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputApplications
 {
 	Param([object]$AllApplications)
 	
-	Write-Verbose "$(Get-Date): `tProcessing Applications"
+	Write-Verbose "$(Get-Date -Format G): `tProcessing Applications"
 
 	If($MSWord -or $PDF)
 	{
@@ -11105,11 +11112,11 @@ Function OutputApplications
 	{
 		If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
 		{
-			Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.ApplicationName)"
+			Write-Verbose "$(Get-Date -Format G): `t`tAdding Application $($Application.ApplicationName)"
 		}
 		Else
 		{
-			Write-Verbose "$(Get-Date): `t`tAdding Application $($Application.Name)"
+			Write-Verbose "$(Get-Date -Format G): `t`tAdding Application $($Application.Name)"
 		}
 
 		$xEnabled = "Enabled"
@@ -11324,11 +11331,11 @@ Function OutputApplicationDetails
 	
 	If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
 	{
-		Write-Verbose "$(Get-Date): `t`tApplication details for $($Application.ApplicationName)"
+		Write-Verbose "$(Get-Date -Format G): `t`tApplication details for $($Application.ApplicationName)"
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): `t`tApplication details for $($Application.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`tApplication details for $($Application.Name)"
 	}
 	
 	$txt = "Details"
@@ -11695,7 +11702,7 @@ Function OutputApplicationSessions
 {
 	Param([object] $Application)
 	
-	Write-Verbose "$(Get-Date): `t`tApplication sessions for $($Application.BrowserName)"
+	Write-Verbose "$(Get-Date -Format G): `t`tApplication sessions for $($Application.BrowserName)"
 	$txt = "Sessions"
 	If($MSWord -or $PDF)
 	{
@@ -11845,11 +11852,11 @@ Function OutputApplicationAdministrators
 	
 	If((Get-BrokerServiceAddedCapability) -contains "ApplicationFolders")
 	{
-		Write-Verbose "$(Get-Date): `t`tApplication administrators for $($Application.ApplicationName)"
+		Write-Verbose "$(Get-Date -Format G): `t`tApplication administrators for $($Application.ApplicationName)"
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): `t`tApplication administrators for $($Application.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`tApplication administrators for $($Application.Name)"
 	}
 	
 	$txt = "Administrators"
@@ -12008,21 +12015,21 @@ Function ProcessPolicies
 		WriteHTMLLine 0 0 $txt1
 		WriteHTMLLine 0 0 $txt2
 	}
-	Write-Verbose "$(Get-Date): Processing XenDesktop Policies"
+	Write-Verbose "$(Get-Date -Format G): Processing XenDesktop Policies"
 	
 	ProcessPolicySummary 
 	
 	If($Policies)
 	{
 	
-		Write-Verbose "$(Get-Date): `tDoes localfarmgpo PSDrive already exist?"
+		Write-Verbose "$(Get-Date -Format G): `tDoes localfarmgpo PSDrive already exist?"
 		If(Get-PSDrive localfarmgpo -EA 0)
 		{
-			Write-Verbose "$(Get-Date): `tRemoving the current localfarmgpo PSDrive"
+			Write-Verbose "$(Get-Date -Format G): `tRemoving the current localfarmgpo PSDrive"
 			Remove-PSDrive localfarmgpo -EA 0 4>$Null
 		}
 		
-		Write-Verbose "$(Get-Date): Creating localfarmgpo PSDrive for Computer policies"
+		Write-Verbose "$(Get-Date -Format G): Creating localfarmgpo PSDrive for Computer policies"
 		New-PSDrive localfarmgpo -psprovider citrixgrouppolicy -root \ -controller $AdminAddress -Scope Global *>$Null
 		
 		#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
@@ -12030,15 +12037,15 @@ Function ProcessPolicies
 		If(Get-PSDrive localfarmgpo -EA 0)
 		{
 			ProcessCitrixPolicies "localfarmgpo" "Computer"
-			Write-Verbose "$(Get-Date): Finished Processing Citrix Site Computer Policies"
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix Site Computer Policies"
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 		Else
 		{
 			Write-Warning "Unable to create the LocalFarmGPO PSDrive on the XenDesktop Controller $($AdminAddress)"
 		}
 
-		Write-Verbose "$(Get-Date): Creating localfarmgpo PSDrive for User policies"
+		Write-Verbose "$(Get-Date -Format G): Creating localfarmgpo PSDrive for User policies"
 		New-PSDrive localfarmgpo -psprovider citrixgrouppolicy -root \ -controller $AdminAddress -Scope Global *>$Null
 		
 		#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
@@ -12046,8 +12053,8 @@ Function ProcessPolicies
 		If(Get-PSDrive localfarmgpo -EA 0)
 		{
 			ProcessCitrixPolicies "localfarmgpo" "User"
-			Write-Verbose "$(Get-Date): Finished Processing Citrix Site User Policies"
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix Site User Policies"
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 		Else
 		{
@@ -12061,34 +12068,34 @@ Function ProcessPolicies
 		Else
 		{
 			#thanks to the Citrix Engineering Team for helping me solve processing Citrix AD based Policies
-			Write-Verbose "$(Get-Date): "
-			Write-Verbose "$(Get-Date): `tSee if there are any Citrix AD based policies to process"
+			Write-Verbose "$(Get-Date -Format G): "
+			Write-Verbose "$(Get-Date -Format G): `tSee if there are any Citrix AD based policies to process"
 			$CtxGPOArray = @()
 			$CtxGPOArray = GetCtxGPOsInAD
 			If($CtxGPOArray -is [Array] -and $CtxGPOArray.Count -gt 0)
 			{
-				Write-Verbose "$(Get-Date): "
-				Write-Verbose "$(Get-Date): `tThere are $($CtxGPOArray.Count) Citrix AD based policies to process"
-				Write-Verbose "$(Get-Date): "
+				Write-Verbose "$(Get-Date -Format G): "
+				Write-Verbose "$(Get-Date -Format G): `tThere are $($CtxGPOArray.Count) Citrix AD based policies to process"
+				Write-Verbose "$(Get-Date -Format G): "
 
 				#V1.41 added -Property DisplayName
 				[array]$CtxGPOArray = $CtxGPOArray | Sort-Object -Property DisplayName -unique
 				
 				ForEach($CtxGPO in $CtxGPOArray)
 				{
-					Write-Verbose "$(Get-Date): `tCreating ADGpoDrv PSDrive for Computer Policies"
+					Write-Verbose "$(Get-Date -Format G): `tCreating ADGpoDrv PSDrive for Computer Policies"
 					New-PSDrive -Name ADGpoDrv -PSProvider CitrixGroupPolicy -Root \ -DomainGpo $($CtxGPO) -Scope Global *>$Null
 		
 					#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
 					TranscriptLogging
 					If(Get-PSDrive ADGpoDrv -EA 0)
 					{
-						Write-Verbose "$(Get-Date): `tProcessing Citrix AD Policy $($CtxGPO)"
+						Write-Verbose "$(Get-Date -Format G): `tProcessing Citrix AD Policy $($CtxGPO)"
 					
-						Write-Verbose "$(Get-Date): `tRetrieving AD Policy $($CtxGPO)"
+						Write-Verbose "$(Get-Date -Format G): `tRetrieving AD Policy $($CtxGPO)"
 						ProcessCitrixPolicies "ADGpoDrv" "Computer"
-						Write-Verbose "$(Get-Date): Finished Processing Citrix AD Computer Policy $($CtxGPO)"
-						Write-Verbose "$(Get-Date): "
+						Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix AD Computer Policy $($CtxGPO)"
+						Write-Verbose "$(Get-Date -Format G): "
 					}
 					Else
 					{
@@ -12096,19 +12103,19 @@ Function ProcessPolicies
 						Write-Warning "$($CtxGPO) was probably created by an updated Citrix Group Policy Provider"
 					}
 
-					Write-Verbose "$(Get-Date): `tCreating ADGpoDrv PSDrive for UserPolicies"
+					Write-Verbose "$(Get-Date -Format G): `tCreating ADGpoDrv PSDrive for UserPolicies"
 					New-PSDrive -Name ADGpoDrv -PSProvider CitrixGroupPolicy -Root \ -DomainGpo $($CtxGPO) -Scope Global *>$Null
 		
 					#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
 					TranscriptLogging
 					If(Get-PSDrive ADGpoDrv -EA 0)
 					{
-						Write-Verbose "$(Get-Date): `tProcessing Citrix AD Policy $($CtxGPO)"
+						Write-Verbose "$(Get-Date -Format G): `tProcessing Citrix AD Policy $($CtxGPO)"
 					
-						Write-Verbose "$(Get-Date): `tRetrieving AD Policy $($CtxGPO)"
+						Write-Verbose "$(Get-Date -Format G): `tRetrieving AD Policy $($CtxGPO)"
 						ProcessCitrixPolicies "ADGpoDrv" "User"
-						Write-Verbose "$(Get-Date): Finished Processing Citrix AD User Policy $($CtxGPO)"
-						Write-Verbose "$(Get-Date): "
+						Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix AD User Policy $($CtxGPO)"
+						Write-Verbose "$(Get-Date -Format G): "
 					}
 					Else
 					{
@@ -12116,30 +12123,30 @@ Function ProcessPolicies
 						Write-Warning "$($CtxGPO) was probably created by an updated Citrix Group Policy Provider"
 					}
 				}
-				Write-Verbose "$(Get-Date): Finished Processing Citrix AD Policies"
-				Write-Verbose "$(Get-Date): "
+				Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix AD Policies"
+				Write-Verbose "$(Get-Date -Format G): "
 			}
 			Else
 			{
-				Write-Verbose "$(Get-Date): There are no Citrix AD based policies to process"
-				Write-Verbose "$(Get-Date): "
+				Write-Verbose "$(Get-Date -Format G): There are no Citrix AD based policies to process"
+				Write-Verbose "$(Get-Date -Format G): "
 			}
 		}
 	}
-	Write-Verbose "$(Get-Date): Finished Processing Citrix Policies"
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix Policies"
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function ProcessPolicySummary
 {
-	Write-Verbose "$(Get-Date): `tDoes localfarmgpo PSDrive already exist?"
+	Write-Verbose "$(Get-Date -Format G): `tDoes localfarmgpo PSDrive already exist?"
 	If(Get-PSDrive localfarmgpo -EA 0)
 	{
-		Write-Verbose "$(Get-Date): `tRemoving the current localfarmgpo PSDrive"
+		Write-Verbose "$(Get-Date -Format G): `tRemoving the current localfarmgpo PSDrive"
 		Remove-PSDrive localfarmgpo -EA 0 4>$Null
 	}
-	Write-Verbose "$(Get-Date): `tRetrieving Site Policies"
-	Write-Verbose "$(Get-Date): `t`tCreating localfarmgpo PSDrive"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving Site Policies"
+	Write-Verbose "$(Get-Date -Format G): `t`tCreating localfarmgpo PSDrive"
 	New-PSDrive localfarmgpo -psprovider citrixgrouppolicy -root \ -controller $AdminAddress -Scope Global *>$Null
 		
 	#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
@@ -12164,38 +12171,38 @@ Function ProcessPolicySummary
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): "
-		Write-Verbose "$(Get-Date): See if there are any Citrix AD based policies to process"
+		Write-Verbose "$(Get-Date -Format G): "
+		Write-Verbose "$(Get-Date -Format G): See if there are any Citrix AD based policies to process"
 		$CtxGPOArray = @()
 		$CtxGPOArray = GetCtxGPOsInAD
 		If($CtxGPOArray -is [Array] -and $CtxGPOArray.Count -gt 0)
 		{
 			#V1.42 added -Property DisplayName
 			[array]$CtxGPOArray = $CtxGPOArray | Sort-Object -Property DisplayName -unique
-			Write-Verbose "$(Get-Date): "
-			Write-Verbose "$(Get-Date): `tThere are $($CtxGPOArray.Count) Citrix AD based policies to process"
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): "
+			Write-Verbose "$(Get-Date -Format G): `tThere are $($CtxGPOArray.Count) Citrix AD based policies to process"
+			Write-Verbose "$(Get-Date -Format G): "
 			
 			ForEach($CtxGPO in $CtxGPOArray)
 			{
-				Write-Verbose "$(Get-Date): `tCreating ADGpoDrv PSDrive"
+				Write-Verbose "$(Get-Date -Format G): `tCreating ADGpoDrv PSDrive"
 				New-PSDrive -Name ADGpoDrv -PSProvider CitrixGroupPolicy -Root \ -DomainGpo $($CtxGPO) -Scope "Global" *>$Null
 		
 				#V1.40 using Citrix policy stuff and new-psdrive breaks transcript logging so restart transcript logging
 				TranscriptLogging
 				If(Get-PSDrive ADGpoDrv -EA 0)
 				{
-					Write-Verbose "$(Get-Date): `tProcessing Citrix AD Policy $($CtxGPO)"
+					Write-Verbose "$(Get-Date -Format G): `tProcessing Citrix AD Policy $($CtxGPO)"
 				
-					Write-Verbose "$(Get-Date): `tRetrieving AD Policy $($CtxGPO)"
+					Write-Verbose "$(Get-Date -Format G): `tRetrieving AD Policy $($CtxGPO)"
 					$HDXPolicies = Get-CtxGroupPolicy -DriveName ADGpoDrv -EA 0 `
 					| Select-Object PolicyName, Type, Description, Enabled, Priority `
 					| Sort-Object Type, Priority
 			
 					OutputSummaryPolicyTable $HDXPolicies "AD" $CtxGPO
 					
-					Write-Verbose "$(Get-Date): Finished Processing Citrix AD Policy $($CtxGPO)"
-					Write-Verbose "$(Get-Date): "
+					Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix AD Policy $($CtxGPO)"
+					Write-Verbose "$(Get-Date -Format G): "
 				}
 				Else
 				{
@@ -12204,13 +12211,13 @@ Function ProcessPolicySummary
 				}
 				Remove-PSDrive ADGpoDrv -EA 0 4>$Null
 			}
-			Write-Verbose "$(Get-Date): Finished Processing Citrix AD Policies"
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): Finished Processing Citrix AD Policies"
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 		Else
 		{
-			Write-Verbose "$(Get-Date): There are no Citrix AD based policies to process"
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): There are no Citrix AD based policies to process"
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 	}
 }
@@ -12254,7 +12261,7 @@ Function OutputSummaryPolicyTable
 
 	If($Null -ne $HDXPolicies)
 	{
-		Write-Verbose "$(Get-Date): `t`t`tPolicies"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tPolicies"
 		If($MSWord -or $PDF)
 		{
 			[System.Collections.Hashtable[]] $PoliciesWordTable = @();
@@ -12379,7 +12386,7 @@ Function ProcessCitrixPolicies
 	Param([string]$xDriveName, [string]$xPolicyType)
 	#updated to match updates in the V2 script
 
-	Write-Verbose "$(Get-Date): `tRetrieving all $($xPolicyType) policy names"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving all $($xPolicyType) policy names"
 
 	$Script:TotalComputerPolicies = 0
 	$Script:TotalUserPolicies = 0
@@ -12434,7 +12441,7 @@ Function ProcessCitrixPolicies
 	{
 		ForEach($Policy in $Policies)
 		{
-			Write-Verbose "$(Get-Date): `tStarted $($Policy.PolicyName) "
+			Write-Verbose "$(Get-Date -Format G): `tStarted $($Policy.PolicyName) "
 			
 			If($xDriveName -eq "localfarmgpo")
 			{
@@ -12529,7 +12536,7 @@ Function ProcessCitrixPolicies
 			}
 				
 
-			Write-Verbose "$(Get-Date): `t`tRetrieving all filters"
+			Write-Verbose "$(Get-Date -Format G): `t`tRetrieving all filters"
 			$filters = Get-CtxGroupPolicyFilter -PolicyName $Policy.PolicyName `
 			-Type $xPolicyType `
 			-DriveName $xDriveName -EA 0 `
@@ -12539,7 +12546,7 @@ Function ProcessCitrixPolicies
 			{
 				If(![String]::IsNullOrEmpty($filters))
 				{
-					Write-Verbose "$(Get-Date): `t`tProcessing all filters"
+					Write-Verbose "$(Get-Date -Format G): `t`tProcessing all filters"
 					$txt = "Assigned to"
 					If($MSWord -or $PDF)
 					{
@@ -12719,7 +12726,7 @@ Function ProcessCitrixPolicies
 				}
 			}
 			
-			Write-Verbose "$(Get-Date): `t`tRetrieving all policy settings"
+			Write-Verbose "$(Get-Date -Format G): `t`tRetrieving all policy settings"
 			$Settings = Get-CtxGroupPolicyConfiguration -PolicyName $Policy.PolicyName `
 			-Type $Policy.Type `
 			-DriveName $xDriveName -EA 0
@@ -12756,8 +12763,8 @@ Function ProcessCitrixPolicies
 					}
 					$First = $False
 					
-					Write-Verbose "$(Get-Date): `t`tPolicy settings"
-					Write-Verbose "$(Get-Date): `t`t`tConnector for Configuration Manager 2012"
+					Write-Verbose "$(Get-Date -Format G): `t`tPolicy settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tConnector for Configuration Manager 2012"
 					If((validStateProp $Setting AdvanceWarningFrequency State ) -and ($Setting.AdvanceWarningFrequency.State -ne "NotConfigured"))
 					{
 						$txt = "Connector for Configuration Manager 2012\Advance warning frequency interval"
@@ -13124,7 +13131,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA"
 					If((validStateProp $Setting ApplicationLaunchWaitTimeout State ) -and ($Setting.ApplicationLaunchWaitTimeout.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Application Launch Wait Timeout (milliseconds)"
@@ -13652,7 +13659,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA\Adobe Flash Delivery\Flash Redirection"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Adobe Flash Delivery\Flash Redirection"
 					If((validStateProp $Setting FlashAcceleration State ) -and ($Setting.FlashAcceleration.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Adobe Flash Delivery\Flash Redirection\Flash acceleration"
@@ -14139,7 +14146,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Audio"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Audio"
 					If((validStateProp $Setting AllowRtpAudio State ) -and ($Setting.AllowRtpAudio.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Audio\Audio over UDP real-time transport"
@@ -14256,7 +14263,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Auto Client Reconnect"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Auto Client Reconnect"
 					If((validStateProp $Setting AutoClientReconnect State ) -and ($Setting.AutoClientReconnect.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Auto Client Reconnect\Auto client reconnect"
@@ -14379,7 +14386,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA\Bandwidth"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Bandwidth"
 					If((validStateProp $Setting AudioBandwidthLimit State ) -and ($Setting.AudioBandwidthLimit.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Bandwidth\Audio redirection bandwidth limit (Kbps)"
@@ -14780,7 +14787,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Client Sensors\Location"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Client Sensors\Location"
 					If((validStateProp $Setting AllowLocationServices State ) -and ($Setting.AllowLocationServices.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Client Sensors\Location\Allow applications to use the physical location of the client device"
@@ -14803,7 +14810,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA\Desktop UI"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Desktop UI"
 					If((validStateProp $Setting AeroRedirection State ) -and ($Setting.AeroRedirection.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Desktop UI\Aero Redirection"
@@ -14931,7 +14938,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 			
-					Write-Verbose "$(Get-Date): `t`t`tICA\End User Monitoring"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\End User Monitoring"
 					If((validStateProp $Setting IcaRoundTripCalculation State ) -and ($Setting.IcaRoundTripCalculation.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\End User Monitoring\ICA round trip calculation"
@@ -14996,7 +15003,7 @@ Function ProcessCitrixPolicies
 						}	
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Enhanced Desktop Experience"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Enhanced Desktop Experience"
 					If((validStateProp $Setting EnhancedDesktopExperience State ) -and ($Setting.EnhancedDesktopExperience.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Enhanced Desktop Experience\Enhanced Desktop Experience"
@@ -15019,7 +15026,7 @@ Function ProcessCitrixPolicies
 						}	
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\File Redirection"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\File Redirection"
 					If((validStateProp $Setting AllowFileTransfer State ) -and ($Setting.AllowFileTransfer.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\File Redirection\Allow file transfer between desktop and client"
@@ -15336,7 +15343,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Graphics"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Graphics"
 					If((validStateProp $Setting AllowVisuallyLosslessCompression State ) -and ($Setting.AllowVisuallyLosslessCompression.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Graphics\Allow visually lossless compression"
@@ -15642,7 +15649,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Graphics\Caching"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Graphics\Caching"
 					If((validStateProp $Setting PersistentCache State ) -and ($Setting.PersistentCache.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Graphics\Caching\Persistent cache threshold (Kbps)"
@@ -15665,7 +15672,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Graphics\Framehawk"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Graphics\Framehawk"
 					If((validStateProp $Setting EnableFramehawkDisplayChannel State ) -and ($Setting.EnableFramehawkDisplayChannel.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Graphics\Framehawk\Framehawk display channel"
@@ -15709,7 +15716,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Keep Alive"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Keep Alive"
 					If((validStateProp $Setting IcaKeepAliveTimeout State ) -and ($Setting.IcaKeepAliveTimeout.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Keep Alive\ICA keep alive timeout (seconds)"
@@ -15761,7 +15768,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Local App Access"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Local App Access"
 					If((validStateProp $Setting AllowLocalAppAccess State ) -and ($Setting.AllowLocalAppAccess.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Local App Access\Allow local app access"
@@ -15948,7 +15955,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Mobile Experience"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Mobile Experience"
 					If((validStateProp $Setting AutoKeyboardPopUp State ) -and ($Setting.AutoKeyboardPopUp.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Mobile Experience\Automatic keyboard display"
@@ -16035,7 +16042,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA\Multimedia"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Multimedia"
 					If((validStateProp $Setting WebBrowserRedirection State ) -and ($Setting.WebBrowserRedirection.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -16544,7 +16551,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Multi-Stream Connections"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Multi-Stream Connections"
 					If((validStateProp $Setting UDPAudioOnServer State ) -and ($Setting.UDPAudioOnServer.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\MultiStream Connections\Audio over UDP"
@@ -16790,7 +16797,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Port Redirection"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Port Redirection"
 					If((validStateProp $Setting ClientComPortsAutoConnection State ) -and ($Setting.ClientComPortsAutoConnection.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Port Redirection\Auto connect client COM ports"
@@ -16876,7 +16883,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Printing"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Printing"
 					If((validStateProp $Setting ClientPrinterRedirection State ) -and ($Setting.ClientPrinterRedirection.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Printing\Client printer redirection"
@@ -17214,7 +17221,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Printing\Client Printers"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Printing\Client Printers"
 					If((validStateProp $Setting ClientPrinterAutoCreation State ) -and ($Setting.ClientPrinterAutoCreation.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Printing\Client Printers\Auto-create client printers"
@@ -17601,7 +17608,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Printing\Drivers"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Printing\Drivers"
 					If((validStateProp $Setting InboxDriverAutoInstallation State ) -and ($Setting.InboxDriverAutoInstallation.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Printing\Drivers\Automatic installation of in-box printer drivers"
@@ -17714,7 +17721,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA\Printing\Universal Print Server"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Printing\Universal Print Server"
 					If((validStateProp $Setting UpcSslCipherSuite State ) -and ($Setting.UpcSslCipherSuite.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -18092,7 +18099,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Printing\Universal Printing"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Printing\Universal Printing"
 					If((validStateProp $Setting EMFProcessingMode State ) -and ($Setting.EMFProcessingMode.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Printing\Universal Printing\Universal printing EMF processing mode"
@@ -18339,7 +18346,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Security"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Security"
 					If((validStateProp $Setting MinimumEncryptionLevel State ) -and ($Setting.MinimumEncryptionLevel.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Security\SecureICA minimum encryption level" 
@@ -18373,7 +18380,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Server Limits"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Server Limits"
 					If((validStateProp $Setting IdleTimerInterval State ) -and ($Setting.IdleTimerInterval.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Server Limits\Server idle timer interval (milliseconds)"
@@ -18396,7 +18403,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tICA\Session Limits"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Session Limits"
 					If((validStateProp $Setting SessionDisconnectTimer State ) -and ($Setting.SessionDisconnectTimer.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Session Limits\Disconnected session timer"
@@ -18524,7 +18531,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Session Watermark"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Session Watermark"
 					If((validStateProp $Setting EnableSessionWatermark State ) -and ($Setting.EnableSessionWatermark.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -18548,7 +18555,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Session Watermark\Watermark Content"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Session Watermark\Watermark Content"
 					If((validStateProp $Setting WatermarkIncludeClientIPAddress State ) -and ($Setting.WatermarkIncludeClientIPAddress.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -18682,7 +18689,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Session Watermark\Watermark Style"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Session Watermark\Watermark Style"
 					If((validStateProp $Setting WatermarkStyle State ) -and ($Setting.WatermarkStyle.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -18736,7 +18743,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Session Reliability"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Session Reliability"
 					If((validStateProp $Setting SessionReliabilityConnections State ) -and ($Setting.SessionReliabilityConnections.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Session Reliability\Session reliability connections"
@@ -18801,7 +18808,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Time Zone Control"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Time Zone Control"
 					If((validStateProp $Setting LocalTimeEstimation State ) -and ($Setting.LocalTimeEstimation.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Time Zone Control\Estimate local time for legacy clients"
@@ -18876,7 +18883,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\TWAIN Devices"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\TWAIN Devices"
 					If((validStateProp $Setting TwainRedirection State ) -and ($Setting.TwainRedirection.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\TWAIN devices\Client TWAIN device redirection"
@@ -18930,7 +18937,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Bidirectional Content Redirection"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Bidirectional Content Redirection"
 					If((validStateProp $Setting AllowURLRedirection State ) -and ($Setting.AllowURLRedirection.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Bidirectional Content Redirection\Allow Bidirectional Content Redirection"
@@ -19061,7 +19068,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\USB Devices"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\USB Devices"
 					If((validStateProp $Setting ClientUsbDeviceOptimizationRules State ) -and ($Setting.ClientUsbDeviceOptimizationRules.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\USB devices\Client USB device optimization rules"
@@ -19261,7 +19268,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Visual Display"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Visual Display"
 					If((validStateProp $Setting PreferredColorDepthForSimpleGraphics State ) -and ($Setting.PreferredColorDepthForSimpleGraphics.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Visual Display\Preferred color depth for simple graphics"
@@ -19344,7 +19351,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Visual Display\Moving Images"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Visual Display\Moving Images"
 					If((validStateProp $Setting MinimumAdaptiveDisplayJpegQuality State ) -and ($Setting.MinimumAdaptiveDisplayJpegQuality.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Visual Display\Moving Images\Minimum image quality"
@@ -19476,7 +19483,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\Visual Display\Still Images"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\Visual Display\Still Images"
 					If((validStateProp $Setting ExtraColorCompression State ) -and ($Setting.ExtraColorCompression.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\Visual Display\Still Images\Extra Color Compression"
@@ -19594,7 +19601,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tICA\WebSockets"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tICA\WebSockets"
 					If((validStateProp $Setting AcceptWebSocketsConnections State ) -and ($Setting.AcceptWebSocketsConnections.State -ne "NotConfigured"))
 					{
 						$txt = "ICA\WebSockets\WebSocket connections"
@@ -19692,7 +19699,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tLoad Management"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tLoad Management"
 					If((validStateProp $Setting ConcurrentLogonsTolerance State ) -and ($Setting.ConcurrentLogonsTolerance.State -ne "NotConfigured"))
 					{
 						$txt = "Load Management\Concurrent logons tolerance"
@@ -19981,8 +19988,8 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management"
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Advanced settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Advanced settings"
 					If((validStateProp $Setting CEIPEnabled State ) -and ($Setting.CEIPEnabled.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Advanced settings\Customer Experience Improvement Program"
@@ -20133,7 +20140,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Basic settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Basic settings"
 					If((validStateProp $Setting PSMidSessionWriteBack State ) -and ($Setting.PSMidSessionWriteBack.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Basic settings\Active write back"
@@ -20531,9 +20538,9 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Citrix Virtual Apps Optimization settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Citrix Virtual Apps Optimization settings"
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Cross-Platform settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Cross-Platform settings"
 					If((validStateProp $Setting CPUserGroups_Part State ) -and ($Setting.CPUserGroups_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Cross-Platform settings\Cross-platform settings user groups"
@@ -20766,7 +20773,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\File system"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\File system"
 					#V1.44
 					If((validStateProp $Setting LogonExclusionCheck_Part State ) -and ($Setting.LogonExclusionCheck_Part.State -ne "NotConfigured"))
 					{
@@ -20797,7 +20804,7 @@ Function ProcessCitrixPolicies
 							OutputPolicySetting $txt $tmp 
 						}
 					}
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\File system\Default Exclusions"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\File system\Default Exclusions"
 					If((validStateProp $Setting DefaultExclusionListSyncDir State ) -and ($Setting.DefaultExclusionListSyncDir.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\File system\Default Exclusions\Enable Default Exclusion List - directories"
@@ -21451,7 +21458,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\File system\Exclusions"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\File system\Exclusions"
 					If((validStateProp $Setting ExclusionListSyncDir_Part State ) -and ($Setting.ExclusionListSyncDir_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\File system\Exclusions\Exclusion list - directories"
@@ -21655,7 +21662,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\File system\Synchronization"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\File system\Synchronization"
 					If((validStateProp $Setting SyncDirList_Part State ) -and ($Setting.SyncDirList_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\File system\Synchronization\Directories to synchronize"
@@ -22061,8 +22068,8 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection"
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\AppData(Roaming)"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\AppData(Roaming)"
 					If((validStateProp $Setting FRAppDataPath_Part State ) -and ($Setting.FRAppDataPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\AppData(Roaming)\AppData(Roaming) path"
@@ -22135,7 +22142,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Common settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Common settings"
 					If((validStateProp $Setting FRAdminAccess_Part State ) -and ($Setting.FRAdminAccess_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Common settings\Grant administrator access"
@@ -22179,7 +22186,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Contacts"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Contacts"
 					If((validStateProp $Setting FRContactsPath_Part State ) -and ($Setting.FRContactsPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Contacts\Contacts path"
@@ -22252,7 +22259,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Desktop"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Desktop"
 					If((validStateProp $Setting FRDesktopPath_Part State ) -and ($Setting.FRDesktopPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Desktop\Desktop path"
@@ -22325,7 +22332,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Documents"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Documents"
 					If((validStateProp $Setting FRDocumentsPath_Part State ) -and ($Setting.FRDocumentsPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Documents\Documents path"
@@ -22399,7 +22406,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Downloads"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Downloads"
 					If((validStateProp $Setting FRDownloadsPath_Part State ) -and ($Setting.FRDownloadsPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Downloads\Downloads path"
@@ -22472,7 +22479,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Favorites"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Favorites"
 					If((validStateProp $Setting FRFavoritesPath_Part State ) -and ($Setting.FRFavoritesPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Favorites\Favorites path"
@@ -22545,7 +22552,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Links"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Links"
 					If((validStateProp $Setting FRLinksPath_Part State ) -and ($Setting.FRLinksPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Links\Links path"
@@ -22618,7 +22625,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Music"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Music"
 					If((validStateProp $Setting FRMusicPath_Part State ) -and ($Setting.FRMusicPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Music\Music path"
@@ -22692,7 +22699,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Pictures"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Pictures"
 					If((validStateProp $Setting FRPicturesPath_Part State ) -and ($Setting.FRPicturesPath_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Pictures\Pictures path"
@@ -22766,7 +22773,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Saved Games"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Saved Games"
 					If((validStateProp $Setting FRSavedGames_Part State ) -and ($Setting.FRSavedGames_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Saved Games\Redirection settings for Saved Games"
@@ -22839,7 +22846,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Searches"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Searches"
 					If((validStateProp $Setting FRSearches_Part State ) -and ($Setting.FRSearches_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Searches\Redirection settings for Searches"
@@ -22912,7 +22919,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Start Menu"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Start Menu"
 					If((validStateProp $Setting FRStartMenu_Part State ) -and ($Setting.FRStartMenu_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Start Menu\Redirection settings for Start Menu"
@@ -22985,7 +22992,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Folder Redirection\Videos"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Folder Redirection\Videos"
 					If((validStateProp $Setting FRVideos_Part State ) -and ($Setting.FRVideos_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Folder Redirection\Videos\Redirection settings for Videos"
@@ -23059,7 +23066,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Log settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Log settings"
 					If((validStateProp $Setting LogLevel_ActiveDirectoryActions State ) -and ($Setting.LogLevel_ActiveDirectoryActions.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Log settings\Active Directory actions"
@@ -23378,7 +23385,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Profile handling"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Profile handling"
 					If((validStateProp $Setting ApplicationProfilesAutoMigration State ) -and ($Setting.ApplicationProfilesAutoMigration.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -23610,7 +23617,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Registry"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Registry"
 					If((validStateProp $Setting ExclusionList_Part State ) -and ($Setting.ExclusionList_Part.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Registry\Exclusion list"
@@ -23844,7 +23851,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Registry\Default Exclusions"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Registry\Default Exclusions"
 					If((validStateProp $Setting DefaultExclusionList State ) -and ($Setting.DefaultExclusionList.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Registry\Enable Default Exclusion list"
@@ -23934,7 +23941,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Streamed user profiles"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Streamed user profiles"
 					If((validStateProp $Setting PSAlwaysCache State ) -and ($Setting.PSAlwaysCache.State -ne "NotConfigured"))
 					{
 						$txt = "Profile Management\Streamed user profiles\Always cache"
@@ -24257,7 +24264,7 @@ Function ProcessCitrixPolicies
 							OutputPolicySetting $txt $Setting.PSPendingLockTimeout.Value 
 						}
 					}
-					Write-Verbose "$(Get-Date): `t`t`tProfile Management\Citrix Virtual Apps Optimization settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tProfile Management\Citrix Virtual Apps Optimization settings"
 					If((validStateProp $Setting XenAppOptimizationEnable State ) -and ($Setting.XenAppOptimizationEnable.State -ne "NotConfigured"))
 					{
 						#V1.44
@@ -24329,7 +24336,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tReceiver"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tReceiver"
 					If((validStateProp $Setting StorefrontAccountsList State ) -and ($Setting.StorefrontAccountsList.State -ne "NotConfigured"))
 					{
 						$txt = "Receiver\Storefront accounts list"
@@ -24474,7 +24481,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tVirtual Delivery Agent Settings"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual Delivery Agent Settings"
 					If((validStateProp $Setting ControllerRegistrationIPv6Netmask State ) -and ($Setting.ControllerRegistrationIPv6Netmask.State -ne "NotConfigured"))
 					{
 						#AD specific setting
@@ -24590,7 +24597,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tVirtual Delivery Agent Settings\CPU Usage Monitoring"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual Delivery Agent Settings\CPU Usage Monitoring"
 					If((validStateProp $Setting CPUUsageMonitoring_Enable State ) -and ($Setting.CPUUsageMonitoring_Enable.State -ne "NotConfigured"))
 					{
 						$txt = "Virtual Delivery Agent Settings\CPU Usage Monitoring\Enable Monitoring"
@@ -24658,7 +24665,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tVirtual Delivery Agent Settings\HDX3DPro"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual Delivery Agent Settings\HDX3DPro"
 					If((validStateProp $Setting EnableLossless State ) -and ($Setting.EnableLossless.State -ne "NotConfigured"))
 					{
 						$txt = "Virtual Delivery Agent Settings\HDX3DPro\Enable lossless"
@@ -24710,7 +24717,7 @@ Function ProcessCitrixPolicies
 						$tmp = $Null
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tVirtual Delivery Agent Settings\ICA Latency Monitoring"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual Delivery Agent Settings\ICA Latency Monitoring"
 					If((validStateProp $Setting ICALatencyMonitoring_Enable State ) -and ($Setting.ICALatencyMonitoring_Enable.State -ne "NotConfigured"))
 					{
 						$txt = "Virtual Delivery Agent Settings\ICA Latency Monitoring\Enable Monitoring"
@@ -24778,7 +24785,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tVirtual Delivery Agent Settings\Monitoring"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual Delivery Agent Settings\Monitoring"
 					If((validStateProp $Setting SelectedFailureLevel State ) -and ($Setting.SelectedFailureLevel.State -ne "NotConfigured"))
 					{
 						$txt = "Virtual Delivery Agent Settings\Monitoring\Enable monitoring of application failures"
@@ -25028,7 +25035,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 					
-					Write-Verbose "$(Get-Date): `t`t`tVirtual Delivery Agent Settings\Profile Load Time Monitoring"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual Delivery Agent Settings\Profile Load Time Monitoring"
 					If((validStateProp $Setting ProfileLoadTimeMonitoring_Enable State ) -and ($Setting.ProfileLoadTimeMonitoring_Enable.State -ne "NotConfigured"))
 					{
 						$txt = "Virtual Delivery Agent Settings\Profile Load Time Monitoring\Enable Monitoring"
@@ -25074,7 +25081,7 @@ Function ProcessCitrixPolicies
 						}
 					}
 
-					Write-Verbose "$(Get-Date): `t`t`tVirtual IP"
+					Write-Verbose "$(Get-Date -Format G): `t`t`tVirtual IP"
 					If((validStateProp $Setting VirtualLoopbackSupport State ) -and ($Setting.VirtualLoopbackSupport.State -ne "NotConfigured"))
 					{
 						$txt = "Virtual IP\Virtual IP loopback support"
@@ -25249,8 +25256,8 @@ Function ProcessCitrixPolicies
 			}
 			$Filter = $Null
 			$Settings = $Null
-			Write-Verbose "$(Get-Date): `t`tFinished $($Policy.PolicyName)"
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): `t`tFinished $($Policy.PolicyName)"
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 	}
 	ElseIf(!$?)
@@ -25263,9 +25270,9 @@ Function ProcessCitrixPolicies
 	}
 	
 	$Policies = $Null
-	Write-Verbose "$(Get-Date): `tRemoving $($xDriveName) PSDrive"
+	Write-Verbose "$(Get-Date -Format G): `tRemoving $($xDriveName) PSDrive"
 	Remove-PSDrive $xDriveName -EA 0 4>$Null
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputPolicySetting
@@ -25592,28 +25599,28 @@ Function GetCtxGPOsInAD
 {
 	#thanks to the Citrix Engineering Team for pointers and for Michael B. Smith for creating the function
 	#updated 07-Nov-13 to work in a Windows Workgroup environment
-	Write-Verbose "$(Get-Date): Testing for an Active Directory environment"
+	Write-Verbose "$(Get-Date -Format G): Testing for an Active Directory environment"
 	$root = [ADSI]"LDAP://RootDSE"
 	If([String]::IsNullOrEmpty($root.PSBase.Name))
 	{
-		Write-Verbose "$(Get-Date): `tNot in an Active Directory environment"
+		Write-Verbose "$(Get-Date -Format G): `tNot in an Active Directory environment"
 		$root = $Null
 		$xArray = @()
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): `tIn an Active Directory environment"
+		Write-Verbose "$(Get-Date -Format G): `tIn an Active Directory environment"
 		$domainNC = $root.defaultNamingContext.ToString()
 		$root = $Null
 		$xArray = @()
 
 		$domain = $domainNC.Replace( 'DC=', '' ).Replace( ',', '.' )
-		Write-Verbose "$(Get-Date): `tSearching \\$($domain)\sysvol\$($domain)\Policies"
+		Write-Verbose "$(Get-Date -Format G): `tSearching \\$($domain)\sysvol\$($domain)\Policies"
 		$sysvolFiles = @()
 		$sysvolFiles = Get-ChildItem -Recurse ( '\\' + $domain  + '\sysvol\' + $domain + '\Policies' ) -EA 0
 		If($sysvolFiles.Count -eq 0)
 		{
-			Write-Verbose "$(Get-Date): `tSearch timed out.  Retrying.  Searching \\ + $($domain)\sysvol\$($domain)\Policies a second time."
+			Write-Verbose "$(Get-Date -Format G): `tSearch timed out.  Retrying.  Searching \\ + $($domain)\sysvol\$($domain)\Policies a second time."
 			$sysvolFiles = Get-ChildItem -Recurse ( '\\' + $domain  + '\sysvol\' + $domain + '\Policies' ) -EA 0
 		}
 		ForEach( $file in $sysvolFiles )
@@ -25654,7 +25661,7 @@ Function ProcessConfigLogging
 		If(($Script:XDSite2.ProductCode -eq "XDT" -and ($Script:XDSite2.ProductEdition -eq "PLT" -or $Script:XDSite2.ProductEdition -eq "ENT")) -or `
 		($Script:XDSite2.ProductCode -eq "MPS" -and ($Script:XDSite2.ProductEdition -eq "PLT" -or $Script:XDSite2.ProductEdition -eq "ENT")))
 		{
-			Write-Verbose "$(Get-Date): Processing Configuration Logging"
+			Write-Verbose "$(Get-Date -Format G): Processing Configuration Logging"
 			$txt1 = "Logging"
 			If($MSword -or $PDF)
 			{
@@ -25673,7 +25680,7 @@ Function ProcessConfigLogging
 			}
 			
 			#preferences
-			Write-Verbose "$(Get-Date): `tConfiguration Logging Preferences"
+			Write-Verbose "$(Get-Date -Format G): `tConfiguration Logging Preferences"
 			$results = Get-XDLogging @XDParams1
 			
 			If($? -and $Null -ne $results)
@@ -25686,7 +25693,7 @@ Function ProcessConfigLogging
 				OutputWarning $txt
 			}
 			
-			Write-Verbose "$(Get-Date): `tConfiguration Logging Details"
+			Write-Verbose "$(Get-Date -Format G): `tConfiguration Logging Details"
 			$ConfigLogItems = Get-LogHighLevelOperation @XDParams2 -Filter {StartTime -ge $StartDate -and EndTime -le $EndDate} -SortBy "-StartTime"
 			If($? -and $Null -ne $ConfigLogItems)
 			{
@@ -25702,13 +25709,13 @@ Function ProcessConfigLogging
 				$txt = "Configuration Logging information could not be retrieved."
 				OutputWarning $txt
 			}
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 		Else
 		{
 			$txt = "Not licensed for Configuration Logging"
 			OutputWarning $txt
-			Write-Verbose "$(Get-Date): "
+			Write-Verbose "$(Get-Date -Format G): "
 		}
 	}
 }
@@ -25719,7 +25726,7 @@ Function OutputConfigLogPreferences
 
 	Param([object] $Preferences)
 	
-	Write-Verbose "$(Get-Date): `t`tOutput Configuration Logging Preferences"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Configuration Logging Preferences"
 	
 	$LogSQLServerPrincipalName = ""
 	$LogSQLServerMirrorName = ""
@@ -25865,7 +25872,7 @@ Function OutputConfigLog
 {
 	Param([object] $ConfigLogItems)
 	
-	Write-Verbose "$(Get-Date): `tOutput Configuration Logging"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Configuration Logging"
 	If($MSWord -or $PDF)
 	{
 		[System.Collections.Hashtable[]] $ItemsWordTable = @();
@@ -25963,16 +25970,16 @@ Function OutputConfigLog
 #region site configuration functions
 Function ProcessConfiguration
 {
-	Write-Verbose "$(Get-Date): Process Configuration Settings"
+	Write-Verbose "$(Get-Date -Format G): Process Configuration Settings"
 	OutputSiteSettings
 	OutputCEIPSetting
 	OutputDatastores
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputSiteSettings
 {
-	Write-Verbose "$(Get-Date): `tSee if StoreFront is installed on the Controller(s)"
+	Write-Verbose "$(Get-Date -Format G): `tSee if StoreFront is installed on the Controller(s)"
 	$DefaultStoreFrontAddress = ""
 	If(Get-SFIsStoreFrontInstalled @XDParams1)
 	{
@@ -25987,7 +25994,7 @@ Function OutputSiteSettings
 		}	
 	}
 
-	Write-Verbose "$(Get-Date): `tOutput Site Settings"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Site Settings"
 	If($MSWord -or $PDF)
 	{
 		$Selection.InsertNewPage()
@@ -26038,7 +26045,7 @@ Function OutputCEIPSetting
 {
 	If($Script:CanDoAnalytics)
 	{
-		Write-Verbose "$(Get-Date): `tProcessing Customer Experience Improvement Program"
+		Write-Verbose "$(Get-Date -Format G): `tProcessing Customer Experience Improvement Program"
 		$Results = Get-AnalyticsSite @XDParams1
 		If($? -and ($Null -ne $Results))
 		{
@@ -26184,8 +26191,8 @@ Function OutputDatastores
 	#25-Jun-2017 add checking if the SQL Server assembly loaded before calculating the database size
 	
 	#V1.42 added get IP address for each SQL Server name
-	Write-Verbose "$(Get-Date): `tRetrieving database connection data"
-	Write-Verbose "$(Get-Date): `t`tConfiguration database"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving database connection data"
+	Write-Verbose "$(Get-Date -Format G): `t`tConfiguration database"
 	[string]$ConfigSQLServerPrincipalName = ""
 	[string]$ConfigSQLServerMirrorName = "Not Configured"
 	[string]$ConfigDatabaseName = ""
@@ -26194,6 +26201,7 @@ Function OutputDatastores
 	[string]$ConfigDBSQLVersion = "Unable to determine"
 	[string]$ConfigSQLServerPrincipalNameIPAddress = ""
 	[string]$ConfigSQLServerMirrorNameIPAddress = ""
+	$SQLServerNames = @()
 	
 	$ConfigDBs = Get-ConfigDBConnection @XDParams1
 
@@ -26217,10 +26225,14 @@ Function OutputDatastores
 		If($ConfigSQLServerPrincipalName.Contains("\"))
 		{
 			$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName.Substring(0,$ConfigSQLServerPrincipalName.IndexOf("\"))
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $ConfigSQLServerPrincipalName.Substring(0,$ConfigSQLServerPrincipalName.IndexOf("\"))
 		}
 		Else
 		{
 			$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $ConfigSQLServerPrincipalName
 		}
 
 		If($ConfigSQLServerMirrorName -ne "Not Configured")
@@ -26228,17 +26240,21 @@ Function OutputDatastores
 			If($ConfigSQLServerMirrorName.Contains("\"))
 			{
 				$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf("\"))
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf("\"))
 			}
 			Else
 			{
 				$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $ConfigSQLServerMirrorName
 			}
 		}
 		Else
 		{
 			$ConfigSQLServerMirrorNameIPAddress = "-"
 		}
-
+		
 		If($Script:SQLServerLoaded)
 		{
 			$SQLsrv = new-Object Microsoft.SqlServer.Management.Smo.Server("$($ConfigSQLServerPrincipalName)")
@@ -26263,7 +26279,7 @@ Function OutputDatastores
 			$ConfigDBParent 									= $Configdb.Parent
 			$ConfigDBCollation 									= $Configdb.Collation
 			$ConfigDBSQLVersion 								= GetSQLVersion $SQLsrv
-			$ConfigDBCompatibilityLevel 						= GetDBCompatibilityLevel $Configdb.CompatibilityLevel
+			$ConfigDBCompatibilityLevel 						= GetDBCompatibilityLevel $Configdb.CompatibilityLevel $SQLsrv
 			$ConfigDBCreateDate 								= $Configdb.CreateDate.ToString()
 
 			If($Configdb.IsReadCommittedSnapshotOn)
@@ -26296,10 +26312,14 @@ Function OutputDatastores
 				If($Configdb.MirroringPartner.Contains("\"))
 				{
 					$ConfigDBMirroringPartnerIPAddress = Get-IPAddress $Configdb.MirroringPartner.Substring(0,$Configdb.MirroringPartner.IndexOf("\"))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Configdb.MirroringPartner.Substring(0,$Configdb.MirroringPartner.IndexOf("\"))
 				}
 				Else
 				{
 					$ConfigDBMirroringPartnerIPAddress = Get-IPAddress $Configdb.MirroringPartner
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Configdb.MirroringPartner
 				}
 				$ConfigDBMirroringPartnerInstance	= $Configdb.MirroringPartnerInstance
 				$ConfigDBMirroringSafetyLevel		= $Configdb.MirroringSafetyLevel
@@ -26309,10 +26329,14 @@ Function OutputDatastores
 				If($Configdb.MirroringPartner.Contains("\"))
 				{
 					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
 				}
 				Else
 				{
 					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Configdb.MirroringWitness
 				}
 				$ConfigDBMirroringWitnessStatus		= $Configdb.MirroringWitnessStatus
 			}
@@ -26356,15 +26380,16 @@ Function OutputDatastores
 		Write-Warning "Unable to retrieve Configuration Database settings"
 	}
 
-	Write-Verbose "$(Get-Date): `t`tConfiguration Logging database"
-	[string]$LogSQLServerPrincipalName = ""
-	[string]$LogSQLServerMirrorName = "Not Configured"
-	[string]$LogDatabaseName = ""
-	[string]$LogDBSize = "Unable to determine"
-	[string]$LogDBReadCommittedSnapshot = "Unable to determine"
-	[string]$LogDBSQLVersion = "Unable to determine"
+	Write-Verbose "$(Get-Date -Format G): `t`tConfiguration Logging database"
+	[string]$LogSQLServerPrincipalName          = ""
+	[string]$LogSQLServerMirrorName             = "Not Configured"
+	[string]$LogDatabaseName                    = ""
+	[string]$LogDBSize                          = "Unable to determine"
+	[string]$LogDBReadCommittedSnapshot         = "Unable to determine"
+	[string]$LogDBSQLVersion                    = "Unable to determine"
 	[string]$LogSQLServerPrincipalNameIPAddress = ""
-	[string]$LogSQLServerMirrorNameIPAddress = ""
+	[string]$LogSQLServerMirrorNameIPAddress    = ""
+
 	$LogDBs = Get-LogDataStore @XDParams1
 
 	If($? -and ($Null -ne $LogDBs))
@@ -26393,10 +26418,14 @@ Function OutputDatastores
 		If($LogSQLServerPrincipalName.Contains("\"))
 		{
 			$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName.Substring(0,$LogSQLServerPrincipalName.IndexOf("\"))
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $LogSQLServerPrincipalName.Substring(0,$LogSQLServerPrincipalName.IndexOf("\"))
 		}
 		Else
 		{
 			$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $LogSQLServerPrincipalName
 		}
 
 		If($LogSQLServerMirrorName -ne "Not Configured")
@@ -26404,10 +26433,14 @@ Function OutputDatastores
 			If($LogSQLServerMirrorName.Contains("\"))
 			{
 				$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf("\"))
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf("\"))
 			}
 			Else
 			{
 				$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $LogSQLServerMirrorName
 			}
 		}
 		Else
@@ -26436,11 +26469,11 @@ Function OutputDatastores
 				}
 			}
 
-			$LogDBParent 									= $LogDB.Parent
-			$LogDBCollation 								= $LogDB.Collation
-			$LogDBSQLVersion 								= GetSQLVersion $SQLsrv
-			$LogDBCompatibilityLevel 						= GetDBCompatibilityLevel $LogDB.CompatibilityLevel
-			$LogDBCreateDate 								= $LogDB.CreateDate.ToString()
+			$LogDBParent			 = $LogDB.Parent
+			$LogDBCollation			 = $LogDB.Collation
+			$LogDBSQLVersion		 = GetSQLVersion $SQLsrv
+			$LogDBCompatibilityLevel = GetDBCompatibilityLevel $LogDB.CompatibilityLevel $SQLsrv
+			$LogDBCreateDate		 = $LogDB.CreateDate.ToString()
 
 			If($LogDB.IsReadCommittedSnapshotOn)
 			{
@@ -26472,10 +26505,14 @@ Function OutputDatastores
 				If($Logdb.MirroringPartner.Contains("\"))
 				{
 					$LogDBMirroringPartnerIPAddress = Get-IPAddress $Logdb.MirroringPartner.Substring(0,$Logdb.MirroringPartner.IndexOf("\"))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Logdb.MirroringPartner.Substring(0,$Logdb.MirroringPartner.IndexOf("\"))
 				}
 				Else
 				{
 					$LogDBMirroringPartnerIPAddress = Get-IPAddress $Logdb.MirroringPartner
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Logdb.MirroringPartner
 				}
 				$LogDBMirroringPartnerInstance	= $LogDB.MirroringPartnerInstance
 				$LogDBMirroringSafetyLevel		= $LogDB.MirroringSafetyLevel
@@ -26484,10 +26521,14 @@ Function OutputDatastores
 				If($Logdb.MirroringPartner.Contains("\"))
 				{
 					$LogDBMirroringWitnessIPAddress = Get-IPAddress $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf("\"))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf("\"))
 				}
 				Else
 				{
 					$LogDBMirroringWitnessIPAddress = Get-IPAddress $Logdb.MirroringWitness
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Logdb.MirroringWitness
 				}
 				$LogDBMirroringWitnessStatus	= $LogDB.MirroringWitnessStatus
 			}
@@ -26531,18 +26572,18 @@ Function OutputDatastores
 		Write-Warning "Unable to retrieve Configuration Logging Database settings"
 	}
 
-	Write-Verbose "$(Get-Date): `t`tMonitoring database"
-	[string]$MonitorSQLServerPrincipalName = ""
-	[string]$MonitorSQLServerMirrorName = "Not Configured"
-	[string]$MonitorDatabaseName = ""
-	[string]$MonitorDBSize = "Unable to determine"
-	[string]$MonitorDBReadCommittedSnapshot = "Unable to determine"
-	[string]$MonitorDBSQLVersion = "Unable to determine"
-	[string]$MonitorCollectHotfix = "Disabled"
-	[string]$MonitorDataCollection = "Disabled"
-	[string]$MonitorDetailedSQL = "Disabled"
+	Write-Verbose "$(Get-Date -Format G): `t`tMonitoring database"
+	[string]$MonitorSQLServerPrincipalName          = ""
+	[string]$MonitorSQLServerMirrorName             = "Not Configured"
+	[string]$MonitorDatabaseName                    = ""
+	[string]$MonitorDBSize                          = "Unable to determine"
+	[string]$MonitorDBReadCommittedSnapshot         = "Unable to determine"
+	[string]$MonitorDBSQLVersion                    = "Unable to determine"
+	[string]$MonitorCollectHotfix                   = "Disabled"
+	[string]$MonitorDataCollection                  = "Disabled"
+	[string]$MonitorDetailedSQL                     = "Disabled"
 	[string]$MonitorSQLServerPrincipalNameIPAddress = ""
-	[string]$MonitorSQLServerMirrorNameIPAddress = ""
+	[string]$MonitorSQLServerMirrorNameIPAddress    = ""
 	
 	$MonitorDBs = Get-MonitorDataStore @XDParams1
 
@@ -26572,10 +26613,14 @@ Function OutputDatastores
 		If($MonitorSQLServerPrincipalName.Contains("\"))
 		{
 			$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName.Substring(0,$MonitorSQLServerPrincipalName.IndexOf("\"))
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $MonitorSQLServerPrincipalName.Substring(0,$MonitorSQLServerPrincipalName.IndexOf("\"))
 		}
 		Else
 		{
 			$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $MonitorSQLServerPrincipalName
 		}
 
 		If($MonitorSQLServerMirrorName -ne "Not Configured")
@@ -26583,10 +26628,14 @@ Function OutputDatastores
 			If($MonitorSQLServerMirrorName.Contains("\"))
 			{
 				$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf("\"))
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf("\"))
 			}
 			Else
 			{
 				$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $MonitorSQLServerMirrorName
 			}
 		}
 		Else
@@ -26618,7 +26667,7 @@ Function OutputDatastores
 			$MonitorDBParent 				= $MonitorDB.Parent
 			$MonitorDBCollation 			= $MonitorDB.Collation
 			$MonitorDBSQLVersion 			= GetSQLVersion $SQLsrv
-			$MonitorDBCompatibilityLevel	= GetDBCompatibilityLevel $MonitorDB.CompatibilityLevel
+			$MonitorDBCompatibilityLevel	= GetDBCompatibilityLevel $MonitorDB.CompatibilityLevel $SQLsrv
 			$MonitorDBCreateDate 			= $MonitorDB.CreateDate.ToString()
 
 			If($MonitorDB.IsReadCommittedSnapshotOn)
@@ -26651,10 +26700,14 @@ Function OutputDatastores
 				If($Monitordb.MirroringPartner.Contains("\"))
 				{
 					$MonitorDBMirroringPartnerIPAddress = Get-IPAddress $Monitordb.MirroringPartner.Substring(0,$Monitordb.MirroringPartner.IndexOf("\"))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Monitordb.MirroringPartner.Substring(0,$Monitordb.MirroringPartner.IndexOf("\"))
 				}
 				Else
 				{
 					$MonitorDBMirroringPartnerIPAddress = Get-IPAddress $Monitordb.MirroringPartner
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Monitordb.MirroringPartner
 				}
 				$MonitorDBMirroringPartnerInstance	= $MonitorDB.MirroringPartnerInstance
 				$MonitorDBMirroringSafetyLevel		= $MonitorDB.MirroringSafetyLevel
@@ -26662,11 +26715,15 @@ Function OutputDatastores
 				$MonitorDBMirroringWitness			= $MonitorDB.MirroringWitness
 				If($Configdb.MirroringPartner.Contains("\"))
 				{
-					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
+					$MonitorDBMirroringWitnessIPAddress = Get-IPAddress $MonitorDB.MirroringWitness.Substring(0,$MonitorDB.MirroringWitness.IndexOf("\"))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $MonitorDB.MirroringWitness.Substring(0,$MonitorDB.MirroringWitness.IndexOf("\"))
 				}
 				Else
 				{
-					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness
+					$MonitorDBMirroringWitnessIPAddress = Get-IPAddress $MonitorDB.MirroringWitness
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $MonitorDB.MirroringWitness
 				}
 				$MonitorDBMirroringWitnessStatus	= $MonitorDB.MirroringWitnessStatus
 			}
@@ -26743,7 +26800,310 @@ Function OutputDatastores
 		Write-Warning "Unable to retrieve Monitoring Database settings"
 	}
 
-	Write-Verbose "$(Get-Date): `tOutput Datastores"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Datastores"
+	If($Script:SQLServerLoaded)
+	{
+		If([String]::IsNullOrEmpty( $ConfigDatabaseName))
+		{
+			$ConfigDatabaseName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBAvailabilityDatabaseSynchronizationState))
+		{
+			$ConfigDBAvailabilityDatabaseSynchronizationState = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBAvailabilityGroupName))
+		{
+			$ConfigDBAvailabilityGroupName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBCollation))
+		{
+			$ConfigDBCollation = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBCompatibilityLevel))
+		{
+			$ConfigDBCompatibilityLevel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBCreateDate))
+		{
+			$ConfigDBCreateDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBSize))
+		{
+			$ConfigDBSize = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBLastBackupDate))
+		{
+			$ConfigDBLastBackupDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBLastLogBackupDate))
+		{
+			$ConfigDBLastLogBackupDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigSQLServerMirrorName))
+		{
+			$ConfigSQLServerMirrorName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigSQLServerMirrorNameIPAddress))
+		{
+			$ConfigSQLServerMirrorNameIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringPartner))
+		{
+			$ConfigDBMirroringPartner = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringPartnerIPAddress))
+		{
+			$ConfigDBMirroringPartnerIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringPartnerInstance))
+		{
+			$ConfigDBMirroringPartnerInstance = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringSafetyLevel))
+		{
+			$ConfigDBMirroringSafetyLevel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringStatus))
+		{
+			$ConfigDBMirroringStatus = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringWitness))
+		{
+			$ConfigDBMirroringWitness = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringWitnessIPAddress))
+		{
+			$ConfigDBMirroringWitnessIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBMirroringWitnessStatus))
+		{
+			$ConfigDBMirroringWitnessStatus = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBParent))
+		{
+			$ConfigDBParent = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBReadCommittedSnapshot))
+		{
+			$ConfigDBReadCommittedSnapshot = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBRecoveryModel))
+		{
+			$ConfigDBRecoveryModel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigSQLServerPrincipalName))
+		{
+			$ConfigSQLServerPrincipalName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigSQLServerPrincipalNameIPAddress))
+		{
+			$ConfigSQLServerPrincipalNameIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $ConfigDBSQLVersion))
+		{
+			$ConfigDBSQLVersion = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDatabaseName))
+		{
+			$LogDatabaseName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBAvailabilityDatabaseSynchronizationState))
+		{
+			$LogDBAvailabilityDatabaseSynchronizationState = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBAvailabilityGroupName))
+		{
+			$LogDBAvailabilityGroupName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBCollation))
+		{
+			$LogDBCollation = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBCompatibilityLevel))
+		{
+			$LogDBCompatibilityLevel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBCreateDate))
+		{
+			$LogDBCreateDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBSize))
+		{
+			$LogDBSize = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBLastBackupDate))
+		{
+			$LogDBLastBackupDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBLastLogBackupDate))
+		{
+			$LogDBLastLogBackupDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogSQLServerMirrorName))
+		{
+			$LogSQLServerMirrorName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogSQLServerMirrorNameIPAddress))
+		{
+			$LogSQLServerMirrorNameIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringPartner))
+		{
+			$LogDBMirroringPartner = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringPartnerIPAddress))
+		{
+			$LogDBMirroringPartnerIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringPartnerInstance))
+		{
+			$LogDBMirroringPartnerInstance = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringSafetyLevel))
+		{
+			$LogDBMirroringSafetyLevel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringStatus))
+		{
+			$LogDBMirroringStatus = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringWitness))
+		{
+			$LogDBMirroringWitness = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringWitnessIPAddress))
+		{
+			$LogDBMirroringWitnessIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBMirroringWitnessStatus))
+		{
+			$LogDBMirroringWitnessStatus = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBParent))
+		{
+			$LogDBParent = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBReadCommittedSnapshot))
+		{
+			$LogDBReadCommittedSnapshot = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBRecoveryModel))
+		{
+			$LogDBRecoveryModel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogSQLServerPrincipalName))
+		{
+			$LogSQLServerPrincipalName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogSQLServerPrincipalNameIPAddress))
+		{
+			$LogSQLServerPrincipalNameIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $LogDBSQLVersion))
+		{
+			$LogDBSQLVersion = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDatabaseName))
+		{
+			$MonitorDatabaseName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBAvailabilityDatabaseSynchronizationState))
+		{
+			$MonitorDBAvailabilityDatabaseSynchronizationState = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBAvailabilityGroupName))
+		{
+			$MonitorDBAvailabilityGroupName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBCollation))
+		{
+			$MonitorDBCollation = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBCompatibilityLevel))
+		{
+			$MonitorDBCompatibilityLevel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBCreateDate))
+		{
+			$MonitorDBCreateDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBSize))
+		{
+			$MonitorDBSize = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBLastBackupDate))
+		{
+			$MonitorDBLastBackupDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBLastLogBackupDate))
+		{
+			$MonitorDBLastLogBackupDate = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorSQLServerMirrorName))
+		{
+			$MonitorSQLServerMirrorName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorSQLServerMirrorNameIPAddress))
+		{
+			$MonitorSQLServerMirrorNameIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringPartner))
+		{
+			$MonitorDBMirroringPartner = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringPartnerIPAddress))
+		{
+			$MonitorDBMirroringPartnerIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringPartnerInstance))
+		{
+			$MonitorDBMirroringPartnerInstance = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringSafetyLevel))
+		{
+			$MonitorDBMirroringSafetyLevel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringStatus))
+		{
+			$MonitorDBMirroringStatus = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringWitness))
+		{
+			$MonitorDBMirroringWitness = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringWitnessIPAddress))
+		{
+			$MonitorDBMirroringWitnessIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBMirroringWitnessStatus))
+		{
+			$MonitorDBMirroringWitnessStatus = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBParent))
+		{
+			$MonitorDBParent = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBReadCommittedSnapshot))
+		{
+			$MonitorDBReadCommittedSnapshot = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBRecoveryModel))
+		{
+			$MonitorDBRecoveryModel = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorSQLServerPrincipalName))
+		{
+			$MonitorSQLServerPrincipalName = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorSQLServerPrincipalNameIPAddress))
+		{
+			$MonitorSQLServerPrincipalNameIPAddress = "Unable to determine"
+		}
+		If([String]::IsNullOrEmpty( $MonitorDBSQLVersion))
+		{
+			$MonitorDBSQLVersion = "Unable to determine"
+		}
+		
 	If($MSWord -or $PDF)
 	{
 		WriteWordLine 2 0 "Datastores"
@@ -27394,14 +27754,47 @@ Function OutputDatastores
 		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "250"
 		WriteHTMLLine 0 0 " "
 	}
+		
+		If($Hardware)
+		{
+			$SQLServerNames = $SQLServerNames | Sort-Object -Unique
+			
+			ForEach($SQLServerName in $SQLServerNames)
+			{
+				If($MSWord -or $PDF)
+				{
+					$Script:Selection.InsertNewPage()
+				}
+				GetComputerWMIInfo $SQLServerName
+			}
+		}
+	}
+	Else
+	{
+		If($MSWord -or $PDF)
+		{
+			WriteWordLine 2 0 "Datastores"
+			WriteWordLine 0 0 "There is no Datastore information becaue the SQL Server Assembly did not load"
+		}
+		If($Text)
+		{
+			Line 0 "Datastores"
+			Line 0 "There is no Datastore information becaue the SQL Server Assembly did not load"
+		}
+		If($HTML)
+		{
+			WriteHTMLLine 2 0 "Datastores"
+			WriteHTMLLine 0 0 "There is no Datastore information becaue the SQL Server Assembly did not load"
+		}
+	}
 }
 #endregion
 
 #region Administrator, Scope and Roles functions
 Function ProcessAdministrators
 {
-	Write-Verbose "$(Get-Date): Processing Administrators"
-	Write-Verbose "$(Get-Date): `tRetrieving Administrator data"
+	Write-Verbose "$(Get-Date -Format G): Processing Administrators"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving Administrator data"
 	
 	$Script:TotalDeliveryGroupAdmins = 0
 	$Script:TotalFullAdmins = 0
@@ -27427,14 +27820,14 @@ Function ProcessAdministrators
 		$txt = "Unable to retrieve Administrators"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputAdministrators
 {
 	Param([object] $Admins)
 	
-	Write-Verbose "$(Get-Date): `tOutput Administrator data"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Administrator data"
 	
 	ForEach($Admin in $Admins)
 	{
@@ -27539,7 +27932,7 @@ Function OutputAdministrators
 
 Function ProcessScopes
 {
-	Write-Verbose "$(Get-Date): Processing Administrator Scopes"
+	Write-Verbose "$(Get-Date -Format G): Processing Administrator Scopes"
 	$Scopes = Get-AdminScope @XDParams2 -SortBy Name
 	
 	If($? -and ($Null -ne $Scopes))
@@ -27561,14 +27954,14 @@ Function ProcessScopes
 		$txt = "Unable to retrieve Administrator Scopes"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputScopes
 {
 	Param([object] $Scopes)
 	
-	Write-Verbose "$(Get-Date): `tOutput Scopes"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Scopes"
 	If($MSWord -or $PDF)
 	{
 		WriteWordLine 2 0 "Administrative Scopes"
@@ -27627,7 +28020,7 @@ Function OutputScopeObjects
 {
 	Param([object] $Scopes)
 	
-	Write-Verbose "$(Get-Date): `t`tOutput Scope Objects"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Scope Objects"
 
 	If($MSWord -or $PDF)
 	{
@@ -27976,7 +28369,7 @@ Function GetScopeHyp
 Function OutputScopeAdministrators 
 {
 	Param([object] $Scopes)
-	Write-Verbose "$(Get-Date): `t`tOutput Scope Administrators"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Scope Administrators"
 	
 	If($MSWord -or $PDF)
 	{
@@ -28147,7 +28540,7 @@ Function OutputScopeAdministrators
 
 Function ProcessRoles
 {
-	Write-Verbose "$(Get-Date): Processing Administrator Roles"
+	Write-Verbose "$(Get-Date -Format G): Processing Administrator Roles"
 	$Roles = Get-AdminRole @XDParams2 -SortBy Name
 
 	If($? -and ($Null -ne $Roles))
@@ -28169,14 +28562,14 @@ Function ProcessRoles
 		$txt = "Unable to retrieve Administrator Roles"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputRoles
 {
 	Param([object] $Roles)
 	
-	Write-Verbose "$(Get-Date): `tOutput Roles"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Roles"
 	If($MSWord -or $PDF)
 	{
 		If($Administrators)
@@ -28272,7 +28665,7 @@ Function OutputRoles
 Function OutputRoleDefinitions
 {
 	Param([object] $Roles)
-	Write-Verbose "$(Get-Date): `t`tOutput Role Definitions"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Role Definitions"
 	
 	If($MSWord -or $PDF)
 	{
@@ -28548,7 +28941,7 @@ Function GetRolePermissions
 Function OutputRoleAdministrators 
 {
 	Param([object] $Roles)
-	Write-Verbose "$(Get-Date): `t`tOutput Role Administrators"
+	Write-Verbose "$(Get-Date -Format G): `t`tOutput Role Administrators"
 	
 	If($MSWord -or $PDF)
 	{
@@ -28721,8 +29114,8 @@ Function OutputRoleAdministrators
 #region Controllers functions
 Function ProcessControllers
 {
-	Write-Verbose "$(Get-Date): Processing Controllers"
-	Write-Verbose "$(Get-Date): `tRetrieving Controller data"
+	Write-Verbose "$(Get-Date -Format G): Processing Controllers"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving Controller data"
 	
 	$Script:TotalControllers = 0
 	
@@ -28742,14 +29135,14 @@ Function ProcessControllers
 		$txt = "Unable to retrieve Controllers"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputControllers
 {
 	Param([object]$Controllers)
 	
-	Write-Verbose "$(Get-Date): `tOutput Controllers"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Controllers"
 	If($MSWord -or $PDF)
 	{
 		$Selection.InsertNewPage()
@@ -28843,7 +29236,7 @@ Function ProcessHosting
 {
 	#original work on the Hosting was done by Kenny Baldwin
 	#V1.44 updated to match the V2 script
-	Write-Verbose "$(Get-Date): Processing Hosting"
+	Write-Verbose "$(Get-Date -Format G): Processing Hosting"
 	
 	$Script:TotalHostingConnections = 0
 
@@ -28868,7 +29261,7 @@ Function ProcessHosting
 	$vmnetwork = @()
 	$IntelliCache = New-Object System.Collections.ArrayList
 
-	Write-Verbose "$(Get-Date): `tProcessing Hosting Units"
+	Write-Verbose "$(Get-Date -Format G): `tProcessing Hosting Units"
 	$HostingUnits = Get-ChildItem @XDParams1 -path 'xdhyp:\hostingunits' 4>$Null
 	If($? -and $Null -ne $HostingUnits)
 	{
@@ -28910,7 +29303,7 @@ Function ProcessHosting
 		OutputWarning $txt
 	}
 
-	Write-Verbose "$(Get-Date): `tProcessing Hypervisors"
+	Write-Verbose "$(Get-Date -Format G): `tProcessing Hypervisors"
 	$Hypervisors = Get-BrokerHypervisorConnection @XDParams2
 	If($? -and $Null -ne $Hypervisors)
 	{
@@ -28992,7 +29385,7 @@ Function ProcessHosting
 			$xState = ""
 			$xZoneName = ""
 			$xPowerActions = @()
-			Write-Verbose "$(Get-Date): `tProcessing Hosting Connections"
+			Write-Verbose "$(Get-Date -Format G): `tProcessing Hosting Connections"
 			$Connections = Get-ChildItem @XDParams1 -path 'xdhyp:\connections' 4>$Null
 			
 			If($? -and $Null -ne $Connections)
@@ -29046,7 +29439,7 @@ Function ProcessHosting
 		$txt = "Unable to retrieve Hypervisors"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date):"
+	Write-Verbose "$(Get-Date -Format G):"
 }
 
 Function OutputHosting
@@ -29171,7 +29564,7 @@ Function OutputHosting
 		$xxMaintMode = "Off"
 	}
 	
-	Write-Verbose "$(Get-Date): `t`t`tOutput $($Hypervisor.Name)"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput $($Hypervisor.Name)"
 	If($MSWord -or $PDF)
 	{
 		WriteWordLine 3 0 $Hypervisor.Name
@@ -29521,7 +29914,7 @@ Function OutputHosting
 	
 	If($Hosting)
 	{	
-		Write-Verbose "$(Get-Date): `tProcessing Host Administrators"
+		Write-Verbose "$(Get-Date -Format G): `tProcessing Host Administrators"
 		$Admins = GetAdmins "Host" $Hypervisor.Name
 		
 		If($? -and ($Null -ne $Admins))
@@ -29539,7 +29932,7 @@ Function OutputHosting
 			OutputWarning $txt
 		}
 
-		Write-Verbose "$(Get-Date): `tProcessing Desktop OS Data"
+		Write-Verbose "$(Get-Date -Format G): `tProcessing Desktop OS Data"
 		$DesktopOSMachines = @(Get-BrokerMachine @XDParams2 -hypervisorconnectionname $Hypervisor.Name -sessionsupport "SingleSession")
 
 		If($? -and ($Null -ne $DesktopOSMachines))
@@ -29577,7 +29970,7 @@ Function OutputHosting
 			OutputWarning $txt
 		}
 
-		Write-Verbose "$(Get-Date): `tProcessing Server OS Data"
+		Write-Verbose "$(Get-Date -Format G): `tProcessing Server OS Data"
 		$ServerOSMachines = @(Get-BrokerMachine @XDParams2 -hypervisorconnectionname $Hypervisor.Name -sessionsupport "MultiSession")
 		
 		If($? -and ($Null -ne $ServerOSMachines))
@@ -29618,7 +30011,7 @@ Function OutputHosting
 
 		If($NoSessions -eq $False) #V2.27
 		{
-			Write-Verbose "$(Get-Date): `tProcessing Sessions Data"
+			Write-Verbose "$(Get-Date -Format G): `tProcessing Sessions Data"
 			$Sessions = @(Get-BrokerSession @XDParams2 -hypervisorconnectionname $Hypervisor.Name -SortBy UserName)
 			If($? -and ($Null -ne $Sessions))
 			{
@@ -29664,7 +30057,7 @@ Function OutputDesktopOSMachine
 	$xMaintMode = ""
 	$xUserChanges = ""
 	
-	Write-Verbose "$(Get-Date): `t`t`tOutput desktop $($Desktop.DNSName)"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput desktop $($Desktop.DNSName)"
 	If($MSWord -or $PDF)
 	{
 		If(![String]::IsNullOrEmpty($Desktop.AssociatedUserNames))
@@ -29812,7 +30205,7 @@ Function OutputServerOSMachine
 {
 	Param([object]$Server)
 	
-	Write-Verbose "$(Get-Date): `t`t`tOutput server $($Server.DNSName)"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput server $($Server.DNSName)"
 	$xName = ""
 	$xMaintMode = ""
 	$xUserChanges = ""
@@ -29967,7 +30360,7 @@ Function OutputHostingSessions
 	
 	ForEach($Session in $Sessions)
 	{
-		Write-Verbose "$(Get-Date): `t`t`tOutput session $($Session.UserName)"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tOutput session $($Session.UserName)"
 		
 		If($Session.SessionSupport -eq "SingleSession")
 		{
@@ -30042,13 +30435,13 @@ Function OutputHostingSessions
 #region Licensing functions
 Function ProcessLicensing
 {
-	Write-Verbose "$(Get-Date): Processing Licensing"
+	Write-Verbose "$(Get-Date -Format G): Processing Licensing"
 	
 	$Script:Licenses = @()
 	OutputLicensingOverview
 	
 	#get product license info
-	Write-Verbose "$(Get-Date): `tRetrieving Licensing data"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving Licensing data"
 	$LSAdminAddress = Get-LicLocation -LicenseServerAddress $Script:XDSite1.LicenseServerName -EA 0 4>$Null
 	If($? -and ($Null -ne $LSAdminAddress))
 	{
@@ -30089,12 +30482,12 @@ Function ProcessLicensing
 		$txt = "Unable to retrieve License Server Admin Address"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputLicensingOverview
 {
-	Write-Verbose "$(Get-Date): `tOutput Licensing Overview"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Licensing Overview"
 
 	#V1.42 added getting the IP address for the license server
 	$LicenseServerIPAddress = Get-IPAddress $Script:XDSite1.LicenseServerName
@@ -30199,13 +30592,18 @@ Function OutputLicensingOverview
 		FormatHTMLTable $msg -rowArray $rowdata -columnArray $columnHeaders -fixedWidth $columnWidths -tablewidth "275"
 		WriteHTMLLine 0 0 " "
 	}
+	
+	If($Hardware)
+	{
+		GetComputerWMIInfo $Script:XDSite1.LicenseServerName
+	}
 }
 
 Function OutputXenDesktopLicenses
 {
 	Param([object]$LSAdminAddress, [object]$LSCertificate, [object]$ProductLicenses)
 	
-	Write-Verbose "$(Get-Date): `tOutput Licenses"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Licenses"
 	[int]$NumLicenses = 0
 	
 	ForEach($Product in $ProductLicenses)
@@ -30352,7 +30750,7 @@ Function OutputLicenseAdmins
 {
 	Param([object]$LicenseAdmins)
 	
-	Write-Verbose "$(Get-Date): `tProcessing License Administrators"
+	Write-Verbose "$(Get-Date -Format G): `tProcessing License Administrators"
 
 	$txt = "License Administrators"
 	If($MSWord -or $PDF)
@@ -30380,7 +30778,7 @@ Function OutputLicenseAdmins
 
 	ForEach($Admin in $LicenseAdmins)
 	{
-		Write-Verbose "$(Get-Date): `t`tAdding Administrator $($Admin.Account)"
+		Write-Verbose "$(Get-Date -Format G): `t`tAdding Administrator $($Admin.Account)"
 
 		If($MSWord -or $PDF)
 		{
@@ -30438,7 +30836,7 @@ Function OutputLicenseAdmins
 #region StoreFront functions
 Function ProcessStoreFront
 {
-	Write-Verbose "$(Get-Date): Processing StoreFront"
+	Write-Verbose "$(Get-Date -Format G): Processing StoreFront"
 	
 	$Script:TotalStoreFrontServers = 0
 	
@@ -30456,7 +30854,7 @@ Function ProcessStoreFront
 		WriteHTMLLine 1 0 "StoreFront"
 	}
 	
-	Write-Verbose "$(Get-Date): `tRetrieving StoreFront information"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving StoreFront information"
 	$SFInfos = Get-BrokerMachineConfiguration @XDParams1 -Name rs* -SortBy LeafName
 	If($? -and ($Null -ne $SFInfos))
 	{
@@ -30466,7 +30864,7 @@ Function ProcessStoreFront
 			$Script:TotalStoreFrontServers++
 
 			$SFByteArray = $SFInfo.Policy
-			Write-Verbose "$(Get-Date): `t`tRetrieving StoreFront server information for $($SFInfo.LeafName)"
+			Write-Verbose "$(Get-Date -Format G): `t`tRetrieving StoreFront server information for $($SFInfo.LeafName)"
 			$SFServer = Get-SFStoreFrontAddress -ByteArray $SFByteArray 4>$Null
 			If($? -and ($Null -ne $SFServer))
 			{
@@ -30486,7 +30884,7 @@ Function ProcessStoreFront
 						OutputStoreFrontDeliveryGroups $SFInfo
 					}
 					
-					Write-Verbose "$(Get-Date): `t`tProcessing administrators for StoreFront server $($SFServer.Name)"
+					Write-Verbose "$(Get-Date -Format G): `t`tProcessing administrators for StoreFront server $($SFServer.Name)"
 					$Admins = GetAdmins "Storefront"
 					
 					If($? -and ($Null -ne $Admins))
@@ -30528,7 +30926,7 @@ Function ProcessStoreFront
 		OutputWarning $txt
 	}
 	
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputStoreFront
@@ -30537,7 +30935,7 @@ Function OutputStoreFront
 	
 	$DGCnt = $SFInfo.DesktopGroupUids.Count
 	
-	Write-Verbose "$(Get-Date): `t`t`tOutput StoreFront server $($SFServer.Name)"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput StoreFront server $($SFServer.Name)"
 	If($MSWord -or $PDF)
 	{
 		WriteWordLine 2 0 "Server: " $SFServer.Name
@@ -30671,7 +31069,7 @@ Function OutputStoreFrontDeliveryGroups
 #region AppV functions
 Function ProcessAppV
 {
-	Write-Verbose "$(Get-Date): Processing App-V"
+	Write-Verbose "$(Get-Date -Format G): Processing App-V"
 	
 	If($MSWord -or $PDF)
 	{
@@ -30687,12 +31085,12 @@ Function ProcessAppV
 		WriteHTMLLine 1 0 "App-V Publishing"
 	}
 	
-	Write-Verbose "$(Get-Date): `tRetrieving App-V configuration"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving App-V configuration"
 	$AppVConfigs = Get-BrokerMachineConfiguration @XDParams1 -Name appv* 4>$Null
 	
 	If($? -and $Null -ne $AppVConfigs)
 	{
-		Write-Verbose "$(Get-Date): `t`tRetrieving App-V server information"
+		Write-Verbose "$(Get-Date -Format G): `t`tRetrieving App-V server information"
 		
 		$AppVs = @()
 		ForEach($AppVConfig in $AppVConfigs)
@@ -30731,14 +31129,14 @@ Function ProcessAppV
 		$txt = "Unable to retrieve App-V configuration"
 		OutputWarning $txt
 	}
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): "
 }
 
 Function OutputAppV
 {
 	Param([object]$AppVs)
 	
-	Write-Verbose "$(Get-Date): `t`t`tOutput App-V server information"
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput App-V server information"
 	If($MSWord -or $PDF)
 	{
 		[System.Collections.Hashtable[]] $AppVWordTable = @();
@@ -30750,7 +31148,7 @@ Function OutputAppV
 	
 	ForEach($AppV in $AppVs)
 	{
-		Write-Verbose "$(Get-Date): `t`t`tAdding AppV Server $($AppV.MgmtServer)"
+		Write-Verbose "$(Get-Date -Format G): `t`t`tAdding AppV Server $($AppV.MgmtServer)"
 
 		If($MSWord -or $PDF)
 		{
@@ -30810,7 +31208,7 @@ Function OutputAppV
 #region zones
 Function ProcessZones
 {
-	Write-Verbose "$(Get-Date): Processing Zones"
+	Write-Verbose "$(Get-Date -Format G): Processing Zones"
 
 	$Script:TotalZones = 0
 
@@ -30829,14 +31227,14 @@ Function ProcessZones
 	}
 	
 	#get all zone names
-	Write-Verbose "$(Get-Date): `tRetrieving All Zones"
+	Write-Verbose "$(Get-Date -Format G): `tRetrieving All Zones"
 	$Zones = Get-ConfigZone @XDParams1 | Sort-Object Name
 	$ZoneMembers = @()
 	
 	ForEach($Zone in $Zones)
 	{
 		$Script:TotalZones++
-		Write-Verbose "$(Get-Date): `t`tRetrieving Machine Catalogs for Zone $($Zone.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`tRetrieving Machine Catalogs for Zone $($Zone.Name)"
 		$ZoneCatalogs = Get-BrokerCatalog @XDParams2 -ZoneUid $Zone.Uid
 		ForEach($ZoneCatalog in $ZoneCatalogs)
 		{
@@ -30850,7 +31248,7 @@ Function ProcessZones
 			$ZoneMembers += $obj
 		}
 		
-		Write-Verbose "$(Get-Date): `t`tRetrieving Delivery Controllers for Zone $($Zone.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`tRetrieving Delivery Controllers for Zone $($Zone.Name)"
 		$ZoneControllers = $Zone.ControllerNames
 		ForEach($ZoneController in $ZoneControllers)
 		{
@@ -30869,7 +31267,7 @@ Function ProcessZones
 			}
 		}
 
-		Write-Verbose "$(Get-Date): `t`tRetrieving Host Connections for Zone $($Zone.Name)"
+		Write-Verbose "$(Get-Date -Format G): `t`tRetrieving Host Connections for Zone $($Zone.Name)"
 		$ZoneHosts = Get-ChildItem @XDParams1 -path 'xdhyp:\connections' 4>$Null | Where-Object {$_.ZoneUid -eq $Zone.Uid}
 		ForEach($ZoneHost in $ZoneHosts)
 		{
@@ -30893,7 +31291,7 @@ Function OutputZoneSiteView
 {
 	Param([array]$ZoneMembers)
 	
-	Write-Verbose "$(Get-Date): `tOutput Zone Site View"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Zone Site View"
 	$ZoneMembers = $ZoneMembers | Sort-Object MemName
 	
 	If($MSWord -or $PDF)
@@ -30974,7 +31372,7 @@ Function OutputPerZoneView
 {
 	Param([array]$ZoneMembers, [object]$Zones)
 	
-	Write-Verbose "$(Get-Date): `tOutput Per Zone View"
+	Write-Verbose "$(Get-Date -Format G): `tOutput Per Zone View"
 	$ZoneMembers = $ZoneMembers | Sort-Object MemZone, MemName
 
 	ForEach($Zone in $Zones)
@@ -31059,7 +31457,7 @@ Function OutputPerZoneView
 Function ProcessSummaryPage
 {
 	#summary page
-	Write-Verbose "$(Get-Date): Create Summary Page"
+	Write-Verbose "$(Get-Date -Format G): Create Summary Page"
 	
 	If($MSWord -or $PDF)
 	{
@@ -31076,24 +31474,24 @@ Function ProcessSummaryPage
 		WriteHTMLLine 1 0 "XenDesktop $($Script:XDSiteVersionReal) $($XDSiteName) Summary Page"
 	}
 
-	Write-Verbose "$(Get-Date): `tAdd administrator summary info"
+	Write-Verbose "$(Get-Date -Format G): `tAdd administrator summary info"
 	If($MSWord -or $PDF)
 	{
-		Write-Verbose "$(Get-Date): `tAdd Machine Catalog summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Machine Catalog summary info"
 		WriteWordLine 0 0 "Machine Catalogs"
 		WriteWordLine 0 1 "Total Server OS Catalogs`t: " $Script:TotalServerOSCatalogs
 		WriteWordLine 0 1 "Total Desktop OS Catalogs`t: " $Script:TotalDesktopOSCatalogs
 		WriteWordLine 0 1 "Total RemotePC Catalogs`t: " $Script:TotalRemotePCCatalogs
 		WriteWordLine 0 2 "Total Machine Catalogs`t: " ($Script:TotalServerOSCatalogs+$Script:TotalDesktopOSCatalogs+$Script:TotalRemotePCCatalogs)
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Delivery Group summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Delivery Group summary info"
 		WriteWordLine 0 0 "Delivery Groups"
 		WriteWordLine 0 1 "Total Application Groups`t: " $Script:TotalApplicationGroups
 		WriteWordLine 0 1 "Total Desktop Groups`t`t: " $Script:TotalDesktopGroups
 		WriteWordLine 0 1 "Total Apps & Desktop Groups`t: " $Script:TotalAppsAndDesktopGroups
 		WriteWordLine 0 2 "Total Delivery Groups`t: " ($Script:TotalApplicationGroups+$Script:TotalDesktopGroups+$Script:TotalAppsAndDesktopGroups)
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Application summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Application summary info"
 		WriteWordLine 0 0 "Applications"
 		WriteWordLine 0 1 "Total Published Applications`t: " $Script:TotalPublishedApplications
 		WriteWordLine 0 1 "Total App-V Applications`t: " $Script:TotalAppvApplications
@@ -31102,7 +31500,7 @@ Function ProcessSummaryPage
 		
 		If($Policies -eq $True)
 		{
-			Write-Verbose "$(Get-Date): `tAdd Policy summary info"
+			Write-Verbose "$(Get-Date -Format G): `tAdd Policy summary info"
 			WriteWordLine 0 0 "Policies"
 			WriteWordLine 0 1 "Total Computer Policies`t`t: " $Script:TotalComputerPolicies
 			WriteWordLine 0 1 "Total User Policies`t`t: " $Script:TotalUserPolicies
@@ -31128,15 +31526,15 @@ Function ProcessSummaryPage
 		WriteWordLine 0 1 "Total Custom Admins`t`t: " $Script:TotalCustomAdmins
 		WriteWordLine 0 2 "Total Administrators`t: " ($Script:TotalDeliveryGroupAdmins+$Script:TotalFullAdmins+$Script:TotalHelpDeskAdmins+$Script:TotalHostAdmins+$Script:TotalMachineCatalogAdmins+$Script:TotalReadOnlyAdmins+$Script:TotalCustomAdmins)
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Controller summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Controller summary info"
 		WriteWordLine 0 0 "Controllers"
 		WriteWordLine 0 1 "Total Controllers`t`t: " $Script:TotalControllers
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Hosting Connection summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Hosting Connection summary info"
 		WriteWordLine 0 0 "Hosting Connections"
 		WriteWordLine 0 1 "Total Hosting Connections`t: " $Script:TotalHostingConnections
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Licensing summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Licensing summary info"
 		WriteWordLine 0 0 "Licensing"
 		$TotalLicenses = 0
 		ForEach($License in $Script:Licenses)
@@ -31146,34 +31544,34 @@ Function ProcessSummaryPage
 		}
 		WriteWordLine 0 2 "Total Licenses`t`t: " $TotalLicenses
 		WriteWordLine 0 0 ""
-		Write-Verbose "$(Get-Date): `tAdd StoreFront summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd StoreFront summary info"
 		WriteWordLine 0 0 "StoreFront"
 		WriteWordLine 0 1 "Total StoreFront Servers`t: " $Script:TotalStoreFrontServers
 		WriteWordLine 0 0 ""
 		If((Get-ConfigServiceAddedCapability @XDParams1) -contains "ZonesSupport")
 		{
-			Write-Verbose "$(Get-Date): `tAdd Zone summary info"
+			Write-Verbose "$(Get-Date -Format G): `tAdd Zone summary info"
 			WriteWordLine 0 0 "Zones"
 			WriteWordLine 0 1 "Total Zones`t`t`t: " $Script:TotalZones
 		}
 	}
 	ElseIf($Text)
 	{
-		Write-Verbose "$(Get-Date): `tAdd Machine Catalog summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Machine Catalog summary info"
 		Line 0 "Machine Catalogs"
 		Line 1 "Total Server OS Catalogs`t: " $Script:TotalServerOSCatalogs
 		Line 1 "Total Desktop OS Catalogs`t: " $Script:TotalDesktopOSCatalogs
 		Line 1 "Total RemotePC Catalogs`t`t: " $Script:TotalRemotePCCatalogs
 		Line 2 "Total Machine Catalogs`t: " ($Script:TotalServerOSCatalogs+$Script:TotalDesktopOSCatalogs+$Script:TotalRemotePCCatalogs)
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Delivery Group summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Delivery Group summary info"
 		Line 0 "Delivery Groups"
 		Line 1 "Total Application Groups`t: " $Script:TotalApplicationGroups
 		Line 1 "Total Desktop Groups`t`t: " $Script:TotalDesktopGroups
 		Line 1 "Total Apps & Desktop Groups`t: " $Script:TotalAppsAndDesktopGroups
 		Line 2 "Total Delivery Groups`t: " ($Script:TotalApplicationGroups+$Script:TotalDesktopGroups+$Script:TotalAppsAndDesktopGroups)
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Application summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Application summary info"
 		Line 0 "Applications"
 		Line 1 "Total Published Applications`t: " $Script:TotalPublishedApplications
 		Line 1 "Total App-V Applications`t: " $Script:TotalAppvApplications
@@ -31182,7 +31580,7 @@ Function ProcessSummaryPage
 		
 		If($Policies -eq $True)
 		{
-			Write-Verbose "$(Get-Date): `tAdd Policy summary info"
+			Write-Verbose "$(Get-Date -Format G): `tAdd Policy summary info"
 			Line 0 "Policies"
 			Line 1 "Total Computer Policies`t`t: " $Script:TotalComputerPolicies
 			Line 1 "Total User Policies`t`t: " $Script:TotalUserPolicies
@@ -31208,15 +31606,15 @@ Function ProcessSummaryPage
 		Line 1 "Total Custom Admins`t`t: " $Script:TotalCustomAdmins
 		Line 2 "Total Administrators`t: " ($Script:TotalDeliveryGroupAdmins+$Script:TotalFullAdmins+$Script:TotalHelpDeskAdmins+$Script:TotalHostAdmins+$Script:TotalMachineCatalogAdmins+$Script:TotalReadOnlyAdmins+$Script:TotalCustomAdmins)
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Controller summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Controller summary info"
 		Line 0 "Controllers"
 		Line 1 "Total Controllers`t`t: " $Script:TotalControllers
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Hosting Connection summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Hosting Connection summary info"
 		Line 0 "Hosting Connections"
 		Line 1 "Total Hosting Connections`t: " $Script:TotalHostingConnections
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd Licensing summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Licensing summary info"
 		Line 0 "Licensing"
 		$TotalLicenses = 0
 		ForEach($License in $Script:Licenses)
@@ -31226,34 +31624,34 @@ Function ProcessSummaryPage
 		}
 		Line 2 "Total Licenses`t`t: " $TotalLicenses
 		Line 0 ""
-		Write-Verbose "$(Get-Date): `tAdd StoreFront summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd StoreFront summary info"
 		Line 0 "StoreFront"
 		Line 1 "Total StoreFront Servers`t: " $Script:TotalStoreFrontServers
 		Line 0 ""
 		If((Get-ConfigServiceAddedCapability @XDParams1) -contains "ZonesSupport")
 		{
-			Write-Verbose "$(Get-Date): `tAdd Zone summary info"
+			Write-Verbose "$(Get-Date -Format G): `tAdd Zone summary info"
 			Line 0 "Zones"
 			Line 1 "Total Zones`t`t`t: " $Script:TotalZones
 		}
 	}
 	ElseIf($HTML)
 	{
-		Write-Verbose "$(Get-Date): `tAdd Machine Catalog summary info"
+		Write-Verbose "$(Get-Date -Format G): `tAdd Machine Catalog summary info"
 		WriteHTMLLine 0 0 "Machine Catalogs"
 		WriteHTMLLine 0 1 "Total Server OS Catalogs: " $Script:TotalServerOSCatalogs
 		WriteHTMLLine 0 1 "Total Desktop OS Catalogs: " $Script:TotalDesktopOSCatalogs
 		WriteHTMLLine 0 1 "Total RemotePC Catalogs: " $Script:TotalRemotePCCatalogs
 		WriteHTMLLine 0 2 "Total Machine Catalogs: " ($Script:TotalServerOSCatalogs+$Script:TotalDesktopOSCatalogs+$Script:TotalRemotePCCatalogs)
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add Delivery Group summary info"
+		Write-Verbose "$(Get-Date -Format G): Add Delivery Group summary info"
 		WriteHTMLLine 0 0 "Delivery Groups"
 		WriteHTMLLine 0 1 "Total Application Groups: " $Script:TotalApplicationGroups
 		WriteHTMLLine 0 1 "Total Desktop Groups: " $Script:TotalDesktopGroups
 		WriteHTMLLine 0 1 "Total Apps & Desktop Groups: " $Script:TotalAppsAndDesktopGroups
 		WriteHTMLLine 0 2 "Total Delivery Groups: " ($Script:TotalApplicationGroups+$Script:TotalDesktopGroups+$Script:TotalAppsAndDesktopGroups)
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add Application summary info"
+		Write-Verbose "$(Get-Date -Format G): Add Application summary info"
 		WriteHTMLLine 0 0 "Applications"
 		WriteHTMLLine 0 1 "Total Published Applications: " $Script:TotalPublishedApplications
 		WriteHTMLLine 0 1 "Total App-V Applications: " $Script:TotalAppvApplications
@@ -31262,7 +31660,7 @@ Function ProcessSummaryPage
 		
 		If($Policies -eq $True)
 		{
-			Write-Verbose "$(Get-Date): Add Policy summary info"
+			Write-Verbose "$(Get-Date -Format G): Add Policy summary info"
 			WriteHTMLLine 0 0 "Policies"
 			WriteHTMLLine 0 1 "Total Computer Policies: " $Script:TotalComputerPolicies
 			WriteHTMLLine 0 1 "Total User Policies: " $Script:TotalUserPolicies
@@ -31288,15 +31686,15 @@ Function ProcessSummaryPage
 		WriteHTMLLine 0 1 "Total Custom Admins: " $Script:TotalCustomAdmins
 		WriteHTMLLine 0 2 "Total Administrators: " ($Script:TotalDeliveryGroupAdmins+$Script:TotalFullAdmins+$Script:TotalHelpDeskAdmins+$Script:TotalHostAdmins+$Script:TotalMachineCatalogAdmins+$Script:TotalReadOnlyAdmins+$Script:TotalCustomAdmins)
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add Controller summary info"
+		Write-Verbose "$(Get-Date -Format G): Add Controller summary info"
 		WriteHTMLLine 0 0 "Controllers"
 		WriteHTMLLine 0 1 "Total Controllers: " $Script:TotalControllers
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add Hosting Connection summary info"
+		Write-Verbose "$(Get-Date -Format G): Add Hosting Connection summary info"
 		WriteHTMLLine 0 0 "Hosting Connections"
 		WriteHTMLLine 0 1 "Total Hosting Connections: " $Script:TotalHostingConnections
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add Licensing summary info"
+		Write-Verbose "$(Get-Date -Format G): Add Licensing summary info"
 		WriteHTMLLine 0 0 "Licensing"
 		$TotalLicenses = 0
 		ForEach($License in $Script:Licenses)
@@ -31306,20 +31704,20 @@ Function ProcessSummaryPage
 		}
 		WriteHTMLLine 0 2 "Total Licenses: " $TotalLicenses
 		WriteHTMLLine 0 0 ""
-		Write-Verbose "$(Get-Date): Add StoreFront summary info"
+		Write-Verbose "$(Get-Date -Format G): Add StoreFront summary info"
 		WriteHTMLLine 0 0 "StoreFront"
 		WriteHTMLLine 0 1 "Total StoreFront Servers: " $Script:TotalStoreFrontServers
 		WriteHTMLLine 0 0 ""
 		If((Get-ConfigServiceAddedCapability @XDParams1) -contains "ZonesSupport")
 		{
-			Write-Verbose "$(Get-Date): Add Zone summary info"
+			Write-Verbose "$(Get-Date -Format G): Add Zone summary info"
 			WriteHTMLLine 0 0 "Zones"
 			WriteHTMLLine 0 1 "Total Zones: " $Script:TotalZones
 		}
 	}
 
-	Write-Verbose "$(Get-Date): Finished Create Summary Page"
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): Finished Create Summary Page"
+	Write-Verbose "$(Get-Date -Format G): "
 }
 #endregion
 
@@ -31463,7 +31861,7 @@ Function ProcessScriptSetup
 	$Script:DoPolicies = $True
 	If($NoPolicies)
 	{
-		Write-Verbose "$(Get-Date): NoPolicies was specified so do not search for Citrix.GroupPolicy.Commands.psm1"
+		Write-Verbose "$(Get-Date -Format G): NoPolicies was specified so do not search for Citrix.GroupPolicy.Commands.psm1"
 		$Script:DoPolicies = $False
 	}
 	ElseIf(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $False)
@@ -31475,7 +31873,7 @@ Function ProcessScriptSetup
 	(https://carlwebster.sharefile.com/d-sc33767b127542c89). 
 	`n`n
 	Citrix Policy documentation will not take place"
-		Write-Verbose "$(Get-Date): "
+		Write-Verbose "$(Get-Date -Format G): "
 		$Script:DoPolicies = $False
 	}
 	ElseIf(!(Check-LoadedModule "Citrix.GroupPolicy.Commands") -and $Policies -eq $True)
@@ -31490,7 +31888,7 @@ Function ProcessScriptSetup
 	Because the Policies parameter was used the script will now close.
 	`n`n
 	"
-		Write-Verbose "$(Get-Date): "
+		Write-Verbose "$(Get-Date -Format G): "
 		Exit
 	}
 	
@@ -31525,7 +31923,7 @@ Function ProcessScriptSetup
 	}
 
 	# Get Site information
-	Write-Verbose "$(Get-Date): Gathering initial Site data"
+	Write-Verbose "$(Get-Date -Format G): Gathering initial Site data"
 
 	$Script:XDSite1 = Get-BrokerSite @XDParams1
 
@@ -31671,22 +32069,22 @@ Function ProcessScriptSetup
 		"Zones" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Zones Only)"; Break}
 		"All" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site"; Break}
 	}
-	Write-Verbose "$(Get-Date): Initial Site data has been gathered"
+	Write-Verbose "$(Get-Date -Format G): Initial Site data has been gathered"
 	
 	#added 25-Jun-2017 with a lot of help from Michael B. Smith
 	#make sure the SQL Server assembly is loaded, if not, later on don't bother calculating the various database sizes
-	Write-Verbose "$(Get-Date): Loading SQL Server Assembly"
+	Write-Verbose "$(Get-Date -Format G): Loading SQL Server Assembly"
 	[bool]$Script:SQLServerLoaded = $False
 	
 	$asm = [reflection.assembly]::loadwithpartialname('microsoft.sqlserver.smo')
 	If( $null –eq $asm )
 	{
-		Write-Verbose "$(Get-Date): `tSQL Server Assembly could not be loaded"
+		Write-Verbose "$(Get-Date -Format G): `tSQL Server Assembly could not be loaded"
 		$Script:SQLServerLoaded = $False
 	}
 	Else
 	{
-		Write-Verbose "$(Get-Date): `tSQL Server Assembly successefully loaded"
+		Write-Verbose "$(Get-Date -Format G): `tSQL Server Assembly successefully loaded"
 		$Script:SQLServerLoaded = $True
 	}
 }
@@ -31695,12 +32093,12 @@ Function ProcessScriptSetup
 #region script end
 Function ProcessScriptEnd
 {
-	Write-Verbose "$(Get-Date): Script has completed"
-	Write-Verbose "$(Get-Date): "
+	Write-Verbose "$(Get-Date -Format G): Script has completed"
+	Write-Verbose "$(Get-Date -Format G): "
 
 	#http://poshtips.com/measuring-elapsed-time-in-powershell/
-	Write-Verbose "$(Get-Date): Script started: $($Script:StartTime)"
-	Write-Verbose "$(Get-Date): Script ended: $(Get-Date)"
+	Write-Verbose "$(Get-Date -Format G): Script started: $($Script:StartTime)"
+	Write-Verbose "$(Get-Date -Format G): Script ended: $(Get-Date)"
 	$runtime = $(Get-Date) - $Script:StartTime
 	$Str = [string]::format("{0} days, {1} hours, {2} minutes, {3}.{4} seconds", `
 		$runtime.Days, `
@@ -31708,7 +32106,7 @@ Function ProcessScriptEnd
 		$runtime.Minutes, `
 		$runtime.Seconds,
 		$runtime.Milliseconds)
-	Write-Verbose "$(Get-Date): Elapsed time: $($Str)"
+	Write-Verbose "$(Get-Date -Format G): Elapsed time: $($Str)"
 	If($Dev)
 	{
 		If($SmtpServer -eq "")
@@ -31808,11 +32206,11 @@ Function ProcessScriptEnd
 			try 
 			{
 				Stop-Transcript | Out-Null
-				Write-Verbose "$(Get-Date): $Script:LogPath is ready for use"
+				Write-Verbose "$(Get-Date -Format G): $Script:LogPath is ready for use"
 			} 
 			catch 
 			{
-				Write-Verbose "$(Get-Date): Transcript/log stop failed"
+				Write-Verbose "$(Get-Date -Format G): Transcript/log stop failed"
 			}
 		}
 	}
@@ -31915,7 +32313,7 @@ If($Section -eq "All")
 #endregion
 
 #region finish script
-Write-Verbose "$(Get-Date): Finishing up document"
+Write-Verbose "$(Get-Date -Format G): Finishing up document"
 #end of document processing
 
 $AbstractTitle = "Citrix XenDesktop $($Script:XDSiteVersion) Inventory"
