@@ -5,6 +5,7 @@
 
 #Version 1.48 2-Apr-2021
 #	Added CVAD 2103/7.29 to version list
+#	Added CVAD 2106/7.30 to version list
 #	Thanks to M. Foster for finding the following bugs:
 #	Update functions OutputConfigLogPreferences and OutputDatastores to handle configuration strings that contain "Data Source" instead of "Server"
 #	Update Function OutputDatastores to look for SQL Server names that contain "TCP://" and ":nnnn (port number)"

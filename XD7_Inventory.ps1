@@ -1132,6 +1132,7 @@ Param(
 
 #Version 1.48 2-Apr-2021
 #	Added CVAD 2103/7.29 to version list
+#	Added CVAD 2106/7.30 to version list
 #	Thanks to M. Foster for finding the following bugs:
 #	Update functions OutputConfigLogPreferences and OutputDatastores to handle configuration strings that contain "Data Source" instead of "Server"
 #	Update Function OutputDatastores to look for SQL Server names that contain "TCP://" and ":nnnn (port number)"
@@ -31870,6 +31871,7 @@ Function ProcessScriptSetup
 			$XDSiteVersionReal = "Unknown"
 			Switch ($XDSiteVersion)
 			{
+				"7.30"	{$XDSiteVersionReal = "CVAD 2106"; Break}
 				"7.29"	{$XDSiteVersionReal = "CVAD 2103"; Break}
 				"7.28"	{$XDSiteVersionReal = "CVAD 2012"; Break}
 				"7.27"	{$XDSiteVersionReal = "CVAD 2009"; Break}
@@ -32077,6 +32079,7 @@ Function ProcessScriptSetup
 	$Script:XDSiteVersionReal = "Unknown"
 	Switch ($Script:XDSiteVersion)
 	{
+		"7.30"	{$Script:XDSiteVersionReal = "CVAD 2106"; Break}
 		"7.29"	{$Script:XDSiteVersionReal = "CVAD 2103"; Break}
 		"7.28"	{$Script:XDSiteVersionReal = "CVAD 2012"; Break}
 		"7.27"	{$Script:XDSiteVersionReal = "CVAD 2009"; Break}
