@@ -950,7 +950,7 @@
 	NAME: XD7_Inventory.ps1
 	VERSION: 1.49
 	AUTHOR: Carl Webster
-	LASTEDIT: July 29, 2021
+	LASTEDIT: October 21, 2021
 #>
 
 #endregion
@@ -1130,11 +1130,12 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
-#Version 1.49 29-Jul-2021
+#Version 1.49 21-Oct-2021
 #	Add Computer policy
 #		Profile Management\Profile container settings\Enable local caching for profile containers
 #		Profile Management\Profile container settings\Folders to exclude in profile container
 #		Profile Management\Profile container settings\Folders to include in profile container
+#	Added CVAD 2109/7.31 to version list
 #	Changed the array built for the User policy setting ICA\Printing\Universal Printing\Universal printing optimization defaults
 #		from splitting on "," to splitting on ";"
 #	Changed the processing for the following policy settings. When they are Disabled in the console, the State value is still Enabled.
@@ -32149,6 +32150,7 @@ Function ProcessScriptSetup
 			$XDSiteVersionReal = "Unknown"
 			Switch ($XDSiteVersion)
 			{
+				"7.31"	{$XDSiteVersionReal = "CVAD 2109"; Break}
 				"7.30"	{$XDSiteVersionReal = "CVAD 2106"; Break}
 				"7.29"	{$XDSiteVersionReal = "CVAD 2103"; Break}
 				"7.28"	{$XDSiteVersionReal = "CVAD 2012"; Break}
@@ -32357,6 +32359,7 @@ Function ProcessScriptSetup
 	$Script:XDSiteVersionReal = "Unknown"
 	Switch ($Script:XDSiteVersion)
 	{
+		"7.31"	{$Script:XDSiteVersionReal = "CVAD 2109"; Break}
 		"7.30"	{$Script:XDSiteVersionReal = "CVAD 2106"; Break}
 		"7.29"	{$Script:XDSiteVersionReal = "CVAD 2103"; Break}
 		"7.28"	{$Script:XDSiteVersionReal = "CVAD 2012"; Break}
