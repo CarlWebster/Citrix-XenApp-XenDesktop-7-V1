@@ -968,9 +968,9 @@
 	plain text, or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.50
+	VERSION: 1.51
 	AUTHOR: Carl Webster
-	LASTEDIT: November 24, 2021
+	LASTEDIT: February 13, 2022
 #>
 
 #endregion
@@ -1154,6 +1154,23 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.51 13-Feb-2022
+#	Changed the date format for the transcript and error log files from yyyy-MM-dd_HHmm format to the FileDateTime format
+#		The format is yyyyMMddTHHmmssffff (case-sensitive, using a 4-digit year, 2-digit month, 2-digit day, 
+#		the letter T as a time separator, 2-digit hour, 2-digit minute, 2-digit second, and 4-digit millisecond). 
+#		For example: 20221225T0840107271.
+#	Fixed the German Table of Contents (Thanks to Rene Bigler)
+#		From 
+#			'de-'	{ 'Automatische Tabelle 2'; Break }
+#		To
+#			'de-'	{ 'Automatisches Verzeichnis 2'; Break }
+#	In Function AbortScript, add test for the winword process and terminate it if it is running
+#		Added stopping the transcript log if the log was enabled and started
+#	In Functions AbortScript and SaveandCloseDocumentandShutdownWord, add code from Guy Leech to test for the "Id" property before using it
+#	Replaced most script Exit calls with AbortScript to stop the transcript log if the log was enabled and started
+#	Since the Citrix.GroupPolicy.Commands.psm1 module file was removed in 1.50, removed the block for Elevation if $Policies is True
+#	Updated the ReadMe file
+#
 #Version 1.50 24-Nov-2021
 #	Added Function OutputReportFooter
 #	Added Parameter ReportFooter
@@ -1583,6 +1600,59 @@ Param(
 
 #endregion
 
+
+Function AbortScript
+{
+	If($MSWord -or $PDF)
+	{
+		Write-Verbose "$(Get-Date -Format G): System Cleanup"
+		If(Test-Path variable:global:word)
+		{
+			$Script:Word.quit()
+			[System.Runtime.Interopservices.Marshal]::ReleaseComObject($Script:Word) | Out-Null
+			Remove-Variable -Name word -Scope Global 4>$Null
+		}
+	}
+	[gc]::collect() 
+	[gc]::WaitForPendingFinalizers()
+
+	If($MSWord -or $PDF)
+	{
+		#is the winword Process still running? kill it
+
+		#find out our session (usually "1" except on TS/RDC or Citrix)
+		$SessionID = (Get-Process -PID $PID).SessionId
+
+		#Find out if winword running in our session
+		$wordprocess = ((Get-Process 'WinWord' -ea 0) | Where-Object {$_.SessionId -eq $SessionID}) | Select-Object -Property Id 
+		If( $wordprocess -and $wordprocess.Id -gt 0)
+		{
+			Write-Verbose "$(Get-Date -Format G): WinWord Process is still running. Attempting to stop WinWord Process # $($wordprocess.Id)"
+			Stop-Process $wordprocess.Id -EA 0
+		}
+	}
+	
+	Write-Verbose "$(Get-Date -Format G): Script has been aborted"
+	#stop transcript logging
+	If($Log -eq $True) 
+	{
+		If($Script:StartLog -eq $True) 
+		{
+			try 
+			{
+				Stop-Transcript | Out-Null
+				Write-Verbose "$(Get-Date -Format G): $Script:LogPath is ready for use"
+			} 
+			catch 
+			{
+				Write-Verbose "$(Get-Date -Format G): Transcript/log stop failed"
+			}
+		}
+	}
+	$ErrorActionPreference = $SaveEAPreference
+	Exit
+}
+
 #region initial variable testing and setup
 Set-StrictMode -Version 2
 
@@ -1591,9 +1661,9 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 $SaveEAPreference = $ErrorActionPreference
 $ErrorActionPreference = 'SilentlyContinue'
 
-$script:MyVersion           = '1.50'
+$script:MyVersion           = '1.51'
 $Script:ScriptName          = "XD7_Inventory.ps1"
-$tmpdate                    = [datetime] "11/24/2021"
+$tmpdate                    = [datetime] "02/13/2022"
 $Script:ReleaseDate         = $tmpdate.ToUniversalTime().ToShortDateString()
 
 If($Null -eq $MSWord)
@@ -1667,7 +1737,7 @@ Else
 	Script cannot continue.
 	`n`n
 	"
-	Exit
+	AbortScript
 }
 
 If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($From) -and [String]::IsNullOrEmpty($To))
@@ -1680,7 +1750,7 @@ If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($From) -an
 	`t`t
 	Script cannot continue.
 	`n`n"
-	Exit
+	AbortScript
 }
 If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($From) -and ![String]::IsNullOrEmpty($To))
 {
@@ -1692,7 +1762,7 @@ If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($From) -an
 	`t`t
 	Script cannot continue.
 	`n`n"
-	Exit
+	AbortScript
 }
 If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($To) -and ![String]::IsNullOrEmpty($From))
 {
@@ -1704,7 +1774,7 @@ If(![String]::IsNullOrEmpty($SmtpServer) -and [String]::IsNullOrEmpty($To) -and 
 	`t`t
 	Script cannot continue.
 	`n`n"
-	Exit
+	AbortScript
 }
 If(![String]::IsNullOrEmpty($From) -and ![String]::IsNullOrEmpty($To) -and [String]::IsNullOrEmpty($SmtpServer))
 {
@@ -1716,7 +1786,7 @@ If(![String]::IsNullOrEmpty($From) -and ![String]::IsNullOrEmpty($To) -and [Stri
 	`t`t
 	Script cannot continue.
 	`n`n"
-	Exit
+	AbortScript
 }
 If(![String]::IsNullOrEmpty($From) -and [String]::IsNullOrEmpty($SmtpServer))
 {
@@ -1728,7 +1798,7 @@ If(![String]::IsNullOrEmpty($From) -and [String]::IsNullOrEmpty($SmtpServer))
 	`t`t
 	Script cannot continue.
 	`n`n"
-	Exit
+	AbortScript
 }
 If(![String]::IsNullOrEmpty($To) -and [String]::IsNullOrEmpty($SmtpServer))
 {
@@ -1740,7 +1810,7 @@ If(![String]::IsNullOrEmpty($To) -and [String]::IsNullOrEmpty($SmtpServer))
 	`t`t
 	Script cannot continue.
 	`n`n"
-	Exit
+	AbortScript
 }
 
 #If the MaxDetails parameter is used, set a bunch of stuff true and some stuff false
@@ -1784,7 +1854,7 @@ If($NoPolicies -and $Section -eq "Policies")
 	Script cannot continue.
 	`n`n
 	"
-	Exit
+	AbortScript
 }
 
 $ValidSection = $False
@@ -1836,7 +1906,7 @@ If($ValidSection -eq $False)
 	`t`tScript cannot continue.
 	`n`n
 	"
-	Exit
+	AbortScript
 }
 
 If($Folder -ne "")
@@ -1863,7 +1933,7 @@ If($Folder -ne "")
 			Script cannot continue.
 			`n`n
 			"
-			Exit
+			AbortScript
 		}
 	}
 	Else
@@ -1878,7 +1948,7 @@ If($Folder -ne "")
 		Script cannot continue.
 		`n`n
 		"
-		Exit
+		AbortScript
 	}
 }
 
@@ -1901,7 +1971,7 @@ If($Script:pwdpath.EndsWith("\"))
 If($Log) 
 {
 	#start transcript logging
-	$Script:LogPath = "$Script:pwdpath\XDV1DocScriptTranscript_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
+	$Script:LogPath = "$Script:pwdpath\XDV1DocScriptTranscript_$(Get-Date -f FileDateTime).txt"
 	
 	try 
 	{
@@ -1919,11 +1989,9 @@ If($Log)
 If($Dev)
 {
 	$Error.Clear()
-	$Script:DevErrorFile = "$Script:pwdpath\XAXD7V1InventoryScriptErrors_$(Get-Date -f yyyy-MM-dd_HHmm).txt"
+	$Script:DevErrorFile = "$Script:pwdpath\XAXD7V1InventoryScriptErrors_$(Get-Date -f FileDateTime).txt"
 }
 
-#V1.43  Add check if $Policies -eq $True, see if PowerShell session is elevated
-#		If session is elevated, abort the script
 Function ElevatedSession
 {
 	#added in V1.43
@@ -1938,32 +2006,6 @@ Function ElevatedSession
 	{
 		Write-Verbose "$(Get-Date -Format G): This is NOT an elevated PowerShell session" -Foreground White
 		Return $False
-	}
-}
-
-If($Policies -eq $True)
-{
-	Write-Verbose "$(Get-Date -Format G): Testing for elevated PowerShell session."
-	#see if session is elevated
-	$Elevated = ElevatedSession
-	
-	If($Elevated -eq $True)
-	{
-		#abort script
-		Write-Error "
-		`n`n
-		`t`t
-		The Citrix Group Policy module cannot be loaded or found in an elevated PowerShell session.
-		`n`n
-		`t`t
-		The Policies parameter was used and this is an elevated PowerShell session.
-		`n`n
-		`t`t
-		Rerun the script from a non-elevated PowerShell session. The script will now close.
-		`n`n
-		"
-		Write-Verbose "$(Get-Date -Format G): "
-		Exit
 	}
 }
 #endregion
@@ -3334,7 +3376,8 @@ Function SetWordHashTable
 		{
 			'ca-'	{ 'Taula automática 2'; Break }
 			'da-'	{ 'Automatisk tabel 2'; Break }
-			'de-'	{ 'Automatische Tabelle 2'; Break }
+			#'de-'	{ 'Automatische Tabelle 2'; Break }
+			'de-'	{ 'Automatisches Verzeichnis 2'; Break } #changed 13-feb-2022 rene bigler
 			'en-'	{ 'Automatic Table 2'; Break }
 			'es-'	{ 'Tabla automática 2'; Break }
 			'fi-'	{ 'Automaattinen taulukko 2'; Break }
@@ -3687,7 +3730,7 @@ Function CheckWordPrereq
 	{
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Host "`n`n`t`tThis script directly outputs to Microsoft Word, please install Microsoft Word`n`n"
-		Exit
+		AbortScript
 	}
 
 	#find out our session (usually "1" except on TS/RDC or Citrix)
@@ -3701,7 +3744,7 @@ Function CheckWordPrereq
 	{
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Host "`n`n`tPlease close all instances of Microsoft Word before running this report.`n`n"
-		Exit
+		AbortScript
 	}
 }
 
@@ -3795,7 +3838,7 @@ Function SetupWord
 		Script cannot continue.
 		`n`n
 		"
-		Exit
+		AbortScript
 	}
 
 	Write-Verbose "$(Get-Date -Format G): Determine Word language value"
@@ -3866,7 +3909,7 @@ Function SetupWord
 		Script cannot continue.
 		`n`n
 		"
-		Exit
+		AbortScript
 	}
 	Else
 	{
@@ -5457,7 +5500,7 @@ Function CheckExcelPrereq
 	{
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Host "`n`n`t`tFor the Delivery Groups Utilization option, this script directly outputs to Microsoft Excel, `n`t`tplease install Microsoft Excel or do not use the DeliveryGroupsUtilization (DGU) switch`n`n"
-		Exit
+		AbortScript
 	}
 
 	#find out our session (usually "1" except on TS/RDC or Citrix)
@@ -5472,7 +5515,7 @@ Function CheckExcelPrereq
 	{
 		$ErrorActionPreference = $SaveEAPreference
 		Write-Host "`n`n`tPlease close all instances of Microsoft Excel before running this report.`n`n"
-		Exit
+		AbortScript
 	}
 }
 
@@ -5656,37 +5699,6 @@ Function SaveandCloseDocumentandShutdownWord
 	Write-Verbose "$(Get-Date -Format G): Closing Word"
 	$Script:Doc.Close()
 	$Script:Word.Quit()
-	If($PDF)
-	{
-		[int]$cnt = 0
-		While(Test-Path $Script:FileName1)
-		{
-			$cnt++
-			If($cnt -gt 1)
-			{
-				Write-Verbose "$(Get-Date -Format G): Waiting another 10 seconds to allow Word to fully close (try # $($cnt))"
-				Start-Sleep -Seconds 10
-				$Script:Word.Quit()
-				If($cnt -gt 2)
-				{
-					#kill the winword process
-
-					#find out our session (usually "1" except on TS/RDC or Citrix)
-					$SessionID = (Get-Process -PID $PID).SessionId
-					
-					#Find out if winword is running in our session
-					$wordprocess = ((Get-Process 'WinWord' -ea 0) | Where-Object {$_.SessionId -eq $SessionID}).Id
-					If($wordprocess -gt 0)
-					{
-						Write-Verbose "$(Get-Date -Format G): Attempting to stop WinWord process # $($wordprocess)"
-						Stop-Process $wordprocess -EA 0
-					}
-				}
-			}
-			Write-Verbose "$(Get-Date -Format G): Attempting to delete $($Script:FileName1) since only $($Script:FileName2) is needed (try # $($cnt))"
-			Remove-Item $Script:FileName1 -EA 0 4>$Null
-		}
-	}
 	Write-Verbose "$(Get-Date -Format G): System Cleanup"
 	[System.Runtime.Interopservices.Marshal]::ReleaseComObject($Script:Word) | Out-Null
 	If(Test-Path variable:global:word)
@@ -5984,42 +5996,6 @@ Function ShowScriptOptions
 	Write-Verbose "$(Get-Date -Format G): "
 	
 	
-}
-
-Function AbortScript
-{
-	If($MSWord -or $PDF)
-	{
-		Write-Verbose "$(Get-Date -Format G): System Cleanup"
-		If(Test-Path variable:global:word)
-		{
-			$Script:Word.quit()
-			[System.Runtime.Interopservices.Marshal]::ReleaseComObject($Script:Word) | Out-Null
-			Remove-Variable -Name word -Scope Global 4>$Null
-		}
-	}
-	[gc]::collect() 
-	[gc]::WaitForPendingFinalizers()
-
-	If($MSWord -or $PDF)
-	{
-		#is the winword Process still running? kill it
-
-		#find out our session (usually "1" except on TS/RDC or Citrix)
-		$SessionID = (Get-Process -PID $PID).SessionId
-
-		#Find out if winword running in our session
-		$wordprocess = ((Get-Process 'WinWord' -ea 0) | Where-Object {$_.SessionId -eq $SessionID}) | Select-Object -Property Id 
-		If( $wordprocess -and $wordprocess.Id -gt 0)
-		{
-			Write-Verbose "$(Get-Date -Format G): WinWord Process is still running. Attempting to stop WinWord Process # $($wordprocess.Id)"
-			Stop-Process $wordprocess.Id -EA 0
-		}
-	}
-	
-	Write-Verbose "$(Get-Date -Format G): Script has been aborted"
-	$ErrorActionPreference = $SaveEAPreference
-	Exit
 }
 
 Function OutputWarning
