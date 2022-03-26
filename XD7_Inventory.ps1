@@ -1154,7 +1154,7 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
-#Version 1.52
+#Version 1.52 26-Mar-2022
 #	Fixed bug where Word tables that used a font size of 9 had black backgrounds
 #	In Function OutputSummaryPage, clean up console output and format the HTML and Word/PDF output to match the other CVAD documentation scripts
 #	Replaced all Get-WmiObject with Get-CimInstance
