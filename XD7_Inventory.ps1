@@ -415,7 +415,7 @@
 	This parameter has an alias of CP.
 	This parameter is only valid with the MSWORD and PDF output parameters.
 .PARAMETER UserName
-	User name to use for the Cover Page and Footer.
+	Username to use for the Cover Page and Footer.
 	The default value is contained in $env:username
 	This parameter has an alias of UN.
 	This parameter is only valid with the MSWORD and PDF output parameters.
@@ -444,7 +444,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	The computer running the script for the AdminAddress.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -AdminAddress DDC01
@@ -457,7 +457,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	DDC01 for the AdminAddress.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF
@@ -470,7 +470,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	The computer running the script for the AdminAddress.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -TEXT
@@ -483,7 +483,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -HTML
 
@@ -495,7 +495,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MachineCatalogs
 	
@@ -508,7 +508,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -DeliveryGroups
 	
@@ -521,7 +521,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -DeliveryGroupsUtilization
 	
@@ -534,7 +534,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -DeliveryGroups -MachineCatalogs
 	
@@ -548,7 +548,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Applications
 	
@@ -561,7 +561,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Policies
 	
@@ -574,7 +574,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -NoPolicies
 	
@@ -587,7 +587,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -NoADPolicies
 	
@@ -600,7 +600,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Policies -NoADPolicies
 	
@@ -615,7 +615,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Administrators
 	
@@ -629,7 +629,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2022 -EndDate 01/31/2022
 	
@@ -644,7 +644,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2022 10:00:00" -EndDate 
 	"06/01/2022 14:00:00"
@@ -662,7 +662,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hosting
 	
@@ -675,7 +675,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -StoreFront
 	
@@ -688,7 +688,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MachineCatalogs -DeliveryGroups -Applications 
 	-Policies -Hosting -StoreFront
@@ -708,7 +708,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MC -DG -Apps -Policies -Hosting
 	
@@ -726,7 +726,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Carl Webster Consulting" 
 	-CoverPage "Mod" -UserName "Carl Webster" -AdminAddress DDC01
@@ -734,7 +734,7 @@
 	Uses:
 		Carl Webster Consulting for the Company Name.
 		Mod for the Cover Page format.
-		Carl Webster for the User Name.
+		Carl Webster for the Username.
 		Controller named DDC01 for the AdminAddress.
 .EXAMPLE
 	PS C:\PSScript .\XD7_Inventory.ps1 -CN "Carl Webster Consulting" -CP "Mod" -UN 
@@ -743,7 +743,7 @@
 	Uses:
 		Carl Webster Consulting for the Company Name (alias CN).
 		Mod for the Cover Page format (alias CP).
-		Carl Webster for the User Name (alias UN).
+		Carl Webster for the Username (alias UN).
 		The computer running the script for the AdminAddress.
 .EXAMPLE
 	PS C:\PSScript .\XD7_Inventory.ps1 -CompanyName "Sherlock Holmes Consulting" 
@@ -753,7 +753,7 @@
 	Uses:
 		Sherlock Holmes Consulting for the Company Name.
 		Exposure for the Cover Page format.
-		Dr. Watson for the User Name.
+		Dr. Watson for the Username.
 		221B Baker Street, London, England for the Company Address.
 		+44 1753 276600 for the Company Fax.
 		+44 1753 276200 for the Company Phone.
@@ -764,7 +764,7 @@
 	Uses:
 		Sherlock Holmes Consulting for the Company Name.
 		Facet for the Cover Page format.
-		Dr. Watson for the User Name.
+		Dr. Watson for the Username.
 		SuperSleuth@SherlockHolmes.com for the Company Email.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -AddDateTime
@@ -777,12 +777,12 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 
 	Adds a date time stamp to the end of the file name.
-	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2022 at 6PM is 2022-06-01_1800.
-	Output filename will be XD7SiteName_2022-06-01_1800.docx
+	The timestamp is in the format of yyyy-MM-dd_HHmm.
+	June 1, 2022, at 6PM is 2022-06-01_1800.
+	The output filename will be XD7SiteName_2022-06-01_1800.docx
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF -AddDateTime
 	
@@ -794,12 +794,12 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 
 	Adds a date time stamp to the end of the file name.
-	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2022 at 6PM is 2022-06-01_1800.
-	Output filename will be XD7SiteName_2022-06-01_1800.pdf
+	The timestamp is in the format of yyyy-MM-dd_HHmm.
+	June 1, 2022, at 6PM is 2022-06-01_1800.
+	The output filename will be XD7SiteName_2022-06-01_1800.pdf
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hardware
 	
@@ -811,7 +811,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Folder \\FileServer\ShareName
 	
@@ -823,7 +823,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	
 	Output file will be saved in the path \\FileServer\ShareName
 .EXAMPLE
@@ -837,7 +837,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	Processes only the Policies section of the report.
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MaxDetails
@@ -850,7 +850,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	
 	Set the following parameter values:
 		Administrators      = True
@@ -876,7 +876,7 @@
 
 	Carl Webster for the Company Name.
 	Sideline for the Cover Page format.
-	Administrator for the User Name.
+	Administrator for the Username.
 	
 	Creates a text file named XAXDV1InventoryScriptErrors_yyyy-MM-dd_HHmm.txt that 
 	contains up to the last 250 errors reported by the script.
@@ -968,9 +968,9 @@
 	plain text, or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.53
+	VERSION: 1.54
 	AUTHOR: Carl Webster
-	LASTEDIT: April 26, 2022
+	LASTEDIT: July 16, 2022
 #>
 
 #endregion
@@ -1154,6 +1154,13 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.54 16-Jul-2022
+#	Fixed bug reported by James Rankin where in Function OutputDatastores I didn't check for SQLServerName,TCPPortNumber
+#		https://support.citrix.com/article/CTX234610/how-to-configure-xendesktop-to-use-custom-sql-port
+#		For example, to to [sic] add custom port to the connection strings, then set the $ServerName variable to "DBServername\Instance,CustomPortNumber".
+#	Updated the help text
+#	Updated the ReadMe file
+#
 #Version 1.53 26-Apr-2022
 #	Fixed text output for hardware inventory
 #	General code cleanup
@@ -1677,9 +1684,9 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 $SaveEAPreference = $ErrorActionPreference
 $ErrorActionPreference = 'SilentlyContinue'
 
-$script:MyVersion           = '1.53'
+$script:MyVersion           = '1.54'
 $Script:ScriptName          = "XD7_Inventory.ps1"
-$tmpdate                    = [datetime] "04/26/2022"
+$tmpdate                    = [datetime] "07/16/2022"
 $Script:ReleaseDate         = $tmpdate.ToUniversalTime().ToShortDateString()
 
 If($Null -eq $MSWord)
@@ -6059,7 +6066,7 @@ Function ShowScriptOptions
 	Write-Verbose "$(Get-Date -Format G): Use SSL         : $($UseSSL)"
 	If($MSWORD -or $PDF)
 	{
-		Write-Verbose "$(Get-Date -Format G): User Name       : $($UserName)"
+		Write-Verbose "$(Get-Date -Format G): Username       : $($UserName)"
 	}
 	Write-Verbose "$(Get-Date -Format G): XA/XD Version   : $($Script:XDSiteVersionReal)"
 	Write-Verbose "$(Get-Date -Format G): "
@@ -26850,6 +26857,7 @@ Function OutputDatastores
 {
 	#2-Mar-2017 Fix bug reported by P. Ewing
 	#2-Apr-2021 Fix bugs reported M. Foster
+	#4-Jul-2022 Fix bug reported by James Rankin
 	
 	#V1.36 add additional database details and change from a horizontal table to a vertical table
 	
@@ -26898,6 +26906,12 @@ Function OutputDatastores
 			#add in V1.47 get hardware info for the sql server(s)
 			$SQLServerNames += $ConfigSQLServerPrincipalName.Substring(0,$ConfigSQLServerPrincipalName.IndexOf("\"))
 		}
+		ElseIf($ConfigSQLServerPrincipalName.Contains(",")) #1.54
+		{
+			$ConfigSQLServerPrincipalNameIPAddress = Get-IPAddress $ConfigSQLServerPrincipalName.Substring(0,$ConfigSQLServerPrincipalName.IndexOf(","))
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $ConfigSQLServerPrincipalName.Substring(0,$ConfigSQLServerPrincipalName.IndexOf(","))
+		}
 		ElseIf($ConfigSQLServerPrincipalName -like "*tcp://*")
 		{
 			#looking for tcp://servername.domain.tld:port
@@ -26921,6 +26935,12 @@ Function OutputDatastores
 				$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf("\"))
 				#add in V1.47 get hardware info for the sql server(s)
 				$SQLServerNames += $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf("\"))
+			}
+			ElseIf($ConfigSQLServerMirrorName.Contains(",")) #1.54
+			{
+				$ConfigSQLServerMirrorNameIPAddress = Get-IPAddress $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf(","))
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $ConfigSQLServerMirrorName.Substring(0,$ConfigSQLServerMirrorName.IndexOf(","))
 			}
 			ElseIf($ConfigSQLServerMirrorName -like "*tcp://*")
 			{
@@ -27003,6 +27023,12 @@ Function OutputDatastores
 					#add in V1.47 get hardware info for the sql server(s)
 					$SQLServerNames += $Configdb.MirroringPartner.Substring(0,$Configdb.MirroringPartner.IndexOf("\"))
 				}
+				ElseIf($Configdb.MirroringPartner.Contains(",")) #1.54
+				{
+					$ConfigDBMirroringPartnerIPAddress = Get-IPAddress $Configdb.MirroringPartner.Substring(0,$Configdb.MirroringPartner.IndexOf(","))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Configdb.MirroringPartner.Substring(0,$Configdb.MirroringPartner.IndexOf(","))
+				}
 				ElseIf($Configdb.MirroringPartner -like "*tcp://*")
 				{
 					#looking for tcp://servername.domain.tld:port
@@ -27027,6 +27053,12 @@ Function OutputDatastores
 					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
 					#add in V1.47 get hardware info for the sql server(s)
 					$SQLServerNames += $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf("\"))
+				}
+				ElseIf($Configdb.MirroringPartner.Contains(",")) #1.54
+				{
+					$ConfigDBMirroringWitnessIPAddress = Get-IPAddress $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf(","))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Configdb.MirroringWitness.Substring(0,$Configdb.MirroringWitness.IndexOf(","))
 				}
 				ElseIf($Configdb.MirroringWitness -like "*tcp://*")
 				{
@@ -27127,6 +27159,12 @@ Function OutputDatastores
 			#add in V1.47 get hardware info for the sql server(s)
 			$SQLServerNames += $LogSQLServerPrincipalName.Substring(0,$LogSQLServerPrincipalName.IndexOf("\"))
 		}
+		ElseIf($LogSQLServerPrincipalName.Contains(",")) #1.54
+		{
+			$LogSQLServerPrincipalNameIPAddress = Get-IPAddress $LogSQLServerPrincipalName.Substring(0,$LogSQLServerPrincipalName.IndexOf(","))
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $LogSQLServerPrincipalName.Substring(0,$LogSQLServerPrincipalName.IndexOf(","))
+		}
 		ElseIf($LogSQLServerPrincipalName -like "*tcp://*")
 		{
 			#looking for tcp://servername.domain.tld:port
@@ -27150,6 +27188,12 @@ Function OutputDatastores
 				$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf("\"))
 				#add in V1.47 get hardware info for the sql server(s)
 				$SQLServerNames += $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf("\"))
+			}
+			ElseIf($LogSQLServerMirrorName.Contains(",")) #1.54
+			{
+				$LogSQLServerMirrorNameIPAddress = Get-IPAddress $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf(","))
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $LogSQLServerMirrorName.Substring(0,$LogSQLServerMirrorName.IndexOf(","))
 			}
 			ElseIf($LogSQLServerMirrorName -like "*tcp://*")
 			{
@@ -27232,6 +27276,12 @@ Function OutputDatastores
 					#add in V1.47 get hardware info for the sql server(s)
 					$SQLServerNames += $Logdb.MirroringPartner.Substring(0,$Logdb.MirroringPartner.IndexOf("\"))
 				}
+				ElseIf($Logdb.MirroringPartner.Contains(",")) #1.54
+				{
+					$LogDBMirroringPartnerIPAddress = Get-IPAddress $Logdb.MirroringPartner.Substring(0,$Logdb.MirroringPartner.IndexOf(","))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Logdb.MirroringPartner.Substring(0,$Logdb.MirroringPartner.IndexOf(","))
+				}
 				ElseIf($Logdb.MirroringPartner -like "*tcp://*")
 				{
 					#looking for tcp://servername.domain.tld:port
@@ -27256,6 +27306,12 @@ Function OutputDatastores
 					$LogDBMirroringWitnessIPAddress = Get-IPAddress $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf("\"))
 					#add in V1.47 get hardware info for the sql server(s)
 					$SQLServerNames += $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf("\"))
+				}
+				ElseIf($Logdb.MirroringWitness.Contains(",")) #1.54
+				{
+					$LogDBMirroringWitnessIPAddress = Get-IPAddress $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf(","))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Logdb.MirroringWitness.Substring(0,$Logdb.MirroringWitness.IndexOf(","))
 				}
 				ElseIf($Logdb.MirroringWitness -like "*tcp://*")
 				{
@@ -27359,6 +27415,12 @@ Function OutputDatastores
 			#add in V1.47 get hardware info for the sql server(s)
 			$SQLServerNames += $MonitorSQLServerPrincipalName.Substring(0,$MonitorSQLServerPrincipalName.IndexOf("\"))
 		}
+		ElseIf($MonitorSQLServerPrincipalName.Contains(",")) #1.54
+		{
+			$MonitorSQLServerPrincipalNameIPAddress = Get-IPAddress $MonitorSQLServerPrincipalName.Substring(0,$MonitorSQLServerPrincipalName.IndexOf(","))
+			#add in V1.47 get hardware info for the sql server(s)
+			$SQLServerNames += $MonitorSQLServerPrincipalName.Substring(0,$MonitorSQLServerPrincipalName.IndexOf(","))
+		}
 		ElseIf($MonitorSQLServerPrincipalName -like "*tcp://*")
 		{
 			#looking for tcp://servername.domain.tld:port
@@ -27382,6 +27444,12 @@ Function OutputDatastores
 				$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf("\"))
 				#add in V1.47 get hardware info for the sql server(s)
 				$SQLServerNames += $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf("\"))
+			}
+			ElseIf($MonitorSQLServerMirrorName.Contains(",")) #1.54
+			{
+				$MonitorSQLServerMirrorNameIPAddress = Get-IPAddress $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf(","))
+				#add in V1.47 get hardware info for the sql server(s)
+				$SQLServerNames += $MonitorSQLServerMirrorName.Substring(0,$MonitorSQLServerMirrorName.IndexOf(","))
 			}
 			ElseIf($MonitorSQLServerMirrorName -like "*tcp://*")
 			{
@@ -27464,6 +27532,12 @@ Function OutputDatastores
 					#add in V1.47 get hardware info for the sql server(s)
 					$SQLServerNames += $Monitordb.MirroringPartner.Substring(0,$Monitordb.MirroringPartner.IndexOf("\"))
 				}
+				ElseIf($Monitordb.MirroringPartner.Contains(",")) #1.54
+				{
+					$MonitorDBMirroringPartnerIPAddress = Get-IPAddress $Monitordb.MirroringPartner.Substring(0,$Monitordb.MirroringPartner.IndexOf(","))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $Monitordb.MirroringPartner.Substring(0,$Monitordb.MirroringPartner.IndexOf(","))
+				}
 				ElseIf($Monitordb.MirroringPartner -like "*tcp://*")
 				{
 					#looking for tcp://servername.domain.tld:port
@@ -27488,6 +27562,12 @@ Function OutputDatastores
 					$MonitorDBMirroringWitnessIPAddress = Get-IPAddress $MonitorDB.MirroringWitness.Substring(0,$MonitorDB.MirroringWitness.IndexOf("\"))
 					#add in V1.47 get hardware info for the sql server(s)
 					$SQLServerNames += $MonitorDB.MirroringWitness.Substring(0,$MonitorDB.MirroringWitness.IndexOf("\"))
+				}
+				ElseIf($Monitordb.MirroringWitness.Contains(",")) #1.54
+				{
+					$MonitorDBMirroringWitnessIPAddress = Get-IPAddress $MonitorDB.MirroringWitness.Substring(0,$MonitorDB.MirroringWitness.IndexOf(","))
+					#add in V1.47 get hardware info for the sql server(s)
+					$SQLServerNames += $MonitorDB.MirroringWitness.Substring(0,$MonitorDB.MirroringWitness.IndexOf(","))
 				}
 				ElseIf($Monitordb.MirroringWitness -like "*tcp://*")
 				{
@@ -33190,7 +33270,7 @@ Function ProcessScriptEnd
 		Out-File -FilePath $SIFile -Append -InputObject "Use SSL         : $($UseSSL)" 4>$Null
 		If($MSWORD -or $PDF)
 		{
-			Out-File -FilePath $SIFile -Append -InputObject "User Name       : $($UserName)" 4>$Null
+			Out-File -FilePath $SIFile -Append -InputObject "Username       : $($UserName)" 4>$Null
 		}
 		Out-File -FilePath $SIFile -Append -InputObject "XA/XD Version   : $($Script:XDSiteVersion)" 4>$Null
 		Out-File -FilePath $SIFile -Append -InputObject "" 4>$Null
