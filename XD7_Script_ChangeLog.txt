@@ -3,6 +3,13 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.54 16-Jul-2022
+#	Fixed bug reported by James Rankin where in Function OutputDatastores I didn't check for SQLServerName,TCPPortNumber
+#		https://support.citrix.com/article/CTX234610/how-to-configure-xendesktop-to-use-custom-sql-port
+#		For example, to to [sic] add custom port to the connection strings, then set the $ServerName variable to "DBServername\Instance,CustomPortNumber".
+#	Updated the help text
+#	Updated the ReadMe file
+
 #Version 1.53 26-Apr-2022
 #	Fixed text output for hardware inventory
 #	General code cleanup
