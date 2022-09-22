@@ -241,7 +241,7 @@
 
 	This parameter has an alias of MAX.
 .PARAMETER Section
-	Processes a specific section of the report.
+	Processes one or more sections of the report.
 	Valid options are:
 		Admins (Administrators)
 		Apps (Applications)
@@ -257,7 +257,10 @@
 		StoreFront
 		Zones
 		All
+
 	This parameter defaults to All sections.
+	
+	Multiple sections are separated by a comma. -Section catalogs, groups
 	
 	Notes:
 	Using Logging will force the Logging switch to True.
@@ -840,6 +843,12 @@
 	Administrator for the Username.
 	Processes only the Policies section of the report.
 .EXAMPLE
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Section Config, Licensing -HTML 
+
+	Creates an HTML report.
+
+	The report includes only the Configuration and Licensing sections.
+.EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -MaxDetails
 	
 	Uses all Default values.
@@ -968,9 +977,9 @@
 	plain text, or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.54
+	VERSION: 1.55
 	AUTHOR: Carl Webster
-	LASTEDIT: July 16, 2022
+	LASTEDIT: September 22, 2022
 #>
 
 #endregion
@@ -1057,7 +1066,7 @@ Param(
 	[ValidateSet('All', 'Admins', 'Apps', 'AppV', 'Catalogs', 'Config', 'Controllers', 
 	'Groups', 'Hosting', 'Licensing', 'Logging', 'Policies', 'StoreFront', 'Zones')]
 	[parameter(Mandatory=$False)] 
-	[string]$Section="All",
+	[String[]] $Section = 'All',
 	
 	[parameter(Mandatory=$False)] 
 	[Alias("ADT")]
@@ -1154,6 +1163,12 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.55 22-Sep-2022
+#	Updated Function ProcessScriptSetup to support multiple Section items
+#	Updated the script to allow the Section parameter to support multiple items
+#	Updated the help text
+#	Updated the ReadMe file
+#
 #Version 1.54 16-Jul-2022
 #	Fixed bug reported by James Rankin where in Function OutputDatastores I didn't check for SQLServerName,TCPPortNumber
 #		https://support.citrix.com/article/CTX234610/how-to-configure-xendesktop-to-use-custom-sql-port
@@ -1681,13 +1696,13 @@ Set-StrictMode -Version 2
 
 #force on
 $PSDefaultParameterValues = @{"*:Verbose"=$True}
-$SaveEAPreference = $ErrorActionPreference
-$ErrorActionPreference = 'SilentlyContinue'
+$SaveEAPreference         = $ErrorActionPreference
+$ErrorActionPreference    = 'SilentlyContinue'
 
-$script:MyVersion           = '1.54'
-$Script:ScriptName          = "XD7_Inventory.ps1"
-$tmpdate                    = [datetime] "07/16/2022"
-$Script:ReleaseDate         = $tmpdate.ToUniversalTime().ToShortDateString()
+$script:MyVersion   = '1.55'
+$Script:ScriptName  = "XD7_Inventory.ps1"
+$tmpdate            = [datetime] "09/20/2022"
+$Script:ReleaseDate = $tmpdate.ToUniversalTime().ToShortDateString()
 
 If($Null -eq $MSWord)
 {
@@ -1881,22 +1896,23 @@ If($NoPolicies -and $Section -eq "Policies")
 }
 
 $ValidSection = $False
+#1.551 remove the Break statements since there can now be multiple sections entered
 Switch ($Section)
 {
-	"Admins"		{$ValidSection = $True; Break}
-	"Apps"			{$ValidSection = $True; Break}
-	"AppV" 			{$ValidSection = $True; Break}
-	"Catalogs"		{$ValidSection = $True; Break}
-	"Config"		{$ValidSection = $True; Break}
-	"Controllers"	{$ValidSection = $True; Break}
-	"Groups"		{$ValidSection = $True; Break}
-	"Hosting"		{$ValidSection = $True; Break}
-	"Licensing"		{$ValidSection = $True; Break}
-	"Logging"		{$ValidSection = $True; $Logging = $True; Break}	#force $logging true if the config logging section is specified
-	"Policies"		{$ValidSection = $True; $Policies = $True; Break} #force $policies true if the policies section is specified
-	"StoreFront"	{$ValidSection = $True; Break}
-	"Zones"			{$ValidSection = $True; Break}
-	"All"			{$ValidSection = $True; Break}
+	"Admins"		{$ValidSection = $True}
+	"Apps"			{$ValidSection = $True}
+	"AppV" 			{$ValidSection = $True}
+	"Catalogs"		{$ValidSection = $True}
+	"Config"		{$ValidSection = $True}
+	"Controllers"	{$ValidSection = $True}
+	"Groups"		{$ValidSection = $True}
+	"Hosting"		{$ValidSection = $True}
+	"Licensing"		{$ValidSection = $True}
+	"Logging"		{$ValidSection = $True; $Logging = $True}	#force $logging true if the config logging section is specified
+	"Policies"		{$ValidSection = $True; $Policies = $True} #force $policies true if the policies section is specified
+	"StoreFront"	{$ValidSection = $True}
+	"Zones"			{$ValidSection = $True}
+	"All"			{$ValidSection = $True}
 }
 
 If($ValidSection -eq $False)
@@ -33142,23 +33158,55 @@ Script cannot continue
 	}
 	
 	[string]$Script:XDSiteName = $Script:XDSite2.SiteName
-	Switch ($Section)
+
+	#1.55 update to support multiple section items
+	If($Section.Count -eq 1 -and $Section -eq "All")
 	{
-		"Admins" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Administrators Only)"; Break}
-		"Apps" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Applications Only)"; Break}
-		"AppV" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (App-V Only"; Break}
-		"Catalogs" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Machine Catalogs Only)"; Break}
-		"Config" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Only)"; Break}
-		"Controllers"	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Controllers Only)"; Break}
-		"Groups" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Delivery Groups Only)"; Break}
-		"Hosting" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Hosting Only)"; Break}
-		"Licensing" 	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Licensing Only)"; Break}
-		"Logging" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Logging Only"; Break}
-		"Policies" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Policies Only)"; Break}
-		"StoreFront" 	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (StoreFront Only)"; Break}
-		"Zones" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Zones Only)"; Break}
-		"All" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site"; Break}
+		[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site"
 	}
+	ElseIf($Section.Count -eq 1)
+	{
+		Switch ($Section)
+		{
+			"Admins" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Administrators Only)"; Break}
+			"Apps" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Applications Only)"; Break}
+			"AppV" 			{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (App-V Only"; Break}
+			"Catalogs" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Machine Catalogs Only)"; Break}
+			"Config" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Only)"; Break}
+			"Controllers"	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Controllers Only)"; Break}
+			"Groups" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Delivery Groups Only)"; Break}
+			"Hosting" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Hosting Only)"; Break}
+			"Licensing" 	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Licensing Only)"; Break}
+			"Logging" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Configuration Logging Only"; Break}
+			"Policies" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Policies Only)"; Break}
+			"StoreFront" 	{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (StoreFront Only)"; Break}
+			"Zones" 		{[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site (Zones Only)"; Break}
+			Default			{[string]$Script:Title = "Inventory Report for the $($Script:CCSiteName) Site (Missing a section title for $Section"; Break}
+		}
+	}
+	ElseIf($Section.Count -gt 1)
+	{
+		[string]$Script:Title = "Inventory Report for the $($Script:XDSiteName) Site ("
+		Switch ($Section)
+		{
+			"Admins"		{[string]$Script:Title += "Administrators "}
+			"Apps"			{[string]$Script:Title += "Applications "}
+			"AppV"			{[string]$Script:Title += "App-V "}
+			"Catalogs"		{[string]$Script:Title += "Machine Catalogs "}
+			"Config"		{[string]$Script:Title += "Configuration "}
+			"Controllers"	{[string]$Script:Title += "Controllers "}
+			"Groups" 		{[string]$Script:Title += "Delivery Groups "}
+			"Hosting"		{[string]$Script:Title += "Hosting "}
+			"Licensing"		{[string]$Script:Title += "Licensing "}
+			"Logging"		{[string]$Script:Title += "Configuration Logging "}
+			"Policies"		{[string]$Script:Title += "Policies "}
+			"StoreFront"	{[string]$Script:Title += "StoreFront "}
+			"Zones"			{[string]$Script:Title += "Zones "}
+			Default			{[string]$Script:Title += "Missing a section title for $Section"}
+		}
+		[string]$Script:Title = $Script:Title.Substring(0,$Script:Title.LastIndexOf(" ")-1)+")"
+	}
+
 	Write-Verbose "$(Get-Date -Format G): Initial Site data has been gathered"
 	
 	#added 25-Jun-2017 with a lot of help from Michael B. Smith
