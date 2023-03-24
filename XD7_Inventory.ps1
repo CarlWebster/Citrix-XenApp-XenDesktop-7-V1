@@ -977,9 +977,9 @@
 	plain text, or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.56
+	VERSION: 1.57
 	AUTHOR: Carl Webster
-	LASTEDIT: October 2, 2022
+	LASTEDIT: March 24, 2023
 #>
 
 #endregion
@@ -1163,6 +1163,23 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.57 24-Mar-2023
+#	In Function OutputDesktopOSMachine:
+#		test if there is a Desktop.DNSName
+#		If not, test Desktop.MachineName
+#		If not, test Desktop.HostedMachineName
+#		If not, use error message "error, there was no name found for the Desktop"
+#	In Function OutputHosting:
+#		for Word output:
+#			if there are no single-session OS or multi-session OS or sessions, output a message and don't waste a page
+#			add a page break after outputting Session data
+#	In Function OutputServerOSMachine:
+#		test if there is a Server.DNSName
+#		If not, test Server.MachineName
+#		If not, test Server.HostedMachineName
+#		If not, use error message "error, there was no name found for the Server"
+#	Updated for CVAD 2206/2209/2212/2303/7.34/7.35/7.36/7.37
+#
 #Version 1.56 2-Oct-2022
 #	Added Computer policy
 #		Profile Management\Advanced settings\Maximum number of VHDX disks for storing Outlook OST files
@@ -1707,9 +1724,9 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 $SaveEAPreference         = $ErrorActionPreference
 $ErrorActionPreference    = 'SilentlyContinue'
 
-$script:MyVersion   = '1.56'
+$script:MyVersion   = '1.57'
 $Script:ScriptName  = "XD7_Inventory.ps1"
-$tmpdate            = [datetime] "10/02/2022"
+$tmpdate            = [datetime] "03/24/2023"
 $Script:ReleaseDate = $tmpdate.ToUniversalTime().ToShortDateString()
 
 If($Null -eq $MSWord)
@@ -31110,7 +31127,7 @@ Function OutputHosting
 		Write-Verbose "$(Get-Date -Format G): `tProcessing Desktop OS Data"
 		$DesktopOSMachines = @(Get-BrokerMachine @XDParams2 -hypervisorconnectionname $Hypervisor.Name -sessionsupport "SingleSession")
 
-		If($? -and ($Null -ne $DesktopOSMachines))
+		If($? -and ($Null -ne $DesktopOSMachines -and $DesktopOSMachines.Count -gt 0))
 		{
 			[int]$cnt = $DesktopOSMachines.Count
 			
@@ -31134,7 +31151,7 @@ Function OutputHosting
 				OutputDesktopOSMachine $Desktop
 			}
 		}
-		ElseIf($? -and ($Null -eq $DesktopOSMachines))
+		ElseIf($? -and ($Null -eq $DesktopOSMachines -or $DesktopOSMachines.Count -eq 0))
 		{
 			$txt = "There are no Desktop OS Machines"
 			OutputWarning $txt
@@ -31148,7 +31165,7 @@ Function OutputHosting
 		Write-Verbose "$(Get-Date -Format G): `tProcessing Server OS Data"
 		$ServerOSMachines = @(Get-BrokerMachine @XDParams2 -hypervisorconnectionname $Hypervisor.Name -sessionsupport "MultiSession")
 		
-		If($? -and ($Null -ne $ServerOSMachines))
+		If($? -and ($Null -ne $ServerOSMachines -and $ServerOSMachines.Count -gt 0))
 		{
 			[int]$cnt = $ServerOSMachines.Count
 
@@ -31173,7 +31190,7 @@ Function OutputHosting
 				OutputServerOSMachine $Server
 			}
 		}
-		ElseIf($? -and ($Null -eq $ServerOSMachines))
+		ElseIf($? -and ($Null -eq $ServerOSMachines -or $ServerOSMachines.Count -eq 0))
 		{
 			$txt = "There are no Server OS Machines"
 			OutputWarning $txt
@@ -31188,7 +31205,7 @@ Function OutputHosting
 		{
 			Write-Verbose "$(Get-Date -Format G): `tProcessing Sessions Data"
 			$Sessions = @(Get-BrokerSession @XDParams2 -hypervisorconnectionname $Hypervisor.Name -SortBy UserName)
-			If($? -and ($Null -ne $Sessions))
+			If($? -and ($Null -ne $Sessions -and $Sessions.Count -gt 0))
 			{
 				[int]$cnt = $Sessions.Count
 
@@ -31210,7 +31227,7 @@ Function OutputHosting
 				
 				OutputHostingSessions $Sessions
 			}
-			ElseIf($? -and ($Null -eq $Sessions))
+			ElseIf($? -and ($Null -eq $Sessions -or $Sessions.Count -eq 0))
 			{
 				$txt = "There are no Sessions"
 				OutputWarning $txt
@@ -31220,6 +31237,12 @@ Function OutputHosting
 				$txt = "Unable to retrieve Sessions"
 				OutputWarning $txt
 			}
+
+			If($MSWord -or $PDF)
+			{
+				#added in 3.40, add a page break after sessions
+				$Selection.InsertNewPage()
+			}
 		}
 	}
 }
@@ -31228,11 +31251,34 @@ Function OutputDesktopOSMachine
 {
 	Param([object]$Desktop)
 
+	#updated in V1.57
+	If($Desktop.DNSName)	# is there anything in the DNSName property
+	{
+		$tmp = $Desktop.DNSName.Split(".")
+		$xDesktopName = $tmp[0]
+		$tmp = $Null
+	}
+	ElseIf($Desktop.MachineName)	# is there anything in the MachineName property
+	{
+		$tmp = $Desktop.MachineName.Split("\")
+		$xDesktopName = $tmp[1]
+		$tmp = $Null
+	}
+	ElseIf($Desktop.HostedMachineName)	# is there anything in the HostedMachineName property
+	{
+		$xDesktopName = $Desktop.HostedMachineName
+	}
+	Else	# error, there is no name for the Server
+	{
+		$xDesktopName = "error, there was no name found for the Desktop"
+	}
+
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput desktop $xDesktopName"
+
 	$xName = ""
 	$xMaintMode = ""
 	$xUserChanges = ""
 	
-	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput desktop $($Desktop.DNSName)"
 	If($MSWord -or $PDF)
 	{
 		If(![String]::IsNullOrEmpty($Desktop.AssociatedUserNames))
@@ -31262,7 +31308,7 @@ Function OutputDesktopOSMachine
 			Default   {$xUserChanges = "Unknown: $($Desktop.PersistUserChanges)"}
 		}
 		[System.Collections.Hashtable[]] $ScriptInformation = @()
-		$ScriptInformation += @{ Data = "Name"; Value = $Desktop.DNSName; }
+		$ScriptInformation += @{ Data = "Name"; Value = $xDesktopName; }
 		$ScriptInformation += @{ Data = "Machine Catalog"; Value = $Desktop.CatalogName; }
 		$ScriptInformation += @{ Data = "Delivery Group"; Value = $Desktop.DesktopGroupName; }
 		$ScriptInformation += @{ Data = "User"; Value = $xName; }
@@ -31289,7 +31335,7 @@ Function OutputDesktopOSMachine
 	}
 	ElseIf($Text)
 	{
-		Line 1 "Name`t`t`t: " $Desktop.DNSName
+		Line 1 "Name`t`t`t: " $xDesktopName
 		Line 1 "Machine Catalog`t`t: " $Desktop.CatalogName
 		If(![String]::IsNullOrEmpty($Desktop.DesktopGroupName))
 		{
@@ -31343,7 +31389,7 @@ Function OutputDesktopOSMachine
 		}
 
 		$rowdata = @()
-		$columnHeaders = @("Name",($htmlsilver -bor $htmlbold),$Desktop.DNSName,$htmlwhite)
+		$columnHeaders = @("Name",($htmlsilver -bor $htmlbold),$xDesktopName,$htmlwhite)
 		$rowdata += @(,('Machine Catalog',($htmlsilver -bor $htmlbold),$Desktop.CatalogName,$htmlwhite))
 		If(![String]::IsNullOrEmpty($Desktop.DesktopGroupName))
 		{
@@ -31380,7 +31426,30 @@ Function OutputServerOSMachine
 {
 	Param([object]$Server)
 	
-	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput server $($Server.DNSName)"
+	#updated in V1.57
+	If($Server.DNSName)	# is there anything in the DNSName property
+	{
+		$tmp = $Server.DNSName.Split(".")
+		$xServerName = $tmp[0]
+		$tmp = $Null
+	}
+	ElseIf($Server.MachineName)	# is there anything in the MachineName property
+	{
+		$tmp = $Server.MachineName.Split("\")
+		$xServerName = $tmp[1]
+		$tmp = $Null
+	}
+	ElseIf($Server.HostedMachineName)	# is there anything in the HostedMachineName property
+	{
+		$xServerName = $Server.HostedMachineName
+	}
+	Else	# error, there is no name for the Server
+	{
+		$xServerName = "error, there was no name found for the Server"
+	}
+
+	Write-Verbose "$(Get-Date -Format G): `t`t`tOutput server $xServerName"
+
 	$xName = ""
 	$xMaintMode = ""
 	$xUserChanges = ""
@@ -31414,7 +31483,7 @@ Function OutputServerOSMachine
 			Default   {$xUserChanges = "Unknown: $($Server.PersistUserChanges)"}
 		}
 		[System.Collections.Hashtable[]] $ScriptInformation = @()
-		$ScriptInformation += @{ Data = "Name"; Value = $Server.DNSName; }
+		$ScriptInformation += @{ Data = "Name"; Value = $xServerName ; }
 		$ScriptInformation += @{ Data = "Machine Catalog"; Value = $Server.CatalogName; }
 		$ScriptInformation += @{ Data = "Delivery Group"; Value = $Server.DesktopGroupName; }
 		$ScriptInformation += @{ Data = "User"; Value = $xName; }
@@ -31441,7 +31510,7 @@ Function OutputServerOSMachine
 	}
 	ElseIf($Text)
 	{
-		Line 1 "Name`t`t`t: " $Server.DNSName
+		Line 1 "Name`t`t`t: " $xServerName 
 		Line 1 "Machine Catalog`t`t: " $Server.CatalogName
 		If(![String]::IsNullOrEmpty($Server.DesktopGroupName))
 		{
@@ -31495,7 +31564,7 @@ Function OutputServerOSMachine
 		}
 
 		$rowdata = @()
-		$columnHeaders = @("Name",($htmlsilver -bor $htmlbold),$Server.DNSName,$htmlwhite)
+		$columnHeaders = @("Name",($htmlsilver -bor $htmlbold),$xServerName ,$htmlwhite)
 		$rowdata += @(,('Machine Catalog',($htmlsilver -bor $htmlbold),$Server.CatalogName,$htmlwhite))
 		If(![String]::IsNullOrEmpty($Server.DesktopGroupName))
 		{
@@ -33135,6 +33204,9 @@ Function ProcessScriptSetup
 			$XDSiteVersionReal = "Unknown"
 			Switch ($XDSiteVersion)
 			{
+				"7.37"	{$XDSiteVersionReal = "CVAD 2303"; Break}
+				"7.36"	{$XDSiteVersionReal = "CVAD 2212"; Break}
+				"7.35"	{$XDSiteVersionReal = "CVAD 2209"; Break}
 				"7.34"	{$XDSiteVersionReal = "CVAD 2206"; Break}
 				"7.33"	{$XDSiteVersionReal = "CVAD 2203"; Break}
 				"7.32"	{$XDSiteVersionReal = "CVAD 2112"; Break}
@@ -33357,6 +33429,9 @@ Script cannot continue
 	$Script:XDSiteVersionReal = "Unknown"
 	Switch ($Script:XDSiteVersion)
 	{
+		"7.37"	{$Script:XDSiteVersionReal = "CVAD 2303"; Break}
+		"7.36"	{$Script:XDSiteVersionReal = "CVAD 2212"; Break}
+		"7.35"	{$Script:XDSiteVersionReal = "CVAD 2209"; Break}
 		"7.34"	{$Script:XDSiteVersionReal = "CVAD 2206"; Break}
 		"7.33"	{$Script:XDSiteVersionReal = "CVAD 2203"; Break}
 		"7.32"	{$Script:XDSiteVersionReal = "CVAD 2112"; Break}
