@@ -3,6 +3,10 @@
 #http://www.CarlWebster.com
 # Created on October 20, 2013
 
+#Version 1.57.001 22-Jul-2025
+#	Added CVAD 2305 (7.38), 2308 (7.39), 2311 (7.40), 2402 (7.41), 2407 (7.42), 2411 (7.43), 2503 (7.44), 2507 (7.45) to the version checks
+#	Nothing else was added or updated
+
 #Version 1.57 24-Mar-2023
 #	In Function OutputDesktopOSMachine:
 #		test if there is a Desktop.DNSName
