@@ -22,13 +22,16 @@
 	This script supports versions of XenApp/XenDesktop from 7.0 to 7.7. 
 
 	If you are running XA/XD 7.8 through CVAD 2006, please use:
-	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	https://github.com/CarlWebster/Citrix-XenApp-XenDesktop-7-V2
 
-	If you are running CVAD 2006 and later, please use:
-	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	If you are running CVAD 2006 through 2511, please use: 
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V3
+
+	If you are running CVAD 2511 or later, please use: 
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V4
 
 	If you are running Citrix Cloud, please use:
-	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	https://github.com/CarlWebster/Citrix-Cloud-Daas-
 	
 	By default, only gives summary information for:
 		Administrators
@@ -269,8 +272,8 @@
 .PARAMETER AddDateTime
 	Adds a date time stamp to the end of the file name.
 	Time stamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2022 at 6PM is 2022-06-01_1800.
-	Output filename will be ReportName_2022-06-01_1800.docx (or .pdf).
+	June 1, 2027 at 6PM is 2027-06-01_1800.
+	Output filename will be ReportName_2027-06-01_1800.docx (or .pdf).
 	This parameter is disabled by default.
 	This parameter has an alias of ADT.
 .PARAMETER Dev
@@ -634,10 +637,10 @@
 	Sideline for the Cover Page format.
 	Administrator for the Username.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2022 -EndDate 01/31/2022
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate 01/01/2027 -EndDate 01/31/2027
 	
-	Creates a report with Configuration Logging details for the dates 01/01/2022 through 
-	01/31/2022.
+	Creates a report with Configuration Logging details for the dates 01/01/2027 through 
+	01/31/2027.
 	
 	Uses all Default values.
 	HKEY_CURRENT_USER\Software\Microsoft\Office\Common\UserInfo\CompanyName="Carl 
@@ -649,11 +652,11 @@
 	Sideline for the Cover Page format.
 	Administrator for the Username.
 .EXAMPLE
-	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2022 10:00:00" -EndDate 
-	"06/01/2022 14:00:00"
+	PS C:\PSScript > .\XD7_Inventory.ps1 -Logging -StartDate "06/01/2027 10:00:00" -EndDate 
+	"06/01/2027 14:00:00"
 	
 	Creates a report with Configuration Logging details for the time range 
-	06/01/2022 10:00:00AM through 06/01/2022 02:00:00PM.
+	06/01/2027 10:00:00AM through 06/01/2027 02:00:00PM.
 	
 	Narrowing the report down to seconds does not work. Seconds must be either 00 or 59.
 	
@@ -784,8 +787,8 @@
 
 	Adds a date time stamp to the end of the file name.
 	The timestamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2022, at 6PM is 2022-06-01_1800.
-	The output filename will be XD7SiteName_2022-06-01_1800.docx
+	June 1, 2027, at 6PM is 2027-06-01_1800.
+	The output filename will be XD7SiteName_2027-06-01_1800.docx
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -PDF -AddDateTime
 	
@@ -801,8 +804,8 @@
 
 	Adds a date time stamp to the end of the file name.
 	The timestamp is in the format of yyyy-MM-dd_HHmm.
-	June 1, 2022, at 6PM is 2022-06-01_1800.
-	The output filename will be XD7SiteName_2022-06-01_1800.pdf
+	June 1, 2027, at 6PM is 2027-06-01_1800.
+	The output filename will be XD7SiteName_2027-06-01_1800.pdf
 .EXAMPLE
 	PS C:\PSScript > .\XD7_Inventory.ps1 -Hardware
 	
@@ -977,9 +980,9 @@
 	plain text, or HTML document.
 .NOTES
 	NAME: XD7_Inventory.ps1
-	VERSION: 1.57.001
+	VERSION: 1.58
 	AUTHOR: Carl Webster
-	LASTEDIT: July 22, 2025
+	LASTEDIT: October 8, 2026
 #>
 
 #endregion
@@ -1163,6 +1166,25 @@ Param(
 
 # Version 1.0 released to the community on June 12, 2015
 
+#Version 1.58 8-Oct-2026
+#	Added CVAD 2511 (7.46), 2603 (7.47), 2607 (7.48) to the version checks
+#
+#	In Function GetComputerWMIInfo,
+#		Thanks to the help from Guy Leech, we fixed a bug where, if run on a localhost 
+#		that is also the Citrix DB and/or license server, the call to Get-CimInstance failed with the 
+#		FQDN of the localhost
+#
+#	In Functions OutputDesktopOSMachine and OutputServerOSMachine,
+#		Fixed bugs to prevent an empty machine name and to prevent processing a SID
+#
+#	Add a PDF copy of the ReadMe file so it can be displayed in GitHub
+#
+#	Change Dropbox and CarlWebster.com links to GitHub links
+#
+#	Updated the help text
+#
+#	Updated the ReadMe file
+#
 #Version 1.57.001 22-Jul-2025
 #	Added CVAD 2305 (7.38), 2308 (7.39), 2311 (7.40), 2402 (7.41), 2407 (7.42), 2411 (7.43), 2503 (7.44), 2507 (7.45) to the version checks
 #	Nothing else was added or updated
@@ -1728,9 +1750,9 @@ $PSDefaultParameterValues = @{"*:Verbose"=$True}
 $SaveEAPreference         = $ErrorActionPreference
 $ErrorActionPreference    = 'SilentlyContinue'
 
-$script:MyVersion   = '1.57'
+$script:MyVersion   = '1.58'
 $Script:ScriptName  = "XD7_Inventory.ps1"
-$tmpdate            = [datetime] "03/24/2023"
+$tmpdate            = [datetime] "10/08/2026"
 $Script:ReleaseDate = $tmpdate.ToUniversalTime().ToShortDateString()
 
 If($Null -eq $MSWord)
@@ -2238,6 +2260,9 @@ Function GetComputerWMIInfo
 	# modified 17-Aug-2016 to fix a few issues with Text and HTML output
 	# modified 29-Apr-2018 to change from Arrays to New-Object System.Collections.ArrayList
 	# modified 11-Mar-2022 changed from using Get-WmiObject to Get-CimInstance
+	# modified 22-Sep-2026 Thanks to the help from Guy Leech, we fixed a bug where, if run on a localhost 
+	#	that is also the Citrix DB and/or license server, the call to Get-CimInstance failed with the 
+	#	FQDN of the localhost
 
 	#Get Computer info
 	Write-Verbose "$(Get-Date -Format G): `t`tProcessing WMI Computer information"
@@ -2260,7 +2285,7 @@ Function GetComputerWMIInfo
 	
 	Try
 	{
-		If($RemoteComputerName -eq $env:computername)
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			$Results = Get-CimInstance -ClassName win32_computersystem -Verbose:$False
 		}
@@ -2281,7 +2306,8 @@ Function GetComputerWMIInfo
 		@{N="TotalPhysicalRam"; E={[math]::round(($_.TotalPhysicalMemory / 1GB),0)}}, `
 		NumberOfProcessors, NumberOfLogicalProcessors
 		$Results = $Null
-		If($RemoteComputerName -eq $env:computername)
+		
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			[string]$ComputerOS = (Get-CimInstance -ClassName Win32_OperatingSystem -EA 0 -Verbose:$False).Caption
 		}
@@ -2348,7 +2374,7 @@ Function GetComputerWMIInfo
 
 	Try
 	{
-		If($RemoteComputerName -eq $env:computername)
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			$Results = Get-CimInstance -ClassName Win32_LogicalDisk -Verbose:$False
 		}
@@ -2429,7 +2455,7 @@ Function GetComputerWMIInfo
 
 	Try
 	{
-		If($RemoteComputerName -eq $env:computername)
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			$Results = Get-CimInstance -ClassName win32_Processor -Verbose:$False
 		}
@@ -2508,7 +2534,7 @@ Function GetComputerWMIInfo
 	
 	Try
 	{
-		If($RemoteComputerName -eq $env:computername)
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			$Results = Get-CimInstance -ClassName win32_networkadapterconfiguration -Verbose:$False
 		}
@@ -2543,7 +2569,7 @@ Function GetComputerWMIInfo
 			{
 				Try
 				{
-					If($RemoteComputerName -eq $env:computername)
+					If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 					{
 						$ThisNic = Get-CimInstance -ClassName win32_networkadapter -Verbose:$False | Where-Object {$_.index -eq $nic.index}
 					}
@@ -2658,7 +2684,7 @@ Function OutputComputerItem
 	try 
 	{
 
-		If($RemoteComputerName -eq $env:computername)
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			$PowerPlan = (Get-CimInstance -ClassName Win32_PowerPlan -Namespace "root\cimv2\power" -Verbose:$False |
 				Where-Object {$_.IsActive -eq $true} |
@@ -2998,7 +3024,7 @@ Function OutputNicItem
 {
 	Param([object]$Nic, [object]$ThisNic, [string]$RemoteComputerName)
 	
-	If($RemoteComputerName -eq $env:computername)
+	If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 	{
 		$powerMgmt = Get-CimInstance -ClassName MSPower_DeviceEnable -Namespace "root\wmi" -Verbose:$False |
 			Where-Object{$_.InstanceName -match [regex]::Escape($ThisNic.PNPDeviceID)}
@@ -3053,7 +3079,7 @@ Function OutputNicItem
 	Try
 	{
 		#https://ios.developreference.com/article/10085450/How+do+I+enable+VRSS+(Virtual+Receive+Side+Scaling)+for+a+Windows+VM+without+relying+on+Enable-NetAdapterRSS%3F
-		If($RemoteComputerName -eq $env:computername)
+		If($RemoteComputerName -match "^$env:COMPUTERNAME\b")
 		{
 			$RSSEnabled = (Get-CimInstance -ClassName MSFT_NetAdapterRssSettingData -Namespace "root\StandardCimV2" -ea 0 -Verbose:$False).Enabled
 		}
@@ -31430,15 +31456,18 @@ Function OutputServerOSMachine
 {
 	Param([object]$Server)
 	
-	#updated in V1.57
+	# Regex pattern for a valid Windows SID
+	$SidPattern = "^S-\d-\d+(-\d+)*$"
+
 	If($Server.DNSName)	# is there anything in the DNSName property
 	{
 		$tmp = $Server.DNSName.Split(".")
 		$xServerName = $tmp[0]
 		$tmp = $Null
 	}
-	ElseIf($Server.MachineName)	# is there anything in the MachineName property
+	ElseIf($Server.MachineName -and $Server.MachineName -notmatch $SidPattern)	
 	{
+		# is there anything in the MachineName property that is not a SID
 		$tmp = $Server.MachineName.Split("\")
 		$xServerName = $tmp[1]
 		$tmp = $Null
@@ -33208,6 +33237,9 @@ Function ProcessScriptSetup
 			$XDSiteVersionReal = "Unknown"
 			Switch ($XDSiteVersion)
 			{
+				"7.48"	{$XDSiteVersionReal = "CVAD 2607"; Break}
+				"7.47"	{$XDSiteVersionReal = "CVAD 2603"; Break}
+				"7.46"	{$XDSiteVersionReal = "CVAD 2511"; Break}
 				"7.45"	{$XDSiteVersionReal = "CVAD 2507"; Break}
 				"7.44"	{$XDSiteVersionReal = "CVAD 2503"; Break}
 				"7.43"	{$XDSiteVersionReal = "CVAD 2411"; Break}
@@ -33276,22 +33308,25 @@ Function ProcessScriptSetup
 	This script is designed for XenApp/XenDesktop 7.0 through 7.7 and should not be run on $XDSiteVersionReal.
 	`n`n
 	Please see the Prerequisites section in the ReadMe file:
-	(https://carlwebster.sharefile.com/d-sc33767b127542c89).
+	(https://github.com/CarlWebster/Citrix-XenApp-XenDesktop-7-V1/blob/master/XD7_Inventory_V1_ReadMe.pdf).
 	`n`n
 	If you are running XenApp 6.0, please use:
-	https://carlwebster.com/downloads/download-info/xenapp-6/
+	https://github.com/CarlWebster/Citrix-XenApp-6.0
 	`n`n
 	If you are running XenApp 6.5, please use:
-	https://carlwebster.com/downloads/download-info/xenapp-6-5/
+	https://github.com/CarlWebster/Citrix-XenApp-6.5
 	`n`n
-	If you are running XA/XD 7.8 through CVAD 2006, please use: 
-	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	If you are running XA/XD 7.8 through CVAD 2006, please use:
+	https://github.com/CarlWebster/Citrix-XenApp-XenDesktop-7-V2
 	`n`n
-	If you are running CVAD 2006 and later, please use:
-	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	If you are running CVAD 2006 through 2511, please use: 
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V3
+	`n`n
+	If you are running CVAD 2511 or later, please use:
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V4
 	`n`n
 	If you are running Citrix Cloud, please use:
-	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	https://github.com/CarlWebster/Citrix-Cloud-Daas-
 	`n`n
 	Script cannot continue
 	`n`n
@@ -33308,22 +33343,25 @@ Function ProcessScriptSetup
 	This script is designed for XenApp/XenDesktop 7.0 through 7.7 and should not be run on any other version.
 	`n`n
 	Please see the Prerequisites section in the ReadMe file:
-	(https://carlwebster.sharefile.com/d-sc33767b127542c89).
+	(https://github.com/CarlWebster/Citrix-XenApp-XenDesktop-7-V1/blob/master/XD7_Inventory_V1_ReadMe.pdf).
 	`n`n
 	If you are running XenApp 6.0, please use:
-	https://carlwebster.com/downloads/download-info/xenapp-6/
+	https://github.com/CarlWebster/Citrix-XenApp-6.0
 	`n`n
 	If you are running XenApp 6.5, please use:
-	https://carlwebster.com/downloads/download-info/xenapp-6-5/
+	https://github.com/CarlWebster/Citrix-XenApp-6.5
 	`n`n
-	If you are running XA/XD 7.8 through CVAD 2006, please use: 
-	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	If you are running XA/XD 7.8 through CVAD 2006, please use:
+	https://github.com/CarlWebster/Citrix-XenApp-XenDesktop-7-V2
 	`n`n
-	If you are running CVAD 2006 and later, please use:
-	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	If you are running CVAD 2006 through 2511, please use: 
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V3
+	`n`n
+	If you are running CVAD 2511 or later, please use:
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V4
 	`n`n
 	If you are running Citrix Cloud, please use:
-	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	https://github.com/CarlWebster/Citrix-Cloud-Daas-
 	`n`n
 	Script cannot continue
 	`n`n
@@ -33441,6 +33479,9 @@ Script cannot continue
 	$Script:XDSiteVersionReal = "Unknown"
 	Switch ($Script:XDSiteVersion)
 	{
+		"7.48"	{$Script:XDSiteVersionReal = "CVAD 2607"; Break}
+		"7.47"	{$Script:XDSiteVersionReal = "CVAD 2603"; Break}
+		"7.46"	{$Script:XDSiteVersionReal = "CVAD 2511"; Break}
 		"7.45"	{$Script:XDSiteVersionReal = "CVAD 2507"; Break}
 		"7.44"	{$Script:XDSiteVersionReal = "CVAD 2503"; Break}
 		"7.43"	{$Script:XDSiteVersionReal = "CVAD 2411"; Break}
@@ -33508,19 +33549,22 @@ Script cannot continue
 	This script is designed for XenApp/XenDesktop 7.0 through 7.7 and should not be run on $Script:XDSiteVersionReal.
 	`n`n
 	If you are running XenApp 6.0, please use:
-	https://carlwebster.com/downloads/download-info/xenapp-6/
+	https://github.com/CarlWebster/Citrix-XenApp-6.0
 	`n`n
 	If you are running XenApp 6.5, please use:
-	https://carlwebster.com/downloads/download-info/xenapp-6-5/
+	https://github.com/CarlWebster/Citrix-XenApp-6.5
 	`n`n
 	If you are running XA/XD 7.8 through CVAD 2006, please use:
-	https://carlwebster.com/downloads/download-info/xenappxendesktop-7-8/
+	https://github.com/CarlWebster/Citrix-XenApp-XenDesktop-7-V2
 	`n`n
-	If you are running CVAD 2006 and later, please use:
-	https://carlwebster.com/downloads/download-info/citrix-virtual-apps-and-desktops-v3-script/
+	If you are running CVAD 2006 through 2511, please use: 
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V3
+	`n`n
+	If you are running CVAD 2511 or later, please use:
+	https://github.com/CarlWebster/Citrix-Virtual-Apps-and-Desktops-V4
 	`n`n
 	If you are running Citrix Cloud, please use:
-	https://carlwebster.com/downloads/download-info/citrix-cloud-citrix-virtual-apps-and-desktops-service/
+	https://github.com/CarlWebster/Citrix-Cloud-Daas-
 	`n`n
 	Script cannot continue
 	`n`n
